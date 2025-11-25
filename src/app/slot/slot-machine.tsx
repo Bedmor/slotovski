@@ -35,6 +35,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
     text: string;
     icon?: string;
   } | null>(null);
+  const [winningIndices, setWinningIndices] = useState<number[][][]>([]);
 
   // Weighted randomness for client-side animation only
   const weightedItems: string[] = [
@@ -65,6 +66,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
     setSpinning(true);
     setWinMessage(null);
+    setWinningIndices([]);
 
     // Start animation immediately
     const animationDuration = 2000; // 2 seconds
@@ -104,6 +106,12 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
         if (result.message) {
           setWinMessage({ text: result.message, icon: result.iconKey });
+        }
+
+        // @ts-ignore
+        if (result.winningIndices) {
+          // @ts-ignore
+          setWinningIndices(result.winningIndices);
         }
 
         setSpinning(false);
@@ -181,24 +189,38 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           {/* Machine Frame */}
           <div className="relative overflow-hidden rounded-xl border-4 border-yellow-600/50 bg-linear-to-b from-gray-900 to-black p-2 md:p-4">
             {/* Payline Indicator */}
-            <div className="pointer-events-none absolute top-1/2 left-0 z-10 h-16 w-full -translate-y-1/2 border-y-2 border-yellow-500/30 bg-yellow-500/10 shadow-[0_0_20px_rgba(234,179,8,0.2)] md:h-24"></div>
+            <div className="pointer-events-none absolute top-1/2 left-0 z-10 h-16 w-full md:h-24"></div>
 
             <div className="flex flex-col gap-2 md:gap-4">
               {matrix.map((row, rowIndex) => (
                 <div
-                  className={`flex flex-row justify-center gap-2 transition-all duration-100 md:gap-4 ${rowIndex === 1 ? "scale-105" : "scale-95 opacity-70"}`}
+                  className={`flex flex-row justify-center gap-2 transition-all duration-100 md:gap-4`}
                   key={rowIndex}
                 >
                   {row.map((itemKey, colIndex) => {
                     const Icon = iconMap[itemKey];
+                    const isWinning = winningIndices.some((segment) =>
+                      segment.some(
+                        ([r, c]) => r === rowIndex && c === colIndex,
+                      ),
+                    );
+
                     return (
                       <div
                         key={`${rowIndex}-${colIndex}`}
-                        className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-linear-to-br from-purple-800/50 to-blue-900/50 shadow-inner backdrop-blur-sm sm:h-20 sm:w-20 md:h-24 md:w-24"
+                        className={`flex h-14 w-14 items-center justify-center rounded-xl border bg-linear-to-br shadow-inner backdrop-blur-sm transition-all duration-300 sm:h-20 sm:w-20 md:h-24 md:w-24 ${
+                          isWinning
+                            ? "z-10 scale-110 border-yellow-400 from-yellow-900/50 to-purple-900/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
+                            : "border-white/10 from-purple-800/50 to-blue-900/50"
+                        }`}
                       >
                         {Icon ? (
                           <Icon
-                            className={`h-8 w-8 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] sm:h-10 sm:w-10 md:h-12 md:w-12 ${itemKey === "diamonds" ? "text-cyan-300" : itemKey === "heart" ? "text-red-400" : itemKey === "cherry" ? "text-red-500" : itemKey === "banana" ? "text-yellow-400" : "text-white"}`}
+                            className={`h-8 w-8 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] sm:h-10 sm:w-10 md:h-12 md:w-12 ${
+                              isWinning
+                                ? "animate-pulse drop-shadow-[0_0_12px_rgba(250,204,21,0.8)]"
+                                : ""
+                            } ${itemKey === "diamonds" ? "text-cyan-300" : itemKey === "heart" ? "text-red-400" : itemKey === "cherry" ? "text-red-500" : itemKey === "banana" ? "text-yellow-400" : "text-white"}`}
                           />
                         ) : null}
                       </div>
