@@ -304,7 +304,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               )}
             </div>
 
-            <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <div className="flex flex-col items-center gap-4">
               <button
                 onClick={handleSpin}
                 disabled={spinning || autoSpinning}
@@ -344,7 +344,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           <div className="flex w-full flex-col items-center gap-4">
             <h2 className="text-xl font-bold text-purple-300">Bet Amount</h2>
             <div className="flex w-full flex-col items-center gap-3 px-4">
-              <div className="flex items-center gap-4">
+              <div className="flex flex-row items-center gap-4">
                 <button
                   onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
