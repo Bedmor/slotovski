@@ -9,6 +9,7 @@ import {
   Rat,
   Angry,
   Banana,
+  Info,
 } from "lucide-react";
 import { spin } from "./actions";
 
@@ -111,7 +112,63 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
+    <main className="relative flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
+      <div className="group absolute top-4 right-4 z-50">
+        <button className="rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20">
+          <Info className="h-6 w-6 text-purple-300" />
+        </button>
+        <div className="pointer-events-none absolute top-full right-0 mt-2 w-64 rounded-xl border border-purple-500/30 bg-black/90 p-4 text-left text-sm opacity-0 shadow-xl backdrop-blur-xl transition-opacity group-hover:opacity-100">
+          <h3 className="mb-2 font-bold text-purple-300">
+            Paytable (Base Bet 10)
+          </h3>
+          <div className="space-y-1 text-gray-300">
+            <div className="flex justify-between">
+              <span>💎 Diamond</span>
+              <span>100</span>
+            </div>
+            <div className="flex justify-between">
+              <span>⚔️ Sword</span>
+              <span>50</span>
+            </div>
+            <div className="flex justify-between">
+              <span>❤️ Heart</span>
+              <span>30</span>
+            </div>
+            <div className="flex justify-between">
+              <span>🐭 Mouse</span>
+              <span>20</span>
+            </div>
+            <div className="flex justify-between">
+              <span>🍌 Banana</span>
+              <span>15</span>
+            </div>
+            <div className="flex justify-between">
+              <span>🍒 Cherry</span>
+              <span>10</span>
+            </div>
+            <div className="flex justify-between">
+              <span>😠 Angry</span>
+              <span>5</span>
+            </div>
+          </div>
+          <div className="mt-3 border-t border-white/10 pt-3">
+            <h4 className="mb-1 font-bold text-purple-300">Multipliers</h4>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>3x Match</span>
+              <span>20%</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>4x Match</span>
+              <span>50%</span>
+            </div>
+            <div className="flex justify-between text-xs text-gray-400">
+              <span>5x Match</span>
+              <span>100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="mb-8 text-center">
         <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold tracking-tighter text-transparent drop-shadow-lg md:text-6xl">
           SLOTOVSKI
@@ -194,26 +251,51 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
           <div className="h-px w-full bg-purple-800/50"></div>
 
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex w-full flex-col items-center gap-4">
             <h2 className="text-xl font-bold text-purple-300">Bet Amount</h2>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-700 text-2xl font-bold hover:bg-purple-600 disabled:opacity-50"
+            <div className="flex w-full flex-col items-center gap-3 px-4">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
+                  disabled={spinning}
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={betAmount}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value);
+                    if (!isNaN(val)) setBetAmount(val);
+                    else setBetAmount(0);
+                  }}
+                  onBlur={() => setBetAmount(Math.max(10, betAmount))}
+                  className="w-24 border-b-2 border-purple-500/50 bg-transparent text-center text-3xl font-bold text-white focus:border-purple-500 focus:outline-none"
+                  disabled={spinning}
+                />
+                <button
+                  onClick={() => setBetAmount(betAmount + 10)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
+                  disabled={spinning}
+                >
+                  +
+                </button>
+              </div>
+              <input
+                type="range"
+                min="1"
+                max={credits}
+                step={credits >= 10 ? 10 : 1}
+                value={betAmount}
+                onChange={(e) => setBetAmount(parseInt(e.target.value))}
+                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-purple-500 hover:accent-purple-400"
                 disabled={spinning}
-              >
-                -
-              </button>
-              <span className="min-w-[3ch] text-center text-3xl font-bold text-white">
-                {betAmount}
-              </span>
-              <button
-                onClick={() => setBetAmount(betAmount + 10)}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-700 text-2xl font-bold hover:bg-purple-600 disabled:opacity-50"
-                disabled={spinning}
-              >
-                +
-              </button>
+              />
+              <div className="flex w-full justify-between px-1 text-xs text-purple-400/50">
+                <span>{Math.min(10, credits - 1)}</span>
+                <span>{credits}</span>
+              </div>
             </div>
           </div>
         </div>
