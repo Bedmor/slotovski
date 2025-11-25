@@ -37,13 +37,13 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
   // Weighted randomness for client-side animation only
   const weightedItems: string[] = [
-    ...Array<string>(40).fill("cherry"), // Increased from 10
-    ...Array<string>(20).fill("mouse"), // Increased from 10
-    ...Array<string>(15).fill("heart"), // Increased from 10
-    ...Array<string>(10).fill("sword"), // Kept at 10
-    ...Array<string>(5).fill("diamonds"), // Decreased from 10 (Jackpot harder)
-    ...Array<string>(50).fill("angry"), // Increased from 20 (Common low win)
-    ...Array<string>(30).fill("banana"), // Increased from 10
+    ...Array<string>(60).fill("cherry"), // Increased
+    ...Array<string>(30).fill("mouse"), // Increased
+    ...Array<string>(20).fill("heart"), // Increased
+    ...Array<string>(10).fill("sword"), // Same
+    ...Array<string>(5).fill("diamonds"), // Rare
+    ...Array<string>(80).fill("angry"), // Very Common
+    ...Array<string>(40).fill("banana"), // Increased
   ];
 
   function getRandomItem() {

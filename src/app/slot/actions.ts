@@ -29,25 +29,37 @@ function calculateWin(
   const middleRow = matrix[1];
   if (!middleRow) return { winAmount: 0, message: "", iconKey: "" };
 
-  const firstItem = middleRow[0];
-  let matchCount = 1;
+  // Find longest consecutive sequence anywhere in the row
+  let maxMatchCount = 0;
+  let bestItem = "";
 
-  // Count consecutive matches from the start
+  let currentItem = middleRow[0];
+  let currentCount = 1;
+
   for (let i = 1; i < middleRow.length; i++) {
-    if (middleRow[i] === firstItem) {
-      matchCount++;
+    if (middleRow[i] === currentItem) {
+      currentCount++;
     } else {
-      break;
+      if (currentCount > maxMatchCount) {
+        maxMatchCount = currentCount;
+        bestItem = currentItem!;
+      }
+      currentItem = middleRow[i];
+      currentCount = 1;
     }
+  }
+  if (currentCount > maxMatchCount) {
+    maxMatchCount = currentCount;
+    bestItem = currentItem!;
   }
 
   // Only win if 3 or more match
-  if (matchCount >= 3) {
+  if (maxMatchCount >= 3) {
     const multiplier = betAmount / 10; // Base bet is 10
     let baseWin = 0;
     let name = "";
 
-    switch (firstItem) {
+    switch (bestItem) {
       case "cherry":
         baseWin = 10;
         name = "Cherry";
@@ -83,16 +95,16 @@ function calculateWin(
     // 4 matches = 50% of base win
     // 5 matches = 100% of base win
     let winFactor = 0;
-    if (matchCount === 3) winFactor = 0.2;
-    if (matchCount === 4) winFactor = 0.5;
-    if (matchCount === 5) winFactor = 1.0;
+    if (maxMatchCount === 3) winFactor = 0.2;
+    if (maxMatchCount === 4) winFactor = 0.5;
+    if (maxMatchCount === 5) winFactor = 1.0;
 
     const winAmount = Math.max(1, Math.round(baseWin * multiplier * winFactor));
 
     return {
       winAmount,
-      message: `${name} ${matchCount}x Combo! ${winAmount} coins!`,
-      iconKey: firstItem ?? "",
+      message: `${name} ${maxMatchCount}x Combo! ${winAmount} coins!`,
+      iconKey: bestItem ?? "",
     };
   }
 
