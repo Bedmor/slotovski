@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import {
@@ -29,6 +29,21 @@ interface SlotMachineProps {
   initialCredits: number;
 }
 
+// Weighted randomness for client-side animation only
+const weightedItems: string[] = [
+  ...Array<string>(60).fill("cherry"), // Increased
+  ...Array<string>(30).fill("mouse"), // Increased
+  ...Array<string>(20).fill("heart"), // Increased
+  ...Array<string>(10).fill("sword"), // Same
+  ...Array<string>(5).fill("diamonds"), // Rare
+  ...Array<string>(80).fill("angry"), // Very Common
+  ...Array<string>(40).fill("banana"), // Increased
+];
+
+function getRandomItem() {
+  return weightedItems[Math.floor(Math.random() * weightedItems.length)]!;
+}
+
 export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   const { width, height } = useWindowSize();
   const [credits, setCredits] = useState(initialCredits);
@@ -42,21 +57,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   const [lastWinAmount, setLastWinAmount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showBigWin, setShowBigWin] = useState(false);
-
-  // Weighted randomness for client-side animation only
-  const weightedItems: string[] = [
-    ...Array<string>(60).fill("cherry"), // Increased
-    ...Array<string>(30).fill("mouse"), // Increased
-    ...Array<string>(20).fill("heart"), // Increased
-    ...Array<string>(10).fill("sword"), // Same
-    ...Array<string>(5).fill("diamonds"), // Rare
-    ...Array<string>(80).fill("angry"), // Very Common
-    ...Array<string>(40).fill("banana"), // Increased
-  ];
-
-  function getRandomItem() {
-    return weightedItems[Math.floor(Math.random() * weightedItems.length)]!;
-  }
+  const [autoSpinning, setAutoSpinning] = useState(false);
 
   const initialRow = [
     getRandomItem(),
@@ -67,7 +68,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   ];
   const [matrix, setMatrix] = useState([initialRow, initialRow, initialRow]);
 
-  async function handleClick() {
+  const handleSpin = useCallback(async () => {
     if (spinning) return;
 
     setSpinning(true);
@@ -134,7 +135,21 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         setSpinning(false);
       }
     }, intervalTime);
-  }
+  }, [spinning, betAmount]);
+
+  useEffect(() => {
+    if (autoSpinning && !spinning) {
+      if (credits < betAmount) {
+        setAutoSpinning(false);
+        return;
+      }
+
+      const timer = setTimeout(() => {
+        void handleSpin();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoSpinning, spinning, credits, betAmount, handleSpin]);
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
@@ -289,17 +304,31 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               )}
             </div>
 
-            <button
-              onClick={handleClick}
-              disabled={spinning}
-              className={`group relative rounded-full px-8 py-3 text-xl font-bold tracking-wider uppercase transition-all duration-200 md:px-12 md:py-4 md:text-2xl ${
-                spinning
-                  ? "cursor-not-allowed bg-gray-700 text-gray-500"
-                  : "bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
-              } `}
-            >
-              {spinning ? "Spinning..." : `SPIN (${betAmount})`}
-            </button>
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <button
+                onClick={handleSpin}
+                disabled={spinning || autoSpinning}
+                className={`group relative rounded-full px-8 py-3 text-xl font-bold tracking-wider uppercase transition-all duration-200 md:px-12 md:py-4 md:text-2xl ${
+                  spinning || autoSpinning
+                    ? "cursor-not-allowed bg-gray-700 text-gray-500"
+                    : "bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
+                } `}
+              >
+                {spinning ? "Spinning..." : `SPIN (${betAmount})`}
+              </button>
+
+              <button
+                onClick={() => setAutoSpinning(!autoSpinning)}
+                disabled={spinning && !autoSpinning}
+                className={`rounded-full px-6 py-3 text-lg font-bold uppercase transition-all duration-200 ${
+                  autoSpinning
+                    ? "bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:bg-red-500"
+                    : "bg-purple-800 text-purple-200 hover:bg-purple-700"
+                }`}
+              >
+                {autoSpinning ? "Stop Auto" : "Auto Spin"}
+              </button>
+            </div>
           </div>
         </div>
 
