@@ -5,13 +5,13 @@ import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
 
 const weightedItems: string[] = [
-  ...Array<string>(40).fill("cherry"), // Increased from 10
-  ...Array<string>(20).fill("mouse"), // Increased from 10
-  ...Array<string>(15).fill("heart"), // Increased from 10
-  ...Array<string>(10).fill("sword"), // Kept at 10
-  ...Array<string>(5).fill("diamonds"), // Decreased from 10 (Jackpot harder)
-  ...Array<string>(50).fill("angry"), // Increased from 20 (Common low win)
-  ...Array<string>(30).fill("banana"), // Increased from 10
+  ...Array<string>(60).fill("cherry"), // Increased
+  ...Array<string>(30).fill("mouse"), // Increased
+  ...Array<string>(20).fill("heart"), // Increased
+  ...Array<string>(10).fill("sword"), // Same
+  ...Array<string>(5).fill("diamonds"), // Rare
+  ...Array<string>(80).fill("angry"), // Very Common
+  ...Array<string>(40).fill("banana"), // Increased
 ];
 
 function getRandomItem() {
@@ -27,56 +27,75 @@ function calculateWin(
   iconKey: string;
 } {
   const middleRow = matrix[1];
-  if (middleRow?.every((item) => item === middleRow[0])) {
-    const item = middleRow[0];
-    const multiplier = betAmount / 10; // Base bet is 10
-    switch (item) {
-      case "cherry":
-        return {
-          winAmount: 10 * multiplier,
-          message: `Cherry Jackpot! ${10 * multiplier} coins!`,
-          iconKey: "cherry",
-        };
-      case "mouse":
-        return {
-          winAmount: 20 * multiplier,
-          message: `Squeak! ${20 * multiplier} coins!`,
-          iconKey: "mouse",
-        };
-      case "heart":
-        return {
-          winAmount: 30 * multiplier,
-          message: `Love is in the air! ${30 * multiplier} coins!`,
-          iconKey: "heart",
-        };
-      case "sword":
-        return {
-          winAmount: 50 * multiplier,
-          message: `Sharp! ${50 * multiplier} coins!`,
-          iconKey: "sword",
-        };
-      case "diamonds":
-        return {
-          winAmount: 100 * multiplier,
-          message: `RICHES! ${100 * multiplier} coins!`,
-          iconKey: "diamonds",
-        };
-      case "angry":
-        return {
-          winAmount: 5 * multiplier,
-          message: `Angry Win! ${5 * multiplier} coins!`,
-          iconKey: "angry",
-        };
-      case "banana":
-        return {
-          winAmount: 15 * multiplier,
-          message: `Potassium Power! ${15 * multiplier} coins!`,
-          iconKey: "banana",
-        };
-      default:
-        return { winAmount: 0, message: "", iconKey: "" };
+  if (!middleRow) return { winAmount: 0, message: "", iconKey: "" };
+
+  const firstItem = middleRow[0];
+  let matchCount = 1;
+
+  // Count consecutive matches from the start
+  for (let i = 1; i < middleRow.length; i++) {
+    if (middleRow[i] === firstItem) {
+      matchCount++;
+    } else {
+      break;
     }
   }
+
+  // Only win if 3 or more match
+  if (matchCount >= 3) {
+    const multiplier = betAmount / 10; // Base bet is 10
+    let baseWin = 0;
+    let name = "";
+
+    switch (firstItem) {
+      case "cherry":
+        baseWin = 10;
+        name = "Cherry";
+        break;
+      case "mouse":
+        baseWin = 20;
+        name = "Mouse";
+        break;
+      case "heart":
+        baseWin = 30;
+        name = "Heart";
+        break;
+      case "sword":
+        baseWin = 50;
+        name = "Sword";
+        break;
+      case "diamonds":
+        baseWin = 100;
+        name = "Diamond";
+        break;
+      case "angry":
+        baseWin = 5;
+        name = "Angry";
+        break;
+      case "banana":
+        baseWin = 15;
+        name = "Banana";
+        break;
+    }
+
+    // Scale win based on match count
+    // 3 matches = 20% of base win
+    // 4 matches = 50% of base win
+    // 5 matches = 100% of base win
+    let winFactor = 0;
+    if (matchCount === 3) winFactor = 0.2;
+    if (matchCount === 4) winFactor = 0.5;
+    if (matchCount === 5) winFactor = 1.0;
+
+    const winAmount = Math.max(1, Math.round(baseWin * multiplier * winFactor));
+
+    return {
+      winAmount,
+      message: `${name} ${matchCount}x Combo! ${winAmount} coins!`,
+      iconKey: firstItem ?? "",
+    };
+  }
+
   return { winAmount: 0, message: "", iconKey: "" };
 }
 
