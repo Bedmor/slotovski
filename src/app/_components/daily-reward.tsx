@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Gift, Timer } from "lucide-react";
+import { Gift, Timer, X } from "lucide-react";
 import { claimDailyReward } from "../actions";
 import { useRouter } from "next/navigation";
 
@@ -12,6 +12,9 @@ interface DailyRewardProps {
 export function DailyReward({ lastDailyReward }: DailyRewardProps) {
   const [loading, setLoading] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -53,37 +56,77 @@ export function DailyReward({ lastDailyReward }: DailyRewardProps) {
     setLoading(true);
     try {
       const result = await claimDailyReward();
+      setModalMessage(result.message);
+      setIsSuccess(result.success);
+      setShowModal(true);
+
       if (result.success) {
-        alert(result.message);
         router.refresh();
-      } else {
-        alert(result.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to claim reward");
+      setModalMessage("Failed to claim reward");
+      setIsSuccess(false);
+      setShowModal(true);
     } finally {
       setLoading(false);
     }
   };
 
-  if (timeLeft) {
-    return (
-      <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-400">
-        <Timer size={16} />
-        <span>Next reward in: {timeLeft}</span>
-      </div>
-    );
-  }
-
   return (
-    <button
-      onClick={handleClaim}
-      disabled={loading}
-      className="group relative flex items-center gap-2 rounded-lg bg-linear-to-r from-yellow-500 to-orange-500 px-4 py-2 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-orange-500/20 disabled:opacity-50"
-    >
-      <Gift size={20} className="transition-transform group-hover:rotate-12" />
-      {loading ? "Claiming..." : "Claim Daily Reward"}
-    </button>
+    <>
+      {timeLeft ? (
+        <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-gray-400">
+          <Timer size={16} />
+          <span>Next reward in: {timeLeft}</span>
+        </div>
+      ) : (
+        <button
+          onClick={handleClaim}
+          disabled={loading}
+          className="group relative flex items-center gap-2 rounded-lg bg-linear-to-r from-yellow-500 to-orange-500 px-4 py-2 font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-orange-500/20 disabled:opacity-50"
+        >
+          <Gift
+            size={20}
+            className="transition-transform group-hover:rotate-12"
+          />
+          {loading ? "Claiming..." : "Claim Daily Reward"}
+        </button>
+      )}
+
+      {showModal && (
+        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm duration-200">
+          <div className="animate-in zoom-in-95 relative w-full max-w-md overflow-hidden rounded-2xl border border-purple-500/30 bg-gray-900 p-6 shadow-2xl duration-200">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="flex flex-col items-center text-center">
+              <div
+                className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full ${isSuccess ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}
+              >
+                {isSuccess ? <Gift size={32} /> : <X size={32} />}
+              </div>
+
+              <h3 className="mb-2 text-2xl font-bold text-white">
+                {isSuccess ? "Reward Claimed!" : "Oops!"}
+              </h3>
+
+              <p className="mb-6 text-gray-300">{modalMessage}</p>
+
+              <button
+                onClick={() => setShowModal(false)}
+                className="w-full rounded-xl bg-purple-600 py-3 font-bold text-white transition-colors hover:bg-purple-500"
+              >
+                Awesome!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
