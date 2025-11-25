@@ -73,6 +73,33 @@ function calculateWin(
       [1, 3],
       [2, 4],
     ], // Inverted V Shape
+
+    // Vertical Columns
+    [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+    ], // Col 1
+    [
+      [0, 1],
+      [1, 1],
+      [2, 1],
+    ], // Col 2
+    [
+      [0, 2],
+      [1, 2],
+      [2, 2],
+    ], // Col 3
+    [
+      [0, 3],
+      [1, 3],
+      [2, 3],
+    ], // Col 4
+    [
+      [0, 4],
+      [1, 4],
+      [2, 4],
+    ], // Col 5
   ];
 
   // Check each payline
