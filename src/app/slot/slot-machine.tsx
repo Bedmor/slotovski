@@ -108,9 +108,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           setWinMessage({ text: result.message, icon: result.iconKey });
         }
 
-        // @ts-ignore
         if (result.winningIndices) {
-          // @ts-ignore
           setWinningIndices(result.winningIndices);
         }
 
