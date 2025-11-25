@@ -12,7 +12,7 @@ datasource db {
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+    url      = env("PRISMA_DATABASE_URL")
 }
 
 // Necessary for Next auth
@@ -25,6 +25,7 @@ model User {
     image         String?
     password      String?
     credits      Int    @default(0)
+    lastDailyReward DateTime?
 }
 
 

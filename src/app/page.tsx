@@ -3,10 +3,22 @@ import { auth, signOut } from "~/server/auth";
 import { db } from "~/server/db";
 import { LogOut, Coins } from "lucide-react";
 import { ProfileImageUpload } from "./_components/profile-image-upload";
+import { DailyReward } from "./_components/daily-reward";
+
+interface User {
+  id: string;
+  name: string | null;
+  email: string | null;
+  emailVerified: Date | null;
+  image: string | null;
+  password: string | null;
+  credits: number;
+  lastDailyReward: Date | null;
+}
 
 export default async function HomePage() {
   const session = await auth();
-  let user = null;
+  let user: User | null = null;
 
   if (session?.user?.id) {
     user = await db.user.findUnique({
@@ -56,6 +68,9 @@ export default async function HomePage() {
                       {user.credits} Credits
                     </span>
                   </div>
+                </div>
+                <div className="ml-auto">
+                  <DailyReward lastDailyReward={user.lastDailyReward ?? null} />
                 </div>
               </div>
 

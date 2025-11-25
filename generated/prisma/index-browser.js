@@ -128,7 +128,8 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   password: 'password',
-  credits: 'credits'
+  credits: 'credits',
+  lastDailyReward: 'lastDailyReward'
 };
 
 exports.Prisma.SortOrder = {
