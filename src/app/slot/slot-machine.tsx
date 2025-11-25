@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 import {
   Cherry,
   Diamond,
@@ -28,6 +30,7 @@ interface SlotMachineProps {
 }
 
 export default function SlotMachine({ initialCredits }: SlotMachineProps) {
+  const { width, height } = useWindowSize();
   const [credits, setCredits] = useState(initialCredits);
   const [spinning, setSpinning] = useState(false);
   const [betAmount, setBetAmount] = useState(10);
@@ -36,6 +39,9 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
     icon?: string;
   } | null>(null);
   const [winningIndices, setWinningIndices] = useState<number[][][]>([]);
+  const [lastWinAmount, setLastWinAmount] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showBigWin, setShowBigWin] = useState(false);
 
   // Weighted randomness for client-side animation only
   const weightedItems: string[] = [
@@ -67,6 +73,8 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
     setSpinning(true);
     setWinMessage(null);
     setWinningIndices([]);
+    setShowConfetti(false);
+    setShowBigWin(false);
 
     // Start animation immediately
     const animationDuration = 2000; // 2 seconds
@@ -112,6 +120,17 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           setWinningIndices(result.winningIndices);
         }
 
+        if (result.winAmount > 0) {
+          setLastWinAmount(result.winAmount);
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 5000);
+
+          if (result.winAmount >= betAmount * 5) {
+            setShowBigWin(true);
+            setTimeout(() => setShowBigWin(false), 4000);
+          }
+        }
+
         setSpinning(false);
       }
     }, intervalTime);
@@ -119,6 +138,28 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
+      {showConfetti && (
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={500}
+        />
+      )}
+
+      {showBigWin && (
+        <div className="animate-in fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm duration-300">
+          <div className="flex animate-bounce flex-col items-center">
+            <h1 className="text-6xl font-black tracking-tighter text-yellow-400 drop-shadow-[0_0_30px_rgba(250,204,21,0.8)] md:text-9xl">
+              BIG WIN!
+            </h1>
+            <div className="mt-4 text-4xl font-bold text-white drop-shadow-lg md:text-6xl">
+              +{lastWinAmount} Coins
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="group absolute top-4 right-4 z-50">
         <button className="rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20">
           <Info className="h-6 w-6 text-purple-300" />
