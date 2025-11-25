@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import {
