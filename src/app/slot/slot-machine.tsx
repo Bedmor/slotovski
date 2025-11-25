@@ -10,7 +10,7 @@ import {
   Angry,
   Banana,
 } from "lucide-react";
-import { spin, addCredits } from "./actions";
+import { spin } from "./actions";
 
 const iconMap: Record<string, React.ElementType> = {
   cherry: Cherry,
@@ -190,15 +190,6 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-xl font-bold text-purple-300">Credits</h2>
             <div className="text-3xl font-bold text-yellow-400">{credits}</div>
-            <button
-              onClick={async () => {
-                await addCredits(100);
-                setCredits((c) => c + 100);
-              }}
-              className="mt-2 cursor-pointer rounded bg-green-600 px-3 py-1 text-sm font-bold hover:bg-green-500"
-            >
-              +100 (Dev)
-            </button>
           </div>
 
           <div className="h-px w-full bg-purple-800/50"></div>

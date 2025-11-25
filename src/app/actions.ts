@@ -55,7 +55,7 @@ export async function claimDailyReward() {
     }
   }
 
-  const REWARD_AMOUNT = 100;
+  const REWARD_AMOUNT = 1000;
 
   await db.user.update({
     where: { id: session.user.id },
