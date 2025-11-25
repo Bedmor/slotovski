@@ -27,7 +27,7 @@ export function TextMorph({
 
     return children.split('').map((char) => {
       const lowerChar = char.toLowerCase();
-      charCounts[lowerChar] = (charCounts[lowerChar] || 0) + 1;
+      charCounts[lowerChar] = (charCounts[lowerChar] ?? 0) + 1;
 
       return {
         id: `${uniqueId}-${lowerChar}${charCounts[lowerChar]}`,
@@ -61,8 +61,8 @@ export function TextMorph({
             initial='initial'
             animate='animate'
             exit='exit'
-            variants={variants || defaultVariants}
-            transition={transition || defaultTransition}
+            variants={variants ?? defaultVariants}
+            transition={transition ?? defaultTransition}
           >
             {character.label}
           </motion.span>
