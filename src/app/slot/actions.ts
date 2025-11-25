@@ -5,13 +5,13 @@ import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
 
 const weightedItems: string[] = [
-  ...Array<string>(17).fill("cherry"),
-  ...Array<string>(15).fill("mouse"),
-  ...Array<string>(12).fill("heart"),
+  ...Array<string>(10).fill("cherry"),
+  ...Array<string>(10).fill("mouse"),
+  ...Array<string>(10).fill("heart"),
   ...Array<string>(10).fill("sword"),
-  ...Array<string>(3).fill("diamonds"),
-  ...Array<string>(25).fill("angry"),
-  ...Array<string>(18).fill("banana"),
+  ...Array<string>(10).fill("diamonds"),
+  ...Array<string>(20).fill("angry"),
+  ...Array<string>(10).fill("banana"),
 ];
 
 function getRandomItem() {
