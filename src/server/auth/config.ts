@@ -43,9 +43,9 @@ export const authConfig = {
           },
         });
 
-        if (!user || !user.password) return null;
+        if (!user?.password) return null;
 
-        const isValid = await verifyPassword(password, user.password as string);
+        const isValid = await verifyPassword(password, user.password);
         if (!isValid) return null;
 
         // Return fields expected by NextAuth
