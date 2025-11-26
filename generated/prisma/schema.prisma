@@ -26,4 +26,5 @@ model User {
   password        String?
   credits         Int       @default(0)
   lastDailyReward DateTime?
+  role            String    @default("user")
 }

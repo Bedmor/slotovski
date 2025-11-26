@@ -890,6 +890,7 @@ export namespace Prisma {
     password: string | null
     credits: number | null
     lastDailyReward: Date | null
+    role: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -901,6 +902,7 @@ export namespace Prisma {
     password: string | null
     credits: number | null
     lastDailyReward: Date | null
+    role: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -912,6 +914,7 @@ export namespace Prisma {
     password: number
     credits: number
     lastDailyReward: number
+    role: number
     _all: number
   }
 
@@ -933,6 +936,7 @@ export namespace Prisma {
     password?: true
     credits?: true
     lastDailyReward?: true
+    role?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -944,6 +948,7 @@ export namespace Prisma {
     password?: true
     credits?: true
     lastDailyReward?: true
+    role?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -955,6 +960,7 @@ export namespace Prisma {
     password?: true
     credits?: true
     lastDailyReward?: true
+    role?: true
     _all?: true
   }
 
@@ -1053,6 +1059,7 @@ export namespace Prisma {
     password: string | null
     credits: number
     lastDailyReward: Date | null
+    role: string
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1083,6 +1090,7 @@ export namespace Prisma {
     password?: boolean
     credits?: boolean
     lastDailyReward?: boolean
+    role?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1094,6 +1102,7 @@ export namespace Prisma {
     password?: boolean
     credits?: boolean
     lastDailyReward?: boolean
+    role?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1105,6 +1114,7 @@ export namespace Prisma {
     password?: boolean
     credits?: boolean
     lastDailyReward?: boolean
+    role?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1116,9 +1126,10 @@ export namespace Prisma {
     password?: boolean
     credits?: boolean
     lastDailyReward?: boolean
+    role?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "credits" | "lastDailyReward", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "credits" | "lastDailyReward" | "role", ExtArgs["result"]["user"]>
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -1132,6 +1143,7 @@ export namespace Prisma {
       password: string | null
       credits: number
       lastDailyReward: Date | null
+      role: string
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1563,6 +1575,7 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly credits: FieldRef<"User", 'Int'>
     readonly lastDailyReward: FieldRef<"User", 'DateTime'>
+    readonly role: FieldRef<"User", 'String'>
   }
     
 
@@ -1951,7 +1964,8 @@ export namespace Prisma {
     image: 'image',
     password: 'password',
     credits: 'credits',
-    lastDailyReward: 'lastDailyReward'
+    lastDailyReward: 'lastDailyReward',
+    role: 'role'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2057,6 +2071,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     credits?: IntFilter<"User"> | number
     lastDailyReward?: DateTimeNullableFilter<"User"> | Date | string | null
+    role?: StringFilter<"User"> | string
   }
 
   export type UserOrderByWithRelationInput = {
@@ -2068,6 +2083,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     credits?: SortOrder
     lastDailyReward?: SortOrderInput | SortOrder
+    role?: SortOrder
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -2082,6 +2098,7 @@ export namespace Prisma {
     password?: StringNullableFilter<"User"> | string | null
     credits?: IntFilter<"User"> | number
     lastDailyReward?: DateTimeNullableFilter<"User"> | Date | string | null
+    role?: StringFilter<"User"> | string
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -2093,6 +2110,7 @@ export namespace Prisma {
     password?: SortOrderInput | SortOrder
     credits?: SortOrder
     lastDailyReward?: SortOrderInput | SortOrder
+    role?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -2112,6 +2130,7 @@ export namespace Prisma {
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     credits?: IntWithAggregatesFilter<"User"> | number
     lastDailyReward?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    role?: StringWithAggregatesFilter<"User"> | string
   }
 
   export type UserCreateInput = {
@@ -2123,6 +2142,7 @@ export namespace Prisma {
     password?: string | null
     credits?: number
     lastDailyReward?: Date | string | null
+    role?: string
   }
 
   export type UserUncheckedCreateInput = {
@@ -2134,6 +2154,7 @@ export namespace Prisma {
     password?: string | null
     credits?: number
     lastDailyReward?: Date | string | null
+    role?: string
   }
 
   export type UserUpdateInput = {
@@ -2145,6 +2166,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateInput = {
@@ -2156,6 +2178,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateManyInput = {
@@ -2167,6 +2190,7 @@ export namespace Prisma {
     password?: string | null
     credits?: number
     lastDailyReward?: Date | string | null
+    role?: string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -2178,6 +2202,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -2189,6 +2214,7 @@ export namespace Prisma {
     password?: NullableStringFieldUpdateOperationsInput | string | null
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -2257,6 +2283,7 @@ export namespace Prisma {
     password?: SortOrder
     credits?: SortOrder
     lastDailyReward?: SortOrder
+    role?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -2272,6 +2299,7 @@ export namespace Prisma {
     password?: SortOrder
     credits?: SortOrder
     lastDailyReward?: SortOrder
+    role?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -2283,6 +2311,7 @@ export namespace Prisma {
     password?: SortOrder
     credits?: SortOrder
     lastDailyReward?: SortOrder
+    role?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {

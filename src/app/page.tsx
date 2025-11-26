@@ -71,6 +71,14 @@ export default async function HomePage() {
                 </div>
                 <div className="ml-auto">
                   <DailyReward lastDailyReward={user.lastDailyReward ?? null} />
+                  {user.name === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="rounded-lg bg-red-600/20 px-3 py-2 text-sm font-semibold text-red-400 transition-all hover:bg-red-600/30"
+                    >
+                      Admin
+                    </Link>
+                  )}
                 </div>
               </div>
 
