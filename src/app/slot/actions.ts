@@ -12,6 +12,9 @@ const weightedItems: string[] = [
   ...Array<string>(5).fill("diamonds"), // Rare
   ...Array<string>(30).fill("angry"), // Very Common
   ...Array<string>(40).fill("banana"), // Increased
+  ...Array<string>(20).fill("star"), // Rare
+  ...Array<string>(10).fill("seven"), // Very Rare
+  ...Array<string>(1).fill("2x"), // Very Rare
 ];
 
 function getRandomItem() {
@@ -174,6 +177,14 @@ function calculateWin(
           baseWin = 15;
           name = "Banana";
           break;
+        case "star":
+          baseWin = 75;
+          name = "Star";
+          break;
+        case "seven":
+          baseWin = 150;
+          name = "Seven";
+          break;
       }
 
       // Scale win based on match count
@@ -205,13 +216,31 @@ function calculateWin(
     }
   }
 
+  // Count 2x multipliers in the matrix
+  let multiplierCount = 0;
+  for (const row of matrix) {
+    for (const symbol of row) {
+      if (symbol === "2x") {
+        multiplierCount++;
+      }
+    }
+  }
+
+  // Apply 2x multipliers (additive)
+  if (multiplierCount > 0 && totalWin > 0) {
+    const multiplierBonus = multiplierCount * 2;
+    totalWin = totalWin * multiplierBonus;
+  }
+
   if (totalWin > 0) {
+    const multiplierText =
+      multiplierCount > 0 ? ` (${multiplierCount}x 2x Multiplier!)` : "";
     return {
       winAmount: totalWin,
       message:
         totalWin > highestSingleWin
-          ? `Multi-Line Win! ${totalWin} coins!`
-          : bestMessage,
+          ? `Multi-Line Win! ${totalWin} coins!${multiplierText}`
+          : bestMessage + multiplierText,
       iconKey: bestIcon,
       winningIndices,
     };

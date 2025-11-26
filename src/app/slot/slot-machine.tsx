@@ -12,6 +12,8 @@ import {
   Angry,
   Banana,
   Info,
+  Zap,
+  Star,
 } from "lucide-react";
 import { spin } from "./actions";
 
@@ -23,6 +25,9 @@ const iconMap: Record<string, React.ElementType> = {
   mouse: Rat,
   angry: Angry,
   banana: Banana,
+  "2x": Zap,
+  star: Star,
+  seven: () => <span className="text-2xl font-bold">7</span>,
 };
 
 interface SlotMachineProps {
@@ -31,13 +36,16 @@ interface SlotMachineProps {
 
 // Weighted randomness for client-side animation only
 const weightedItems: string[] = [
-  ...Array<string>(60).fill("cherry"), // Increased
-  ...Array<string>(30).fill("mouse"), // Increased
-  ...Array<string>(20).fill("heart"), // Increased
+  ...Array<string>(30).fill("cherry"), // Increased
+  ...Array<string>(60).fill("mouse"), // Increased
+  ...Array<string>(80).fill("heart"), // Increased
   ...Array<string>(10).fill("sword"), // Same
   ...Array<string>(5).fill("diamonds"), // Rare
-  ...Array<string>(80).fill("angry"), // Very Common
+  ...Array<string>(30).fill("angry"), // Very Common
   ...Array<string>(40).fill("banana"), // Increased
+  ...Array<string>(20).fill("star"), // Rare
+  ...Array<string>(10).fill("seven"), // Very Rare
+  ...Array<string>(1).fill("2x"), // Very Rare
 ];
 
 function getRandomItem() {
@@ -58,6 +66,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showBigWin, setShowBigWin] = useState(false);
   const [autoSpinning, setAutoSpinning] = useState(false);
+  const [lastBigWinTime, setLastBigWinTime] = useState<number | null>(null);
 
   const initialRow = [
     getRandomItem(),
@@ -128,6 +137,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
           if (result.winAmount >= betAmount * 5) {
             setShowBigWin(true);
+            setLastBigWinTime(Date.now());
             setTimeout(() => setShowBigWin(false), 4000);
           }
         }
@@ -144,12 +154,16 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         return;
       }
 
+      // Check if we need to wait after a big win
+      const bigWinDelay =
+        lastBigWinTime && Date.now() - lastBigWinTime < 3000 ? 3000 : 500;
+
       const timer = setTimeout(() => {
         void handleSpin();
-      }, 500);
+      }, bigWinDelay);
       return () => clearTimeout(timer);
     }
-  }, [autoSpinning, spinning, credits, betAmount, handleSpin]);
+  }, [autoSpinning, spinning, credits, betAmount, handleSpin, lastBigWinTime]);
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
@@ -185,8 +199,16 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           </h3>
           <div className="space-y-1 text-gray-300">
             <div className="flex justify-between">
+              <span>7️⃣ Seven</span>
+              <span>150</span>
+            </div>
+            <div className="flex justify-between">
               <span>💎 Diamond</span>
               <span>100</span>
+            </div>
+            <div className="flex justify-between">
+              <span>⭐ Star</span>
+              <span>75</span>
             </div>
             <div className="flex justify-between">
               <span>⚔️ Sword</span>
@@ -212,16 +234,20 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               <span>😠 Angry</span>
               <span>5</span>
             </div>
+            <div className="mt-2 flex justify-between border-t border-yellow-500/30 pt-2 font-bold text-yellow-400">
+              <span>⚡ 2x Multiplier</span>
+              <span>x2 Win!</span>
+            </div>
           </div>
           <div className="mt-3 border-t border-white/10 pt-3">
             <h4 className="mb-1 font-bold text-purple-300">Multipliers</h4>
             <div className="flex justify-between text-xs text-gray-400">
               <span>3x Match</span>
-              <span>20%</span>
+              <span>50%</span>
             </div>
             <div className="flex justify-between text-xs text-gray-400">
               <span>4x Match</span>
-              <span>50%</span>
+              <span>75%</span>
             </div>
             <div className="flex justify-between text-xs text-gray-400">
               <span>5x Match</span>
