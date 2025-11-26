@@ -5,12 +5,12 @@ import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
 
 const weightedItems: string[] = [
-  ...Array<string>(60).fill("cherry"), // Increased
-  ...Array<string>(30).fill("mouse"), // Increased
-  ...Array<string>(20).fill("heart"), // Increased
+  ...Array<string>(30).fill("cherry"), // Increased
+  ...Array<string>(60).fill("mouse"), // Increased
+  ...Array<string>(80).fill("heart"), // Increased
   ...Array<string>(10).fill("sword"), // Same
   ...Array<string>(5).fill("diamonds"), // Rare
-  ...Array<string>(80).fill("angry"), // Very Common
+  ...Array<string>(30).fill("angry"), // Very Common
   ...Array<string>(40).fill("banana"), // Increased
 ];
 
