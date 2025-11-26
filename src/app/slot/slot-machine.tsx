@@ -27,7 +27,7 @@ const iconMap: Record<string, React.ElementType> = {
   banana: Banana,
   "2x": Zap,
   star: Star,
-  seven: () => <span className="text-2xl font-bold">7</span>,
+  seven: () => <span className="text-2xl sm:text-3xl text-purple-500 font-bold">7</span>,
 };
 
 interface SlotMachineProps {
