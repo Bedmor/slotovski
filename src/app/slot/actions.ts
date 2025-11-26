@@ -189,9 +189,9 @@ function calculateWin(
 
       // Scale win based on match count
       let winFactor = 0;
-      if (maxMatchCount === 3) winFactor = 0.5;
-      if (maxMatchCount === 4) winFactor = 0.75;
-      if (maxMatchCount === 5) winFactor = 1.0;
+      if (maxMatchCount === 3) winFactor = 1.5;
+      if (maxMatchCount === 4) winFactor = 1.75;
+      if (maxMatchCount === 5) winFactor = 2.0;
 
       const lineWin = Math.max(1, Math.round(baseWin * multiplier * winFactor));
 
