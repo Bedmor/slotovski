@@ -28,6 +28,7 @@ export default function BlackjackGame({
 }: BlackjackGameProps) {
   const { width, height } = useWindowSize();
   const [credits] = useState(initialCredits);
+  const [winAmount, setWinAmount] = useState(0);
   const [screen, setScreen] = useState<"lobby" | "room">("lobby");
   const [roomId, setRoomId] = useState("");
   const [joinRoomId, setJoinRoomId] = useState("");
@@ -730,24 +731,23 @@ export default function BlackjackGame({
                   room.currentPlayerIndex === idx && !room.gameEnded;
                 // Determine winner (exclude pushes) when game ended
                 let isWinner = false;
-                let winAmount = 0;
                 if (room.gameEnded && !player.busted && player.bet > 0) {
                   const dealerValue = calculateHandValue(room.dealer.hand);
                   const dealerBusted = room.dealer.busted;
                   if (dealerBusted) {
                     isWinner = true;
-                    winAmount = player.bet * 2;
+                    setWinAmount(player.bet * 2);
                   } else {
                     if (player.blackjack && dealerValue !== 21) {
                       isWinner = true;
-                      winAmount = Math.floor(player.bet * 2.5);
+                      setWinAmount(Math.floor(player.bet * 2.5));
                     } else if (handValue > dealerValue) {
                       isWinner = true;
-                      winAmount = player.bet * 2;
+                      setWinAmount(player.bet * 2);
                     } else if (handValue === dealerValue) {
                       // push => not winner, bet returned
                       isWinner = false;
-                      winAmount = player.bet;
+                      setWinAmount(player.bet);
                     }
                   }
                 }
