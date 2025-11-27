@@ -120,7 +120,7 @@ export default function MinesweeperGame({
   };
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 font-sans text-white sm:p-4">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 pt-16 font-sans text-white sm:p-4 sm:pt-20">
       {showConfetti && (
         <Confetti
           width={width}
@@ -139,7 +139,7 @@ export default function MinesweeperGame({
 
       <div className="mb-4 text-center sm:mb-8">
         <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-3xl font-extrabold tracking-tighter text-transparent drop-shadow-lg sm:text-4xl md:text-6xl">
-          💎 DIAMOND MINES
+          DIAMOND MINES
         </h1>
         <p className="mt-1 text-base text-purple-300 sm:mt-2 sm:text-lg">
           Find diamonds, avoid mines!
