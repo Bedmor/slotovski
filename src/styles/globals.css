@@ -1,6 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* Subtle winning animations */
+@keyframes softPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(255, 255, 0, 0);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 12px rgba(255, 255, 0, 0.25);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0px rgba(255, 255, 0, 0);
+  }
+}
+
+@keyframes gentleSparkleFade {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-4px) scale(1);
+  }
+}
+
+.animate-softPulse {
+  animation: softPulse 2.8s ease-in-out infinite;
+}
+
+.animate-gentleSparkle {
+  animation: gentleSparkleFade 2.5s ease-in-out infinite;
+}
+
+.winner-glow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.15),
+    rgba(255, 255, 255, 0.05)
+  );
+  position: relative;
+}
+
+.winner-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: inherit;
+  pointer-events: none;
 }

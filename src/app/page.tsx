@@ -38,18 +38,45 @@ export default async function HomePage() {
           </p>
         </div>
 
-        <div className="flex w-full max-w-lg flex-col items-center gap-8">
-          <Link
-            href="/slot"
-            className="group relative w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-600 to-blue-600 p-1 shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(139,92,246,0.5)]"
-          >
-            <div className="relative flex h-full flex-col items-center justify-center gap-2 rounded-xl bg-black/40 p-8 backdrop-blur-sm transition-all group-hover:bg-black/20">
-              <span className="text-6xl drop-shadow-md">🎰</span>
-              <h3 className="text-3xl font-bold text-white drop-shadow-md">
-                Play Slots
-              </h3>
-            </div>
-          </Link>
+        <div className="flex w-full max-w-4xl flex-col items-center gap-8">
+          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/slot"
+              className="group relative w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-600 to-blue-600 p-1 shadow-[0_0_40px_rgba(139,92,246,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(139,92,246,0.5)]"
+            >
+              <div className="relative flex h-full flex-col items-center justify-center gap-2 rounded-xl bg-black/40 p-8 backdrop-blur-sm transition-all group-hover:bg-black/20">
+                <span className="text-6xl drop-shadow-md">🎰</span>
+                <h3 className="text-2xl font-bold text-white drop-shadow-md">
+                  Slots
+                </h3>
+                <p className="text-sm text-purple-300">Spin to win!</p>
+              </div>
+            </Link>
+            <Link
+              href="/diamonds"
+              className="group relative w-full overflow-hidden rounded-2xl bg-linear-to-br from-cyan-600 to-blue-600 p-1 shadow-[0_0_40px_rgba(34,211,238,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(34,211,238,0.5)]"
+            >
+              <div className="relative flex h-full flex-col items-center justify-center gap-2 rounded-xl bg-black/40 p-8 backdrop-blur-sm transition-all group-hover:bg-black/20">
+                <span className="text-6xl drop-shadow-md">💎</span>
+                <h3 className="text-2xl font-bold text-white drop-shadow-md">
+                  Diamond Mines
+                </h3>
+                <p className="text-sm text-cyan-300">Find diamonds!</p>
+              </div>
+            </Link>
+            <Link
+              href="/blackjack"
+              className="group relative w-full overflow-hidden rounded-2xl bg-linear-to-br from-red-600 to-orange-600 p-1 shadow-[0_0_40px_rgba(220,38,38,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(220,38,38,0.5)]"
+            >
+              <div className="relative flex h-full flex-col items-center justify-center gap-2 rounded-xl bg-black/40 p-8 backdrop-blur-sm transition-all group-hover:bg-black/20">
+                <span className="text-6xl drop-shadow-md">♠️</span>
+                <h3 className="text-2xl font-bold text-white drop-shadow-md">
+                  Blackjack
+                </h3>
+                <p className="text-sm text-red-300">Multiplayer 21</p>
+              </div>
+            </Link>
+          </div>
 
           {user ? (
             <div className="flex w-full flex-col gap-4 rounded-xl border border-purple-500/30 bg-black/40 p-6 backdrop-blur-md">

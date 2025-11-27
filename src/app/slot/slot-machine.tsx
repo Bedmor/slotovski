@@ -16,6 +16,7 @@ import {
   Star,
 } from "lucide-react";
 import { spin } from "./actions";
+import Link from "next/link";
 
 const iconMap: Record<string, React.ElementType> = {
   cherry: Cherry,
@@ -27,7 +28,9 @@ const iconMap: Record<string, React.ElementType> = {
   banana: Banana,
   "2x": Zap,
   star: Star,
-  seven: () => <span className="text-2xl sm:text-3xl text-purple-500 font-bold">7</span>,
+  seven: () => (
+    <span className="text-2xl font-bold text-purple-500 sm:text-3xl">7</span>
+  ),
 };
 
 interface SlotMachineProps {
@@ -166,7 +169,13 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   }, [autoSpinning, spinning, credits, betAmount, handleSpin, lastBigWinTime]);
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 font-sans text-white">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 font-sans text-white sm:p-4">
+      <Link
+        href="/"
+        className="absolute top-2 left-2 flex items-center gap-2 rounded-lg bg-purple-800/50 px-3 py-2 text-sm transition-colors hover:bg-purple-700 sm:top-4 sm:left-4 sm:px-4"
+      >
+        🏠 Home
+      </Link>
       {showConfetti && (
         <Confetti
           width={width}
@@ -189,7 +198,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         </div>
       )}
 
-      <div className="group absolute top-4 right-4 z-50">
+      <div className="group absolute top-2 right-2 z-50 sm:top-4 sm:right-4">
         <button className="rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20">
           <Info className="h-6 w-6 text-purple-300" />
         </button>
@@ -257,24 +266,26 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         </div>
       </div>
 
-      <div className="mb-8 text-center">
-        <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-extrabold tracking-tighter text-transparent drop-shadow-lg md:text-6xl">
+      <div className="mb-4 text-center sm:mb-8">
+        <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-3xl font-extrabold tracking-tighter text-transparent drop-shadow-lg sm:text-4xl md:text-6xl">
           SLOTOVSKI
         </h1>
-        <p className="mt-2 text-lg text-purple-300">Spin to Win!</p>
+        <p className="mt-1 text-base text-purple-300 sm:mt-2 sm:text-lg">
+          Spin to Win!
+        </p>
       </div>
 
-      <div className="flex flex-col items-center gap-8 lg:flex-row lg:items-start">
-        <div className="relative rounded-3xl border-4 border-purple-900 bg-black/80 p-4 shadow-2xl shadow-purple-900/50 md:border-8 md:p-8">
+      <div className="flex w-full max-w-fit flex-col items-center gap-4 px-2 sm:gap-8 lg:flex-row lg:items-start">
+        <div className="relative w-full rounded-2xl border-2 border-purple-900 bg-black/80 p-2 shadow-2xl shadow-purple-900/50 sm:rounded-3xl sm:border-4 sm:p-4 md:border-8 md:p-8">
           {/* Machine Frame */}
-          <div className="relative overflow-hidden rounded-xl border-4 border-yellow-600/50 bg-linear-to-b from-gray-900 to-black p-2 md:p-4">
+          <div className="relative overflow-hidden rounded-lg border-2 border-yellow-600/50 bg-linear-to-b from-gray-900 to-black p-1 sm:rounded-xl sm:border-4 sm:p-2 md:p-4">
             {/* Payline Indicator */}
             <div className="pointer-events-none absolute top-1/2 left-0 z-10 h-16 w-full md:h-24"></div>
 
-            <div className="flex flex-col gap-2 md:gap-4">
+            <div className="flex flex-col gap-1 sm:gap-2 md:gap-4">
               {matrix.map((row, rowIndex) => (
                 <div
-                  className={`flex flex-row justify-center gap-2 transition-all duration-100 md:gap-4`}
+                  className={`flex flex-row justify-center gap-1 transition-all duration-100 sm:gap-2 md:gap-4`}
                   key={rowIndex}
                 >
                   {row.map((itemKey, colIndex) => {
@@ -288,7 +299,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
                     return (
                       <div
                         key={`${rowIndex}-${colIndex}`}
-                        className={`flex h-14 w-14 items-center justify-center rounded-xl border bg-linear-to-br shadow-inner backdrop-blur-sm transition-all duration-300 sm:h-20 sm:w-20 md:h-24 md:w-24 ${
+                        className={`flex aspect-square h-12 w-12 items-center justify-center rounded-lg border bg-linear-to-br shadow-inner backdrop-blur-sm transition-all duration-300 sm:h-16 sm:w-16 md:h-24 md:w-24 ${
                           isWinning
                             ? "z-10 scale-110 border-yellow-400 from-yellow-900/50 to-purple-900/50 shadow-[0_0_20px_rgba(250,204,21,0.5)]"
                             : "border-white/10 from-purple-800/50 to-blue-900/50"
@@ -296,7 +307,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
                       >
                         {Icon ? (
                           <Icon
-                            className={`h-8 w-8 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] sm:h-10 sm:w-10 md:h-12 md:w-12 ${
+                            className={`h-6 w-6 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] sm:h-10 sm:w-10 md:h-12 md:w-12 ${
                               isWinning
                                 ? "animate-pulse drop-shadow-[0_0_12px_rgba(250,204,21,0.8)]"
                                 : ""
@@ -312,8 +323,8 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           </div>
 
           {/* Controls */}
-          <div className="mt-8 flex flex-col items-center gap-6">
-            <div className="h-8 text-xl font-bold text-yellow-400 drop-shadow-md md:h-12 md:text-2xl">
+          <div className="mt-4 flex flex-col items-center gap-3 sm:mt-8 sm:gap-6">
+            <div className="min-h-8 text-center text-base font-bold text-yellow-400 drop-shadow-md sm:text-xl md:min-h-12 md:text-2xl">
               {winMessage && (
                 <div className="flex animate-bounce items-center gap-2">
                   {(() => {
@@ -330,11 +341,11 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               )}
             </div>
 
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-2 sm:gap-4">
               <button
                 onClick={handleSpin}
                 disabled={spinning || autoSpinning}
-                className={`group relative rounded-full px-8 py-3 text-xl font-bold tracking-wider uppercase transition-all duration-200 md:px-12 md:py-4 md:text-2xl ${
+                className={`group relative rounded-full px-6 py-2 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl ${
                   spinning || autoSpinning
                     ? "cursor-not-allowed bg-gray-700 text-gray-500"
                     : "bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
@@ -346,7 +357,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               <button
                 onClick={() => setAutoSpinning(!autoSpinning)}
                 disabled={spinning && !autoSpinning}
-                className={`rounded-full px-6 py-3 text-lg font-bold uppercase transition-all duration-200 ${
+                className={`rounded-full px-4 py-2 text-sm font-bold uppercase transition-all duration-200 sm:px-6 sm:py-3 sm:text-lg ${
                   autoSpinning
                     ? "bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:bg-red-500"
                     : "bg-purple-800 text-purple-200 hover:bg-purple-700"
@@ -359,18 +370,24 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         </div>
 
         {/* Side Panel */}
-        <div className="flex w-full flex-col gap-6 rounded-3xl border-4 border-purple-900 bg-black/80 p-6 shadow-xl lg:w-auto">
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="text-xl font-bold text-purple-300">Credits</h2>
-            <div className="text-3xl font-bold text-yellow-400">{credits}</div>
+        <div className="flex w-full flex-col gap-4 rounded-2xl border-2 border-purple-900 bg-black/80 p-4 shadow-xl sm:gap-6 sm:rounded-3xl sm:border-4 sm:p-6 lg:w-auto">
+          <div className="flex flex-col items-center gap-1 sm:gap-2">
+            <h2 className="text-lg font-bold text-purple-300 sm:text-xl">
+              Credits
+            </h2>
+            <div className="text-2xl font-bold text-yellow-400 sm:text-3xl">
+              {credits}
+            </div>
           </div>
 
           <div className="h-px w-full bg-purple-800/50"></div>
 
-          <div className="flex w-full flex-col items-center gap-4">
-            <h2 className="text-xl font-bold text-purple-300">Bet Amount</h2>
-            <div className="flex w-full flex-col items-center gap-3 px-4">
-              <div className="flex flex-row items-center gap-4">
+          <div className="flex w-full flex-col items-center gap-2 sm:gap-4">
+            <h2 className="text-lg font-bold text-purple-300 sm:text-xl">
+              Bet Amount
+            </h2>
+            <div className="flex w-full flex-col items-center gap-2 px-2 sm:gap-3 sm:px-4">
+              <div className="flex flex-row items-center gap-2 sm:gap-4">
                 <button
                   onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
@@ -387,7 +404,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
                     else setBetAmount(0);
                   }}
                   onBlur={() => setBetAmount(Math.max(10, betAmount))}
-                  className="w-24 border-b-2 border-purple-500/50 bg-transparent text-center text-3xl font-bold text-white focus:border-purple-500 focus:outline-none"
+                  className="w-20 border-b-2 border-purple-500/50 bg-transparent text-center text-2xl font-bold text-white focus:border-purple-500 focus:outline-none sm:w-24 sm:text-3xl"
                   disabled={spinning}
                 />
                 <button
