@@ -28,3 +28,15 @@ model User {
   lastDailyReward DateTime?
   role            String    @default("user")
 }
+
+model GameRoom {
+  id                 String   @id
+  players            Json // Store as JSON since it's complex
+  dealer             Json
+  deck               Json
+  currentPlayerIndex Int
+  gameStarted        Boolean  @default(false)
+  gameEnded          Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  maxPlayers         Int
+}

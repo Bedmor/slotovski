@@ -4,6 +4,7 @@ import { authConfig } from "~/server/auth/auth.config";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  console.log("Middleware auth:", req.auth);
   if (!req.auth && req.nextUrl.pathname !== "/") {
     const newUrl = new URL("/auth/signin", req.nextUrl.origin);
     return Response.redirect(newUrl);
@@ -11,5 +12,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/slot"],
+  matcher: ["/slot/:path*", "/diamonds/:path*", "/blackjack/:path*"],
 };

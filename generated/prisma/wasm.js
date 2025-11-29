@@ -105,9 +105,25 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role'
 };
 
+exports.Prisma.GameRoomScalarFieldEnum = {
+  id: 'id',
+  players: 'players',
+  dealer: 'dealer',
+  deck: 'deck',
+  currentPlayerIndex: 'currentPlayerIndex',
+  gameStarted: 'gameStarted',
+  gameEnded: 'gameEnded',
+  createdAt: 'createdAt',
+  maxPlayers: 'maxPlayers'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -120,9 +136,16 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  GameRoom: 'GameRoom'
 };
 /**
  * Create the Client
@@ -171,13 +194,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below\n  // Further reading:\n  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema\n  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string\n  url      = env(\"PRISMA_DATABASE_URL\")\n}\n\n// Necessary for Next auth\n\nmodel User {\n  id              String    @id @default(cuid())\n  name            String?\n  email           String?   @unique\n  emailVerified   DateTime?\n  image           String?\n  password        String?\n  credits         Int       @default(0)\n  lastDailyReward DateTime?\n  role            String    @default(\"user\")\n}\n",
-  "inlineSchemaHash": "f37755cd477467c5179f1b59641c47d9ce9f829b1d255e303a40b33cb4eea781",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below\n  // Further reading:\n  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema\n  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string\n  url      = env(\"PRISMA_DATABASE_URL\")\n}\n\n// Necessary for Next auth\n\nmodel User {\n  id              String    @id @default(cuid())\n  name            String?\n  email           String?   @unique\n  emailVerified   DateTime?\n  image           String?\n  password        String?\n  credits         Int       @default(0)\n  lastDailyReward DateTime?\n  role            String    @default(\"user\")\n}\n\nmodel GameRoom {\n  id                 String   @id\n  players            Json // Store as JSON since it's complex\n  dealer             Json\n  deck               Json\n  currentPlayerIndex Int\n  gameStarted        Boolean  @default(false)\n  gameEnded          Boolean  @default(false)\n  createdAt          DateTime @default(now())\n  maxPlayers         Int\n}\n",
+  "inlineSchemaHash": "caacc2459138ea2d3dfdc774e5f6c14f1e219bd73191e913367220530629c946",
   "copyEngine": false
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"credits\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastDailyReward\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"credits\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lastDailyReward\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"GameRoom\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"players\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"dealer\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"deck\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"currentPlayerIndex\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"gameStarted\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"gameEnded\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"maxPlayers\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = undefined
 config.compilerWasm = undefined

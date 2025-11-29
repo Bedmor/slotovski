@@ -28,7 +28,6 @@ export default function BlackjackGame({
 }: BlackjackGameProps) {
   const { width, height } = useWindowSize();
   const [credits] = useState(initialCredits);
-  const [winAmount, setWinAmount] = useState(0);
   const [screen, setScreen] = useState<"lobby" | "room">("lobby");
   const [roomId, setRoomId] = useState("");
   const [joinRoomId, setJoinRoomId] = useState("");
@@ -47,27 +46,22 @@ export default function BlackjackGame({
   );
   const countdownRef = useRef<number | null>(null);
 
-  // WebSocket connection for real-time updates
-  const wsRef = useRef<WebSocket | null>(null);
+  // SSE connection for real-time updates
+  const eventSourceRef = useRef<EventSource | null>(null);
   useEffect(() => {
     if (screen !== "room" || !roomId) return;
 
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
     try {
-      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-      const url = `${protocol}://${window.location.host}/blackjack/ws?roomId=${roomId}`;
-      const ws = new WebSocket(url);
-      wsRef.current = ws;
-      ws.onopen = () => {
-        ws.send("ping");
-      };
-      ws.onmessage = (event: MessageEvent) => {
-        if (typeof event.data !== "string") return;
+      const url = `/api/blackjack/sse?roomId=${roomId}`;
+      const eventSource = new EventSource(url);
+      eventSourceRef.current = eventSource;
+      eventSource.onmessage = (event: MessageEvent) => {
         try {
-          const parsed = JSON.parse(event.data) as {
+          const parsed = JSON.parse(event.data as string) as {
             type: string;
             room?: GameRoom;
             message?: string;
@@ -81,26 +75,23 @@ export default function BlackjackGame({
               if (me) setLocalBet(me.bet);
             }
           } else if (parsed.type === "error") {
-            setMessage({ text: parsed.message ?? "WS error", type: "error" });
+            setMessage({ text: parsed.message ?? "SSE error", type: "error" });
           }
         } catch {
           // ignore malformed JSON
         }
       };
-      ws.onerror = () => {
-        setMessage({ text: "WebSocket error", type: "error" });
-      };
-      ws.onclose = () => {
-        wsRef.current = null;
+      eventSource.onerror = () => {
+        setMessage({ text: "SSE error", type: "error" });
       };
     } catch (err) {
-      console.error("Failed to init websocket", err);
+      console.error("Failed to init SSE", err);
       setMessage({ text: "Realtime unavailable", type: "error" });
     }
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
       }
     };
   }, [screen, roomId, userId]);
@@ -160,10 +151,28 @@ export default function BlackjackGame({
     try {
       const result = await createRoom(maxPlayers);
       setRoomId(result.roomId);
-      setMessage({
-        text: `Room created! ID: ${result.roomId}`,
-        type: "success",
-      });
+
+      // Automatically join the created room
+      const joinResult = await joinRoom(result.roomId);
+      if ("error" in joinResult) {
+        setMessage({
+          text: joinResult.error ?? "Failed to join created room",
+          type: "error",
+        });
+      } else {
+        setRoom(joinResult.room);
+        setScreen("room");
+        const joinedPlayer = joinResult.room.players.find(
+          (p: Player) => p.id === userId,
+        );
+        if (joinedPlayer) {
+          setLocalBet(joinedPlayer.bet);
+        }
+        setMessage({
+          text: `Room created! ID: ${result.roomId}`,
+          type: "success",
+        });
+      }
     } catch (error) {
       setMessage({
         text: error instanceof Error ? error.message : "Failed to create room",
@@ -462,16 +471,6 @@ export default function BlackjackGame({
                           )}
                         </button>
                       </div>
-                      <button
-                        onClick={async () => {
-                          await handleJoinRoom();
-                          setJoinRoomId(roomId);
-                        }}
-                        disabled={isLoading}
-                        className="mt-3 w-full rounded-lg bg-green-600 px-4 py-2 font-bold transition-all hover:bg-green-500 disabled:opacity-50"
-                      >
-                        Join Your Room
-                      </button>
                     </div>
                   )}
                 </div>
@@ -731,23 +730,24 @@ export default function BlackjackGame({
                   room.currentPlayerIndex === idx && !room.gameEnded;
                 // Determine winner (exclude pushes) when game ended
                 let isWinner = false;
+                let winAmount = 0;
                 if (room.gameEnded && !player.busted && player.bet > 0) {
                   const dealerValue = calculateHandValue(room.dealer.hand);
                   const dealerBusted = room.dealer.busted;
                   if (dealerBusted) {
                     isWinner = true;
-                    setWinAmount(player.bet * 2);
+                    winAmount = player.bet * 2;
                   } else {
                     if (player.blackjack && dealerValue !== 21) {
                       isWinner = true;
-                      setWinAmount(Math.floor(player.bet * 2.5));
+                      winAmount = Math.floor(player.bet * 2.5);
                     } else if (handValue > dealerValue) {
                       isWinner = true;
-                      setWinAmount(player.bet * 2);
+                      winAmount = player.bet * 2;
                     } else if (handValue === dealerValue) {
                       // push => not winner, bet returned
                       isWinner = false;
-                      setWinAmount(player.bet);
+                      winAmount = player.bet;
                     }
                   }
                 }

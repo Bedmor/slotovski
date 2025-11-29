@@ -133,9 +133,25 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role'
 };
 
+exports.Prisma.GameRoomScalarFieldEnum = {
+  id: 'id',
+  players: 'players',
+  dealer: 'dealer',
+  deck: 'deck',
+  currentPlayerIndex: 'currentPlayerIndex',
+  gameStarted: 'gameStarted',
+  gameEnded: 'gameEnded',
+  createdAt: 'createdAt',
+  maxPlayers: 'maxPlayers'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -148,9 +164,16 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  GameRoom: 'GameRoom'
 };
 
 /**

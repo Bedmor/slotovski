@@ -3,8 +3,13 @@
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
-import { broadcastRoom } from "./roomSockets";
-import { gameRooms } from "./gameRooms";
+import { broadcastRoomSSE } from "../api/blackjack/sse/sse-utils";
+import {
+  saveGameRoom,
+  loadGameRoom,
+  deleteGameRoom,
+  cleanupOldRooms,
+} from "./gameRooms";
 import type { Card, GameRoom } from "./types";
 
 // Types & gameRooms map moved to separate modules to avoid exporting non-functions from a server action file.
@@ -123,16 +128,11 @@ export async function createRoom(maxPlayers = 4) {
     maxPlayers: Math.min(Math.max(maxPlayers, 1), 6),
   };
 
-  gameRooms.set(roomId, room);
-  broadcastRoom(room);
+  await saveGameRoom(room);
+  broadcastRoomSSE(roomId, room);
 
   // Clean up old rooms (older than 1 hour)
-  const oneHourAgo = Date.now() - 60 * 60 * 1000;
-  for (const [id, room] of gameRooms.entries()) {
-    if (room.createdAt < oneHourAgo) {
-      gameRooms.delete(id);
-    }
-  }
+  await cleanupOldRooms();
 
   return { success: true, roomId };
 }
@@ -151,7 +151,7 @@ export async function joinRoom(roomId: string) {
     throw new Error("User not found");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -165,7 +165,7 @@ export async function joinRoom(roomId: string) {
     return { error: "Room is full" };
   }
 
-  if (room.players.some((p) => p.id === user.id)) {
+  if (room.players.some((p: any) => p.id === user.id)) {
     return { error: "Already in this room" };
   }
 
@@ -180,8 +180,9 @@ export async function joinRoom(roomId: string) {
     blackjack: false,
   });
 
+  await saveGameRoom(room);
   revalidatePath("/blackjack");
-  broadcastRoom(room);
+  broadcastRoomSSE(roomId, room);
 
   return { success: true, room };
 }
@@ -192,7 +193,7 @@ export async function updateBet(roomId: string, betAmount: number) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -214,7 +215,8 @@ export async function updateBet(roomId: string, betAmount: number) {
   }
 
   player.bet = betAmount;
-  broadcastRoom(room);
+  await saveGameRoom(room);
+  broadcastRoomSSE(roomId, room);
   return { success: true, room };
 }
 
@@ -224,7 +226,7 @@ export async function startGame(roomId: string) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -277,10 +279,11 @@ export async function startGame(roomId: string) {
   // Skip players who already stood/busted (e.g., blackjack) and finish immediately if all done
   advanceToNextActivePlayer(room);
   if (room.currentPlayerIndex >= room.players.length) {
-    await finishGame(room);
+    await finishGame(room, roomId);
   }
 
-  broadcastRoom(room);
+  await saveGameRoom(room);
+  broadcastRoomSSE(roomId, room);
   return { success: true, room };
 }
 
@@ -290,7 +293,7 @@ export async function startNewRound(roomId: string) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -315,8 +318,9 @@ export async function startNewRound(roomId: string) {
   room.gameStarted = false;
   room.gameEnded = false;
 
+  await saveGameRoom(room);
   revalidatePath("/blackjack");
-  broadcastRoom(room);
+  broadcastRoomSSE(roomId, room);
 
   return { success: true, room };
 }
@@ -327,7 +331,7 @@ export async function hit(roomId: string) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -360,11 +364,12 @@ export async function hit(roomId: string) {
     room.currentPlayerIndex++;
     advanceToNextActivePlayer(room);
     if (room.currentPlayerIndex >= room.players.length) {
-      await finishGame(room);
+      await finishGame(room, roomId);
     }
   }
 
-  broadcastRoom(room);
+  await saveGameRoom(room);
+  broadcastRoomSSE(roomId, room);
   return { success: true, room };
 }
 
@@ -374,7 +379,7 @@ export async function stand(roomId: string) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -396,13 +401,14 @@ export async function stand(roomId: string) {
 
   // Check if all players are done
   if (room.currentPlayerIndex >= room.players.length) {
-    await finishGame(room);
+    await finishGame(room, roomId);
   }
-  broadcastRoom(room);
+  await saveGameRoom(room);
+  broadcastRoomSSE(roomId, room);
   return { success: true, room };
 }
 
-async function finishGame(room: GameRoom) {
+async function finishGame(room: GameRoom, roomId: string) {
   // Dealer plays
   let dealerValue = calculateHandValue(room.dealer.hand);
 
@@ -451,11 +457,11 @@ async function finishGame(room: GameRoom) {
   room.gameEnded = true; // keep final state for a few seconds
   // Do NOT reset immediately; client will trigger startNewRound after delay.
   revalidatePath("/blackjack");
-  broadcastRoom(room);
+  broadcastRoomSSE(roomId, room);
 }
 
 export async function getRoom(roomId: string) {
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
   if (!room) {
     return { error: "Room not found" };
   }
@@ -468,7 +474,7 @@ export async function leaveRoom(roomId: string) {
     throw new Error("Unauthorized");
   }
 
-  const room = gameRooms.get(roomId.toUpperCase());
+  const room = await loadGameRoom(roomId);
 
   if (!room) {
     return { error: "Room not found" };
@@ -488,11 +494,13 @@ export async function leaveRoom(roomId: string) {
 
   // Delete room if empty
   if (room.players.length === 0) {
-    gameRooms.delete(roomId.toUpperCase());
+    await deleteGameRoom(roomId);
+  } else {
+    await saveGameRoom(room);
   }
 
   revalidatePath("/blackjack");
-  broadcastRoom(room);
+  broadcastRoomSSE(roomId, room);
   return { success: true };
 }
 

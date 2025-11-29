@@ -189,7 +189,7 @@ export default function MinesweeperGame({
                   </label>
                   <input
                     type="range"
-                    min="1"
+                    min="8"
                     max="20"
                     step="1"
                     value={mineCount}
@@ -197,7 +197,7 @@ export default function MinesweeperGame({
                     className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-red-500"
                   />
                   <div className="flex justify-between text-xs text-gray-400">
-                    <span>1 (Easy)</span>
+                    <span>8 (Easy)</span>
                     <span>20 (Hard)</span>
                   </div>
                 </div>
