@@ -13,7 +13,7 @@ export async function LeaderBoard() {
       role: true,
     },
   });
-  topUsers = topUsers.filter((user) => user.credits > 0 || user.role !== "admin");
+  topUsers = topUsers.filter((user) => user.credits > 0 && user.role !== "admin");
   return (
     <div className="mt-12 w-full max-w-2xl rounded-xl bg-white/5 p-6 backdrop-blur-md">
       <h2 className="mb-4 text-2xl font-bold text-white">Leaderboard</h2>
