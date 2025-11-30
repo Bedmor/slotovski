@@ -100,7 +100,7 @@ export default function BlackjackGame({
   useEffect(() => {
     if (room?.gameEnded) {
       // Start a 3 second countdown
-      setNextRoundCountdown(3);
+      setNextRoundCountdown(5);
       if (countdownRef.current) {
         window.clearInterval(countdownRef.current);
       }
