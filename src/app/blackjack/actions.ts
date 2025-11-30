@@ -10,7 +10,7 @@ import {
   deleteGameRoom,
   cleanupOldRooms,
 } from "./gameRooms";
-import type { Card, GameRoom } from "./types";
+import type { Card, GameRoom, Player } from "./types";
 
 // Types & gameRooms map moved to separate modules to avoid exporting non-functions from a server action file.
 
@@ -165,7 +165,7 @@ export async function joinRoom(roomId: string) {
     return { error: "Room is full" };
   }
 
-  if (room.players.some((p: any) => p.id === user.id)) {
+  if (room.players.some((p: Player) => p.id === user.id)) {
     return { error: "Already in this room" };
   }
 
