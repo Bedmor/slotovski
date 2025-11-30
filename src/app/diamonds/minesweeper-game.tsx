@@ -17,7 +17,7 @@ export default function MinesweeperGame({
   const { width, height } = useWindowSize();
   const [credits, setCredits] = useState(initialCredits);
   const [betAmount, setBetAmount] = useState(10);
-  const [mineCount, setMineCount] = useState(5);
+  const [mineCount, setMineCount] = useState(8);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
