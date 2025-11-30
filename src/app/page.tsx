@@ -2,9 +2,9 @@ import Link from "next/link";
 import { auth, signOut } from "~/server/auth";
 import { db } from "~/server/db";
 import { LogOut, Coins } from "lucide-react";
-import { ProfileImageUpload } from "./_components/profile-image-upload";
-import { DailyReward } from "./_components/daily-reward";
-
+import { ProfileImageUpload } from "./components/profile-image-upload";
+import { DailyReward } from "./components/daily-reward";
+import { LeaderBoard } from "./components/leaderboard";
 interface User {
   id: string;
   name: string | null;
@@ -27,7 +27,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] font-sans text-white">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <div className="animate-fade-in space-y-6 text-center">
           <h1 className="bg-linear-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-5xl font-extrabold tracking-tighter text-transparent drop-shadow-[0_0_15px_rgba(168,85,247,0.5)] md:text-7xl">
@@ -142,7 +142,7 @@ export default async function HomePage() {
             </div>
           )}
         </div>
-
+        <LeaderBoard />
         <footer className="bottom-8 text-sm text-purple-400/50">
           Made with ❤️ by Acabesim
         </footer>

@@ -17,7 +17,7 @@ export default function MinesweeperGame({
   const { width, height } = useWindowSize();
   const [credits, setCredits] = useState(initialCredits);
   const [betAmount, setBetAmount] = useState(10);
-  const [mineCount, setMineCount] = useState(8);
+  const [mineCount, setMineCount] = useState(5);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
@@ -189,7 +189,7 @@ export default function MinesweeperGame({
                   </label>
                   <input
                     type="range"
-                    min="8"
+                    min="5"
                     max="20"
                     step="1"
                     value={mineCount}
