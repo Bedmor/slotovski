@@ -5,12 +5,9 @@ import { Analytics } from "@vercel/analytics/next";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
-export const metadataBase = new URL(siteUrl);
-
 export const metadata: Metadata = {
   title: "Slotovski",
   description: "New generation slot machine simulator",
-  metadataBase,
   icons: [{ rel: "icon", url: "/favicon.ico" }],
   openGraph: {
     title: "Slotovski",
