@@ -187,6 +187,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -197,7 +198,7 @@ const config = {
   },
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below\n  // Further reading:\n  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema\n  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string\n  url      = env(\"PRISMA_DATABASE_URL\")\n}\n\n// Necessary for Next auth\n\nmodel User {\n  id              String    @id @default(cuid())\n  name            String?\n  email           String?   @unique\n  emailVerified   DateTime?\n  image           String?\n  password        String?\n  credits         Int       @default(0)\n  lastDailyReward DateTime?\n  role            String    @default(\"user\")\n}\n\nmodel GameRoom {\n  id                 String   @id\n  players            Json // Store as JSON since it's complex\n  dealer             Json\n  deck               Json\n  currentPlayerIndex Int\n  gameStarted        Boolean  @default(false)\n  gameEnded          Boolean  @default(false)\n  createdAt          DateTime @default(now())\n  maxPlayers         Int\n}\n",
   "inlineSchemaHash": "caacc2459138ea2d3dfdc774e5f6c14f1e219bd73191e913367220530629c946",
-  "copyEngine": false
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -234,3 +235,9 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "generated/prisma/schema.prisma")
