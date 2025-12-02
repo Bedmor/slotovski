@@ -31,7 +31,6 @@ export default function CrashPage() {
   const [attending, setAttending] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [showBigWin, setShowBigWin] = useState(false);
   const sessionUserIdRef = useRef<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const cashedOutRef = useRef(false);
@@ -113,7 +112,6 @@ export default function CrashPage() {
       </svg>
     );
   }
-
 
   // SSE: Connect & update state
   useEffect(() => {
@@ -323,9 +321,7 @@ export default function CrashPage() {
         // big win celebration
         if (r.payout >= (betAmount ?? DEFAULT_BET) * 5) {
           setShowConfetti(true);
-          setShowBigWin(true);
           setTimeout(() => setShowConfetti(false), 5000);
-          setTimeout(() => setShowBigWin(false), 4000);
         }
         await refreshCredits();
         cashedOutRef.current = true;
@@ -336,7 +332,8 @@ export default function CrashPage() {
     }
   }
 
-  const canPlace = !attending && (credits ?? 0) >= betAmount && betAmount >= 1;
+  const canPlace =
+    !attending && !running && (credits ?? 0) >= betAmount && betAmount >= 1;
   const betButtonClass = canPlace
     ? "group relative rounded-full px-6 py-3 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
     : "group relative rounded-full px-6 py-3 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl cursor-not-allowed bg-gray-700 text-gray-400";
@@ -365,17 +362,6 @@ export default function CrashPage() {
           recycle={false}
           numberOfPieces={500}
         />
-      )}
-
-      {showBigWin && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60">
-          <div className="rounded-lg bg-linear-to-r from-yellow-400 to-red-400 p-8 text-black shadow-xl">
-            <h1 className="text-5xl font-extrabold">BIG WIN!</h1>
-            <div className="mt-2 text-2xl font-bold">
-              +{(betAmount ?? DEFAULT_BET) * 5}
-            </div>
-          </div>
-        </div>
       )}
 
       <div className="group absolute top-2 right-2 z-50 sm:top-4 sm:right-4">
@@ -470,8 +456,8 @@ export default function CrashPage() {
             <div className="mb-1 text-sm text-purple-300">Bet Amount</div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setBetAmount(Math.max(1, betAmount - 1))}
-                className="rounded-full bg-purple-700 px-3 py-2 text-white"
+                onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
               >
                 -
               </button>
@@ -482,11 +468,11 @@ export default function CrashPage() {
                 onChange={(e) =>
                   setBetAmount(Math.max(1, parseInt(e.target.value || "0")))
                 }
-                className="w-20 bg-black/60 text-center text-white"
+                className="w-20 border-b-2 border-purple-500/50 bg-transparent text-center text-2xl font-bold text-white focus:border-purple-500 focus:outline-none sm:w-24 sm:text-3xl"
               />
               <button
-                onClick={() => setBetAmount(betAmount + 1)}
-                className="rounded-full bg-purple-700 px-3 py-2 text-white"
+                onClick={() => setBetAmount(betAmount + 10)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
               >
                 +
               </button>
@@ -498,13 +484,11 @@ export default function CrashPage() {
               step={1}
               value={betAmount}
               onChange={(e) => setBetAmount(parseInt(e.target.value || "1"))}
-              className="mt-2 w-full"
+              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-purple-500 hover:accent-purple-400"
             />
           </div>
           <div className="mb-3 text-sm font-bold text-purple-300">Recent</div>
-          <div className="mb-4">
-            
-          </div>
+          <div className="mb-4"></div>
           <div className="flex flex-wrap gap-2">
             {history.map((h, idx) => (
               <div

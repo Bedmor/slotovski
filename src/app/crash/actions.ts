@@ -64,6 +64,17 @@ export async function placeBet(betAmount: number) {
   const session = await auth();
   if (!session?.user) return { error: "Unauthorized" };
   if (betAmount <= 0) return { error: "Invalid bet" };
+  ensureGlobalState();
+  const state = global.crashState!;
+  // Only accept pending bets during the betting phase
+  if (state.phase !== "betting") {
+    return { error: "Betting is closed for this round" };
+  }
+
+  // If user already has a pending bet, disallow placing another one
+  if (state.pendingBets?.[session.user.id]) {
+    return { error: "Bet already pending" };
+  }
 
   const user = await db.user.findUnique({ where: { id: session.user.id } });
   if (!user) return { error: "User not found" };
@@ -76,9 +87,8 @@ export async function placeBet(betAmount: number) {
     data: { credits: newCredits },
   });
 
-  ensureGlobalState();
   // Add pending bet
-  global.crashState!.pendingBets[session.user.id] = {
+  state.pendingBets[session.user.id] = {
     playerId: session.user.id,
     betAmount,
   } as CrashActiveBet;

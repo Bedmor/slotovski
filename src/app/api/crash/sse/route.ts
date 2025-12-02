@@ -6,6 +6,7 @@ declare global {
     | Map<string, Set<ReadableStreamDefaultController<Uint8Array>>>
     | undefined;
   var crashState: CrashRoundState | undefined;
+  var crashLoopRunning: boolean | undefined;
 }
 
 export async function GET(request: NextRequest) {
@@ -45,20 +46,22 @@ export async function GET(request: NextRequest) {
       });
 
       // Start loop if not started
-      if (!global.crashState) {
-        // Initialize state and start loop
-        global.crashState = {
-          running: false,
-          multiplier: 1,
-          phase: "cooldown",
-          activeBets: {},
-          pendingBets: {},
-          history: [],
-        } as CrashRoundState;
+      // Initialize state object if not present
+      global.crashState ??= {
+        running: false,
+        multiplier: 1,
+        phase: "cooldown",
+        activeBets: {},
+        pendingBets: {},
+        history: [],
+      } as CrashRoundState;
 
-        // Kick off async round loop
+      // Kick off async round loop if it isn't already running
+      if (!global.crashLoopRunning) {
+        // Track whether a loop is already running to avoid duplicates
+        global.crashLoopRunning = true;
         void (async () => {
-          while (clients && clients.size > 0) {
+          while (true) {
             const state = global.crashState;
             if (!state) break;
             // Wait until there are pending bets
@@ -71,7 +74,7 @@ export async function GET(request: NextRequest) {
               state.timeLeft = tl;
               const data = `data: ${JSON.stringify({ type: "countdown", timeLeft: tl })}\n\n`;
               const encoded = new TextEncoder().encode(data);
-              for (const set of clients.values()) {
+              for (const set of global.crashSseClients?.values() ?? []) {
                 for (const c of set) {
                   try {
                     c.enqueue(encoded);
@@ -93,18 +96,23 @@ export async function GET(request: NextRequest) {
             state.roundId = Math.random().toString(36).slice(2, 9);
             state.multiplier = 1;
 
-            // Choose crash multiplier between 1.0 and 8.0 with some heavy tail
-            const crashAt = Math.max(1.0, Math.pow(1 - Math.random(), 2));
-            // clamp
-            const crashClamp = Math.min(1, crashAt);
-            const finalCrash = Math.round(crashClamp * 50) / 100;
+            // Choose crash multiplier (random between min and max, with some bias toward lower values)
+            // We pick a min>1.0 so the round has a chance to grow beyond 1x.
+            const MIN_CRASH = 1.02; // minimum crash multiplier
+            const MAX_CRASH = 25.0; // maximum crash multiplier
+            // Use a light power curve to bias toward smaller multipliers while still allowing high outliers.
+            const r = Math.random();
+            const biased = Math.pow(r, 3); // bias toward smaller values
+            const finalCrash =
+              Math.round((MIN_CRASH + biased * (MAX_CRASH - MIN_CRASH)) * 100) /
+              100;
 
             const tickInterval = 100; //ms
             const growth = 0.01 + Math.random() * 0.04; // growth per tick
 
             // Broadcast start
             const startData = `data: ${JSON.stringify({ type: "round_start", roundId: global.crashState!.roundId })}\n\n`;
-            for (const set of clients.values()) {
+            for (const set of global.crashSseClients?.values() ?? []) {
               for (const c of set) {
                 try {
                   c.enqueue(new TextEncoder().encode(startData));
@@ -135,7 +143,7 @@ export async function GET(request: NextRequest) {
             state.history = [crashMult, ...state.history].slice(0, 10);
 
             const crashData = `data: ${JSON.stringify({ type: "crash", multiplier: crashMult })}\n\n`;
-            for (const set of clients.values()) {
+            for (const set of global.crashSseClients?.values() ?? []) {
               for (const c of set) {
                 try {
                   c.enqueue(new TextEncoder().encode(crashData));
@@ -149,9 +157,8 @@ export async function GET(request: NextRequest) {
             // Cooldown for a few seconds before betting starts
             state.phase = "cooldown";
             await new Promise((r) => setTimeout(r, 1500));
-
-            if (!global.crashSseClients || global.crashSseClients.size === 0)
-              break;
+            // Continue running even if there are no connected clients.
+            // If shutdown is required, we can add a global flag to stop the loop.
           }
         })();
       }
