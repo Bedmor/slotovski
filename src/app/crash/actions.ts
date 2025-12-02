@@ -4,6 +4,7 @@
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { broadcastGlobal } from "~/app/api/sse/sse-utils";
+import { startCrashLoopIfNeeded } from "../api/crash/loop";
 import { revalidatePath } from "next/cache";
 import type { CrashActiveBet, CrashRoundState } from "./types";
 
@@ -67,8 +68,9 @@ export async function placeBet(betAmount: number) {
   if (betAmount <= 0) return { error: "Invalid bet" };
   ensureGlobalState();
   const state = global.crashState!;
-  // Only accept pending bets during the betting phase
-  if (state.phase !== "betting") {
+  // Only accept a new bet if a round is not currently running.
+  // Use `running` as the single source of truth: allow placing pending bets when a round is not running.
+  if (state.running) {
     return { error: "Betting is closed for this round" };
   }
 
@@ -96,6 +98,11 @@ export async function placeBet(betAmount: number) {
 
   // Broadcast bet placed
   await broadcast({ type: "player_bet", playerId: session.user.id, betAmount });
+
+  // Ensure the crash loop is running (even if no SSE clients are connected)
+  try {
+    startCrashLoopIfNeeded();
+  } catch {}
 
   revalidatePath("/crash");
   return { newCredits };

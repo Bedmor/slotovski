@@ -31,6 +31,9 @@ export default function CrashPage() {
   const [attending, setAttending] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [phase, setPhase] = useState<
+    "betting" | "running" | "crashed" | "cooldown"
+  >("cooldown");
   const sessionUserIdRef = useRef<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const cashedOutRef = useRef(false);
@@ -177,6 +180,16 @@ export default function CrashPage() {
             setRunning(Boolean(s?.running));
             setMultiplier(s?.multiplier ?? 1);
             setHistory(s?.history ?? []);
+            const pRaw = s?.phase;
+            function isPhase(
+              v: unknown,
+            ): v is "betting" | "running" | "crashed" | "cooldown" {
+              return (
+                typeof v === "string" &&
+                ["betting", "running", "crashed", "cooldown"].includes(v)
+              );
+            }
+            setPhase(isPhase(pRaw) ? pRaw : "cooldown");
             setAttending(
               Boolean(
                 s?.pendingBets?.[sessionUserIdRef.current ?? ""] ??
@@ -379,7 +392,11 @@ export default function CrashPage() {
   }
 
   const canPlace =
-    !attending && !running && (credits ?? 0) >= betAmount && betAmount >= 1;
+    !attending &&
+    !running &&
+    (credits ?? 0) >= betAmount &&
+    betAmount >= 1 &&
+    phase === "betting";
   const betButtonClass = canPlace
     ? "group relative rounded-full px-6 py-3 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
     : "group relative rounded-full px-6 py-3 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl cursor-not-allowed bg-gray-700 text-gray-400";

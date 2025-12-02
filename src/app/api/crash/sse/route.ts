@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import type { CrashRoundState } from "../../../crash/types";
+import { startCrashLoopIfNeeded } from "../loop";
 
 declare global {
   var crashSseClients:
@@ -56,112 +57,8 @@ export async function GET(request: NextRequest) {
         history: [],
       } as CrashRoundState;
 
-      // Kick off async round loop if it isn't already running
-      if (!global.crashLoopRunning) {
-        // Track whether a loop is already running to avoid duplicates
-        global.crashLoopRunning = true;
-        void (async () => {
-          while (true) {
-            const state = global.crashState;
-            if (!state) break;
-            // Wait until there are pending bets
-            global.crashState!.phase = "betting";
-            global.crashState!.timeLeft = 6; // 6 sec betting
-            // Broadcast countdown
-            // countdown
-            let tl = state.timeLeft ?? 0;
-            while (tl > 0) {
-              state.timeLeft = tl;
-              const data = `data: ${JSON.stringify({ type: "countdown", timeLeft: tl })}\n\n`;
-              const encoded = new TextEncoder().encode(data);
-              for (const set of global.crashSseClients?.values() ?? []) {
-                for (const c of set) {
-                  try {
-                    c.enqueue(encoded);
-                  } catch {
-                    /* ignore */
-                  }
-                }
-              }
-              await new Promise((r) => setTimeout(r, 1000));
-              tl--;
-            }
-            state.timeLeft = 0;
-
-            // Move pendingBets into activeBets
-            state.activeBets = { ...(state.pendingBets ?? {}) };
-            state.pendingBets = {};
-            state.phase = "running";
-            state.running = true;
-            state.roundId = Math.random().toString(36).slice(2, 9);
-            state.multiplier = 1;
-
-            // Choose crash multiplier (random between min and max, with some bias toward lower values)
-            // We pick a min>1.0 so the round has a chance to grow beyond 1x.
-            const MIN_CRASH = 1.02; // minimum crash multiplier
-            const MAX_CRASH = 25.0; // maximum crash multiplier
-            // Use a light power curve to bias toward smaller multipliers while still allowing high outliers.
-            const r = Math.random();
-            const biased = Math.pow(r, 1.5); // bias toward smaller values
-            const finalCrash =
-              Math.round((MIN_CRASH + biased * (MAX_CRASH - MIN_CRASH)) * 100) /
-              100;
-
-            const tickInterval = 100; //ms
-            const growth = 0.01 + Math.random() * 0.04; // growth per tick
-
-            // Broadcast start
-            const startData = `data: ${JSON.stringify({ type: "round_start", roundId: global.crashState!.roundId })}\n\n`;
-            for (const set of global.crashSseClients?.values() ?? []) {
-              for (const c of set) {
-                try {
-                  c.enqueue(new TextEncoder().encode(startData));
-                } catch {}
-              }
-            }
-
-            // Run ticks
-            while (state.multiplier < finalCrash) {
-              await new Promise((r) => setTimeout(r, tickInterval));
-              if (!state) break;
-              state.multiplier =
-                Math.round(state.multiplier * (1 + growth) * 100) / 100;
-              const tick = `data: ${JSON.stringify({ type: "tick", multiplier: state.multiplier })}\n\n`;
-              for (const set of global.crashSseClients!.values()) {
-                for (const c of set) {
-                  try {
-                    c.enqueue(new TextEncoder().encode(tick));
-                  } catch {}
-                }
-              }
-            }
-
-            // Crash!
-            const crashMult = state.multiplier;
-            state.phase = "crashed";
-            state.running = false;
-            state.history = [crashMult, ...state.history].slice(0, 10);
-
-            const crashData = `data: ${JSON.stringify({ type: "crash", multiplier: crashMult })}\n\n`;
-            for (const set of global.crashSseClients?.values() ?? []) {
-              for (const c of set) {
-                try {
-                  c.enqueue(new TextEncoder().encode(crashData));
-                } catch {}
-              }
-            }
-
-            // Clear active bets
-            state.activeBets = {};
-
-            // Cooldown for a few seconds before betting starts
-            state.phase = "cooldown";
-            await new Promise((r) => setTimeout(r, 1500));
-            // Continue running even if there are no connected clients.
-            // If shutdown is required, we can add a global flag to stop the loop.
-          }
-        })();
-      }
+      // Kick off the centralized crash loop if it isn't already running
+      startCrashLoopIfNeeded();
     },
   });
 
