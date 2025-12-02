@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
             const MAX_CRASH = 25.0; // maximum crash multiplier
             // Use a light power curve to bias toward smaller multipliers while still allowing high outliers.
             const r = Math.random();
-            const biased = Math.pow(r, 3); // bias toward smaller values
+            const biased = Math.pow(r, 1.5); // bias toward smaller values
             const finalCrash =
               Math.round((MIN_CRASH + biased * (MAX_CRASH - MIN_CRASH)) * 100) /
               100;
