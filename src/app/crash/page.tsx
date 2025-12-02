@@ -254,6 +254,52 @@ export default function CrashPage() {
     };
   }, []);
 
+  // Global site SSE for notifications from other games
+  useEffect(() => {
+    const siteEs = new EventSource(`/api/sse`);
+    siteEs.onmessage = (ev: MessageEvent) => {
+      try {
+        const parsed = JSON.parse(String(ev.data)) as Record<
+          string,
+          unknown
+        > | null;
+        if (parsed?.type === "player_cashed_out") {
+          const pidRaw = parsed.playerId as string | number | undefined;
+          const pid =
+            typeof pidRaw === "string"
+              ? pidRaw
+              : typeof pidRaw === "number"
+                ? String(pidRaw)
+                : "";
+          const payout = Number(
+            (parsed.payout ?? parsed.amount ?? 0) as number,
+          );
+          if (!pid) return;
+          // If this event is for crash itself, ignore (already handled)
+          if (parsed.game === "crash") return;
+          if (pid === sessionUserIdRef.current) {
+            setMessage(`You won ${payout} credits!`);
+            setShowConfetti(true);
+            setTimeout(() => setShowConfetti(false), 5000);
+          } else {
+            setMessage(`Player ${pid} won ${payout} credits`);
+            setTimeout(() => setMessage(null), 3000);
+          }
+        }
+      } catch {}
+    };
+    siteEs.onerror = () => {
+      try {
+        siteEs.close();
+      } catch {}
+    };
+    return () => {
+      try {
+        siteEs.close();
+      } catch {}
+    };
+  }, []);
+
   useEffect(() => {
     let canceled = false;
     void (async () => {
@@ -397,14 +443,14 @@ export default function CrashPage() {
         </p>
       </div>
 
-      <div className="flex w-full max-w-4xl flex-col items-start gap-6 lg:flex-row">
+      <div className="flex w-full max-w-4xl flex-col-reverse items-start gap-6 lg:flex-row">
         <div className="flex-1 rounded-2xl border-2 border-purple-900 bg-black/80 p-6">
           <div className="relative overflow-hidden rounded-lg border-2 border-yellow-600/50 bg-linear-to-b from-gray-900 to-black p-4">
             {message && (
               <div className="mb-2 text-xl text-white/90">{message}</div>
             )}
             <div
-              className={`mb-2 text-6xl font-black drop-shadow-lg transition-transform sm:text-7xl md:text-9xl ${running ? "scale-105" : "scale-100"}`}
+              className={`mb-2 text-5xl font-black drop-shadow-lg transition-transform sm:text-6xl md:text-8xl lg:text-9xl ${running ? "scale-105" : "scale-100"}`}
             >
               <span
                 className={`inline-block ${getMultiplierColor(multiplier)} bg-clip-text`}
@@ -412,11 +458,15 @@ export default function CrashPage() {
                 {multiplier.toFixed(2)}x
               </span>
             </div>
-            <div className="graph mt-4 rounded-md bg-black/60 p-2">
-              <RealtimeGraph data={graphData} width={420} height={110} />
+            <div className="graph mt-4 w-full overflow-hidden rounded-md bg-black/60 p-2">
+              <RealtimeGraph
+                data={graphData}
+                width={Math.min(420, Math.max(320, width - 144))}
+                height={110}
+              />
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
               <button
                 onClick={onPlaceBet}
                 disabled={!canPlace}
@@ -425,27 +475,27 @@ export default function CrashPage() {
                 Bet {betAmount}
               </button>
               {attending && (
-                <>
+                <div className="flex w-full gap-2 sm:w-auto sm:gap-3">
                   <button
                     onClick={onCancelBet}
-                    className="rounded-full bg-red-600 px-5 py-2 font-bold"
+                    className="w-full rounded-full bg-red-600 px-4 py-2 font-bold sm:w-auto"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={onCashOut}
                     disabled={!running}
-                    className="rounded-full bg-yellow-400 px-5 py-2 font-bold"
+                    className="w-full rounded-full bg-yellow-400 px-4 py-2 font-bold sm:w-auto"
                   >
                     Cash Out
                   </button>
-                </>
+                </div>
               )}
             </div>
           </div>
         </div>
 
-        <aside className="w-80 rounded-2xl border-2 border-purple-900 bg-black/80 p-4">
+        <aside className="w-full rounded-2xl border-2 border-purple-900 bg-black/80 p-4 sm:w-80">
           <div className="mb-4 text-center">
             <div className="text-sm text-purple-300">Credits</div>
             <div className="text-2xl font-bold text-yellow-400">

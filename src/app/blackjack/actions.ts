@@ -4,6 +4,7 @@ import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
 import { broadcastRoomSSE } from "../api/blackjack/sse/sse-utils";
+import { broadcastGlobal } from "~/app/api/sse/sse-utils";
 import {
   saveGameRoom,
   loadGameRoom,
@@ -451,6 +452,15 @@ async function finishGame(room: GameRoom, roomId: string) {
         where: { id: player.id },
         data: { credits: { increment: winAmount } },
       });
+      // Notify global listeners about this win
+      try {
+        broadcastGlobal({
+          type: "player_cashed_out",
+          playerId: player.id,
+          payout: winAmount,
+          game: "blackjack",
+        });
+      } catch {}
     }
   }
 

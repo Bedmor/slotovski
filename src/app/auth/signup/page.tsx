@@ -62,14 +62,16 @@ export default function SignUpPage() {
             </div>
             <div>
               <label className="mb-2 block text-sm font-bold" htmlFor="email">
-                Email
+                Email{" "}
+                <span className="text-xs font-normal text-gray-400">
+                  (optional)
+                </span>
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 className="w-full rounded-md border border-gray-300 bg-white/5 p-2 text-white focus:border-purple-500 focus:outline-none"
-                required
               />
             </div>
             <div>

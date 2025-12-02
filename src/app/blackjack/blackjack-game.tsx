@@ -48,6 +48,8 @@ export default function BlackjackGame({
 
   // SSE connection for real-time updates
   const eventSourceRef = useRef<EventSource | null>(null);
+  // Global site SSE for notification broadcasts
+  const siteEventSourceRef = useRef<EventSource | null>(null);
   useEffect(() => {
     if (screen !== "room" || !roomId) return;
 
@@ -95,6 +97,55 @@ export default function BlackjackGame({
       }
     };
   }, [screen, roomId, userId]);
+
+  // Connect to global SSE for site-wide notifications
+  useEffect(() => {
+    try {
+      const evt = new EventSource(`/api/sse`);
+      siteEventSourceRef.current = evt;
+      evt.onmessage = (ev: MessageEvent) => {
+        try {
+          const parsed = JSON.parse(ev.data as string) as Record<
+            string,
+            unknown
+          > | null;
+          if (parsed?.type === "player_cashed_out") {
+            const pidRaw = parsed.playerId as string | number | undefined;
+            const pid =
+              typeof pidRaw === "string"
+                ? pidRaw
+                : typeof pidRaw === "number"
+                  ? String(pidRaw)
+                  : "";
+            const payout = Number(
+              (parsed.payout ?? parsed.amount ?? 0) as number,
+            );
+            if (!pid) return;
+            if (pid === userId) {
+              setMessage({
+                text: `You won ${payout} credits!`,
+                type: "success",
+              });
+              setShowConfetti(true);
+              setTimeout(() => setShowConfetti(false), 5000);
+            } else {
+              setMessage({
+                text: `Player ${pid} cashed out ${payout} credits`,
+                type: "info",
+              });
+              setTimeout(() => setMessage(null), 3000);
+            }
+          }
+        } catch {}
+      };
+    } catch {}
+    return () => {
+      if (siteEventSourceRef.current) {
+        siteEventSourceRef.current.close();
+        siteEventSourceRef.current = null;
+      }
+    };
+  }, [userId]);
 
   // Trigger countdown when gameEnded becomes true
   useEffect(() => {
@@ -378,8 +429,66 @@ export default function BlackjackGame({
   const currentPlayer = room?.players.find((p) => p.id === userId);
   const isCurrentTurn = room?.players[room.currentPlayerIndex]?.id === userId;
 
+  // Small animated card component for entry & reveal animations
+  function AnimatedCard({
+    card,
+    faceDown = false,
+    reveal = false,
+    className = "",
+  }: {
+    card: Card;
+    faceDown?: boolean;
+    reveal?: boolean;
+    className?: string;
+  }) {
+    const [shown, setShown] = useState(false);
+    const [flash, setFlash] = useState(false);
+    useEffect(() => {
+      const id = setTimeout(() => setShown(true), 10);
+      return () => clearTimeout(id);
+    }, []);
+
+    useEffect(() => {
+      let t: number | undefined;
+      if (reveal) {
+        setFlash(true);
+        t = window.setTimeout(() => setFlash(false), 700);
+      }
+      return () => {
+        if (t) window.clearTimeout(t);
+      };
+    }, [reveal]);
+
+    return (
+      <div
+        className={`flex h-20 w-12 shrink-0 flex-col items-center justify-center rounded-lg border-2 shadow-lg transition-all duration-300 md:h-24 md:w-14 lg:h-28 lg:w-16 ${
+          faceDown ? "border-gray-600 bg-gray-800" : "border-gray-300 bg-white"
+        } ${className} ${
+          shown
+            ? "translate-y-0 scale-100 opacity-100"
+            : "translate-y-2 scale-95 opacity-0"
+        } ${reveal ? "-translate-y-1 scale-105 transform-gpu" : ""} ${flash ? "-translate-y-1 scale-110" : ""}`}
+      >
+        {faceDown ? (
+          <div className={`text-xl sm:text-2xl`}>🂠</div>
+        ) : (
+          <>
+            <div
+              className={`text-xl font-bold sm:text-2xl ${getCardColor(card.suit)}`}
+            >
+              {card.value}
+            </div>
+            <div className={`text-sm sm:text-xl ${getCardColor(card.suit)}`}>
+              {card.display.slice(-1)}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 pt-16 font-sans text-white sm:p-4 sm:pt-20">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 pt-16 pb-24 font-sans text-white sm:p-4 sm:pt-20 sm:pb-8">
       {showConfetti && (
         <Confetti
           width={width}
@@ -473,6 +582,84 @@ export default function BlackjackGame({
                       </div>
                     </div>
                   )}
+
+                  {/* Mobile fixed bet control bar (visible when in room and game not started) */}
+                  {currentPlayer && !room?.gameStarted && (
+                    <div className="fixed right-0 bottom-0 left-0 z-50 sm:hidden">
+                      <div className="mx-3 mb-3 flex items-center justify-between gap-3 rounded-t-lg bg-black/80 px-3 py-2 shadow-lg">
+                        <div className="flex items-center gap-2">
+                          <button
+                            aria-label="Decrease bet"
+                            onClick={() =>
+                              setLocalBet((prev) =>
+                                Math.max(10, Math.floor((prev - 10) / 10) * 10),
+                              )
+                            }
+                            className="rounded bg-purple-700 px-3 py-2 text-sm font-bold transition-colors hover:bg-purple-600"
+                          >
+                            -
+                          </button>
+                          <div className="rounded bg-black/50 px-4 py-2 text-lg font-bold">
+                            {localBet}
+                          </div>
+                          <button
+                            aria-label="Increase bet"
+                            onClick={() =>
+                              setLocalBet((prev) =>
+                                Math.min(
+                                  credits,
+                                  Math.floor((prev + 10) / 10) * 10,
+                                ),
+                              )
+                            }
+                            className="rounded bg-purple-700 px-3 py-2 text-sm font-bold transition-colors hover:bg-purple-600"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => {
+                              const half = Math.max(
+                                10,
+                                Math.floor(localBet / 2 / 10) * 10,
+                              );
+                              setLocalBet(half);
+                            }}
+                            className="rounded bg-yellow-700 px-3 py-2 text-sm font-bold transition-colors hover:bg-yellow-600"
+                          >
+                            1/2x
+                          </button>
+                          <button
+                            onClick={() => {
+                              const doubled = Math.min(
+                                credits,
+                                Math.floor((localBet * 2) / 10) * 10,
+                              );
+                              setLocalBet(doubled);
+                            }}
+                            className="rounded bg-yellow-700 px-3 py-2 text-sm font-bold transition-colors hover:bg-yellow-600"
+                          >
+                            2x
+                          </button>
+                          <button
+                            onClick={handleConfirmBet}
+                            disabled={isLoading}
+                            className="rounded bg-green-600 px-4 py-2 text-sm font-bold transition-colors hover:bg-green-500 disabled:opacity-50"
+                          >
+                            {isLoading ? "Confirming..." : "Confirm"}
+                          </button>
+                          <button
+                            onClick={() => setLocalBet(currentPlayer.bet)}
+                            className="rounded bg-red-600 px-3 py-2 text-sm font-bold transition-colors hover:bg-red-500"
+                          >
+                            Revert
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -549,7 +736,7 @@ export default function BlackjackGame({
         <div className="w-full max-w-6xl px-2">
           <div className="rounded-2xl border-2 border-purple-900 bg-black/80 p-4 shadow-2xl sm:p-6">
             {/* Room Header */}
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="mb-4 flex flex-col-reverse items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-purple-300">
@@ -571,7 +758,10 @@ export default function BlackjackGame({
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="rounded-md bg-black/30 px-3 py-1 text-sm font-bold text-yellow-400">
+                  Credits: {credits}
+                </div>
                 {!room?.gameStarted && (
                   <>
                     <button
@@ -599,7 +789,7 @@ export default function BlackjackGame({
 
             {/* Bet Adjustment - Before Game Starts */}
             {currentPlayer && !room?.gameStarted && (
-              <div className="mb-4 rounded-xl border-2 border-yellow-600 bg-yellow-900/20 p-4">
+              <div className="mb-4 hidden rounded-xl border-2 border-yellow-600 bg-yellow-900/20 p-4 sm:block">
                 <div className="mb-3 text-center">
                   <div className="flex items-center justify-center gap-3">
                     <div className="flex items-center gap-2">
@@ -679,8 +869,8 @@ export default function BlackjackGame({
             {/* Dealer's Hand */}
             {room?.gameStarted && (
               <div className="mb-6 rounded-xl border-2 border-yellow-600 bg-yellow-900/20 p-4">
-                <div className="mb-2 text-center text-lg font-bold text-yellow-400">
-                  Dealer{" "}
+                <div className="mb-2 flex items-center justify-between gap-3 text-lg font-bold text-yellow-400">
+                  <div className="flex items-center gap-3">Dealer</div>
                   {room.gameEnded && (
                     <span className="text-sm">
                       (
@@ -691,38 +881,21 @@ export default function BlackjackGame({
                     </span>
                   )}
                 </div>
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="flex w-full items-center justify-center gap-2 overflow-auto px-1 py-2">
                   {room.dealer.hand.map((card, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex h-24 w-16 flex-col items-center justify-center rounded-lg border-2 ${
-                        !room.gameEnded && idx === 1
-                          ? "border-gray-600 bg-gray-800"
-                          : "border-gray-300 bg-white"
-                      } shadow-lg sm:h-28 sm:w-20`}
-                    >
-                      {!room.gameEnded && idx === 1 ? (
-                        <div className="text-2xl">🂠</div>
-                      ) : (
-                        <>
-                          <div
-                            className={`text-2xl font-bold ${getCardColor(card.suit)}`}
-                          >
-                            {card.value}
-                          </div>
-                          <div className={`text-xl ${getCardColor(card.suit)}`}>
-                            {card.display.slice(-1)}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                    <AnimatedCard
+                      key={`${card.display}-${idx}`}
+                      card={card}
+                      faceDown={!room.gameEnded && idx === 1}
+                      reveal={room.gameEnded && idx === 1}
+                    />
                   ))}
                 </div>
               </div>
             )}
 
             {/* Players */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {room?.players.map((player, idx) => {
                 const handValue = calculateHandValue(player.hand);
                 const isCurrentPlayer = player.id === userId;
@@ -755,22 +928,27 @@ export default function BlackjackGame({
                 return (
                   <div
                     key={player.id}
-                    className={`rounded-xl border-2 p-4 ${
+                    className={`flex min-h-[150px] w-full flex-col justify-between rounded-xl border-2 p-3 sm:p-4 ${
                       isCurrentPlayer
                         ? "border-cyan-500 bg-cyan-900/30"
                         : isTurn
                           ? "border-yellow-500 bg-yellow-900/30"
                           : "border-purple-700 bg-purple-900/20"
-                    }`}
+                    } ${isWinner && winAmount > 0 ? "animate-pulse ring-2 ring-green-400" : ""}`}
                   >
                     <div className="mb-2 flex items-center justify-between">
-                      <div className="font-bold text-white">
-                        {player.name}
-                        {isCurrentPlayer && " (You)"}
+                      <div className="flex items-center gap-2">
+                        <div className="truncate font-bold text-white">
+                          {player.name}
+                          {isCurrentPlayer && " (You)"}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {player.credits}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
                         {isTurn && (
-                          <div className="rounded-full bg-yellow-500 px-2 py-1 text-xs font-bold text-black">
+                          <div className="rounded-full bg-yellow-500 px-3 py-1.5 text-sm font-bold text-black">
                             YOUR TURN
                           </div>
                         )}
@@ -820,23 +998,13 @@ export default function BlackjackGame({
                     </div>
 
                     {player.hand.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap items-center gap-1">
                         {player.hand.map((card, cardIdx) => (
-                          <div
-                            key={cardIdx}
-                            className="flex h-16 w-12 flex-col items-center justify-center rounded border-2 border-gray-300 bg-white shadow sm:h-20 sm:w-14"
-                          >
-                            <div
-                              className={`text-lg font-bold ${getCardColor(card.suit)}`}
-                            >
-                              {card.value}
-                            </div>
-                            <div
-                              className={`text-sm ${getCardColor(card.suit)}`}
-                            >
-                              {card.display.slice(-1)}
-                            </div>
-                          </div>
+                          <AnimatedCard
+                            key={`${player.id}-${card.display}-${cardIdx}`}
+                            card={card}
+                            className="h-12 w-10 rounded border-2 border-gray-300 bg-white shadow sm:h-16 sm:w-12 md:h-20 md:w-14"
+                          />
                         ))}
                       </div>
                     )}
@@ -851,18 +1019,18 @@ export default function BlackjackGame({
               !room.gameEnded &&
               isCurrentTurn &&
               !currentPlayer.stand && (
-                <div className="mt-6 flex justify-center gap-4">
+                <div className="fixed bottom-4 left-1/2 z-40 mt-6 flex w-[calc(100%-32px)] -translate-x-1/2 flex-col items-center justify-center gap-3 sm:static sm:bottom-auto sm:left-auto sm:w-auto sm:translate-x-0 sm:flex-row sm:gap-4">
                   <button
                     onClick={handleHit}
                     disabled={isLoading}
-                    className="rounded-lg bg-green-600 px-8 py-4 text-xl font-bold uppercase transition-all hover:bg-green-500 disabled:opacity-50"
+                    className="w-full rounded-lg bg-green-600 px-6 py-3 text-lg font-bold uppercase transition-all hover:bg-green-500 disabled:opacity-50 sm:w-auto sm:text-xl"
                   >
                     Hit
                   </button>
                   <button
                     onClick={handleStand}
                     disabled={isLoading}
-                    className="rounded-lg bg-red-600 px-8 py-4 text-xl font-bold uppercase transition-all hover:bg-red-500 disabled:opacity-50"
+                    className="w-full rounded-lg bg-red-600 px-6 py-3 text-lg font-bold uppercase transition-all hover:bg-red-500 disabled:opacity-50 sm:w-auto sm:text-xl"
                   >
                     Stand
                   </button>

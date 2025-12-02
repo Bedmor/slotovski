@@ -3,6 +3,7 @@
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
+import { broadcastGlobal } from "~/app/api/sse/sse-utils";
 import { revalidatePath } from "next/cache";
 import type { CrashActiveBet, CrashRoundState } from "./types";
 
@@ -148,6 +149,15 @@ export async function cashOut() {
     payout,
     multiplier,
   });
+  try {
+    broadcastGlobal({
+      type: "player_cashed_out",
+      playerId: session.user.id,
+      payout,
+      multiplier,
+      game: "crash",
+    });
+  } catch {}
   revalidatePath("/crash");
   return { payout, multiplier };
 }

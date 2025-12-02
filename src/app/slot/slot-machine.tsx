@@ -67,6 +67,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
   const [winningIndices, setWinningIndices] = useState<number[][][]>([]);
   const [lastWinAmount, setLastWinAmount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  // Slot is a single player game - notifications are local-only
   const [showBigWin, setShowBigWin] = useState(false);
   const [autoSpinning, setAutoSpinning] = useState(false);
   const [lastBigWinTime, setLastBigWinTime] = useState<number | null>(null);
@@ -168,6 +169,8 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
     }
   }, [autoSpinning, spinning, credits, betAmount, handleSpin, lastBigWinTime]);
 
+  // Slot is single-player; no global notifications used
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 font-sans text-white sm:p-4">
       <Link
@@ -197,6 +200,8 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           </div>
         </div>
       )}
+
+      {/* No global notification block for slot - single-player only */}
 
       <div className="group absolute top-2 right-2 z-50 sm:top-4 sm:right-4">
         <button className="rounded-full bg-white/10 p-2 transition-colors hover:bg-white/20">

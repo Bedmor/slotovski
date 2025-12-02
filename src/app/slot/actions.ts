@@ -5,16 +5,16 @@ import { db } from "~/server/db";
 import { revalidatePath } from "next/cache";
 
 const weightedItems: string[] = [
-  ...Array<string>(30).fill("cherry"), 
-  ...Array<string>(60).fill("mouse"), 
-  ...Array<string>(50).fill("heart"), 
-  ...Array<string>(10).fill("sword"), 
-  ...Array<string>(5).fill("diamonds"), 
+  ...Array<string>(30).fill("cherry"),
+  ...Array<string>(60).fill("mouse"),
+  ...Array<string>(50).fill("heart"),
+  ...Array<string>(10).fill("sword"),
+  ...Array<string>(5).fill("diamonds"),
   ...Array<string>(30).fill("angry"),
-  ...Array<string>(40).fill("banana"), 
+  ...Array<string>(40).fill("banana"),
   ...Array<string>(20).fill("star"),
-  ...Array<string>(10).fill("seven"), 
-  ...Array<string>(1).fill("2x"), 
+  ...Array<string>(10).fill("seven"),
+  ...Array<string>(1).fill("2x"),
 ];
 
 function getRandomItem() {
@@ -307,6 +307,7 @@ export async function spin(betAmount: number) {
     where: { id: user.id },
     data: { credits: newCredits },
   });
+  // Slot is single-player; updates are local-only.
 
   revalidatePath("/slot");
 
