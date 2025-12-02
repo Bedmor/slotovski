@@ -9,7 +9,10 @@ export async function GET(req: Request) {
     const title = searchParams.get("title") ?? "Slotovski";
     const subtitle = searchParams.get("subtitle") ?? "Spin. Win. Repeat.";
 
-    const ImageResponseConstructor = ImageResponse as unknown as new (body: React.ReactElement, options?: { width: number; height: number }) => Response;
+    const ImageResponseConstructor = ImageResponse as unknown as new (
+      body: React.ReactElement,
+      options?: { width: number; height: number },
+    ) => Response;
 
     return new ImageResponseConstructor(
       (
@@ -29,7 +32,14 @@ export async function GET(req: Request) {
             boxSizing: "border-box",
           }}
         >
-          <div style={{ maxWidth: 1100 }}>
+          <div
+            style={{
+              maxWidth: 1100,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               <div
                 style={{
@@ -45,11 +55,19 @@ export async function GET(req: Request) {
               >
                 🎰
               </div>
-              <div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
                 <div style={{ fontSize: 56, fontWeight: 800, lineHeight: 1 }}>
                   {title}
                 </div>
-                <div style={{ marginTop: 8, fontSize: 24, opacity: 0.85 }}>{subtitle}</div>
+                <div style={{ marginTop: 8, fontSize: 24, opacity: 0.85 }}>
+                  {subtitle}
+                </div>
               </div>
             </div>
           </div>
@@ -58,7 +76,7 @@ export async function GET(req: Request) {
       {
         width: 1200,
         height: 630,
-      }
+      },
     ) as unknown as Response;
   } catch {
     return new Response("Failed to generate the image", { status: 500 });
