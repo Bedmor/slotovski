@@ -267,7 +267,13 @@ export default function CrashPage() {
         }
 
         if (type === "player_bet") {
-          const pid = String(parsed.playerId ?? "");
+          const pidRaw = parsed.playerId as string | number | undefined;
+          const pid =
+            typeof pidRaw === "string"
+              ? pidRaw
+              : typeof pidRaw === "number"
+                ? String(pidRaw)
+                : "";
           if (pid === sessionUserIdRef.current) {
             setMessage("Bet placed — waiting for round");
             // local grace will set attending
@@ -280,7 +286,13 @@ export default function CrashPage() {
         }
 
         if (type === "player_cashed_out") {
-          const pid = String(parsed.playerId ?? "");
+          const pidRaw = parsed.playerId as string | number | undefined;
+          const pid =
+            typeof pidRaw === "string"
+              ? pidRaw
+              : typeof pidRaw === "number"
+                ? String(pidRaw)
+                : "";
           const m = Number(parsed.multiplier ?? 1);
           const payoutAmt = Number(parsed.payout ?? parsed.amount ?? 0);
           if (pid === sessionUserIdRef.current) {
@@ -302,7 +314,13 @@ export default function CrashPage() {
         }
 
         if (type === "bet_cancelled") {
-          const pid = String(parsed.playerId ?? "");
+          const pidRaw = parsed.playerId as string | number | undefined;
+          const pid =
+            typeof pidRaw === "string"
+              ? pidRaw
+              : typeof pidRaw === "number"
+                ? String(pidRaw)
+                : "";
           if (pid === sessionUserIdRef.current) {
             setMessage("Your bet was canceled");
             setAttending(false);
