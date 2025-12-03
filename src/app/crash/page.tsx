@@ -200,7 +200,9 @@ export default function CrashPage() {
                 s?.activeBets?.[sessionUserIdRef.current ?? ""],
             );
             const now = Date.now();
-            const inGrace = typeof attendingGraceRef.current === "number" && attendingGraceRef.current > now;
+            const inGrace =
+              typeof attendingGraceRef.current === "number" &&
+              attendingGraceRef.current > now;
             setAttending(serverAttending || inGrace);
             break;
           }
@@ -236,7 +238,7 @@ export default function CrashPage() {
             if (pid === sessionUserIdRef.current) {
               setMessage(`You cashed out at ${m}x`);
               setAttending(false);
-                attendingGraceRef.current = null;
+              attendingGraceRef.current = null;
             } else setMessage(`Player ${pid} cashed out at ${m}x`);
             setTimeout(() => setMessage(null), 2000);
             break;
