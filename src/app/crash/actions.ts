@@ -1,10 +1,9 @@
-// empty file
 "use server";
 
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
-import { broadcastGlobal } from "~/app/api/sse/sse-utils";
 import { startCrashLoopIfNeeded } from "../api/crash/loop";
+import { broadcastGlobal } from "~/app/api/sse/sse-utils";
 import { revalidatePath } from "next/cache";
 import type { CrashActiveBet, CrashRoundState } from "./types";
 
@@ -23,7 +22,7 @@ function ensureGlobalState() {
     activeBets: {},
     pendingBets: {},
     history: [],
-  };
+  } as CrashRoundState;
   global.crashSseClients ??= new Map();
 }
 
@@ -36,73 +35,68 @@ async function broadcast(payload: Record<string, unknown>) {
     for (const c of set) {
       try {
         c.enqueue(enc);
-      } catch {}
+      } catch {
+        /* ignore */
+      }
     }
   }
 }
 
 export async function getCredits() {
-  const session = await auth();
-  if (!session?.user) return 0;
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
+  const s = await auth();
+  if (!s?.user) return 0;
+  const u = await db.user.findUnique({
+    where: { id: s.user.id },
     select: { credits: true },
   });
-  return user?.credits ?? 0;
+  return u?.credits ?? 0;
 }
 
 export async function getSessionUser() {
-  const session = await auth();
-  if (!session?.user) return { userId: null, credits: 0 };
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
+  const s = await auth();
+  if (!s?.user) return { userId: null, credits: 0 };
+  const u = await db.user.findUnique({
+    where: { id: s.user.id },
     select: { id: true, credits: true },
   });
-  if (!user) return { userId: null, credits: 0 };
-  return { userId: user.id, credits: user.credits };
+  if (!u) return { userId: null, credits: 0 };
+  return { userId: u.id, credits: u.credits };
 }
 
+/**
+ * Place a pending bet. If a round is running, bet is rejected.
+ * Deducts credits immediately and stores into pendingBets.
+ */
 export async function placeBet(betAmount: number) {
-  const session = await auth();
-  if (!session?.user) return { error: "Unauthorized" };
-  if (betAmount <= 0) return { error: "Invalid bet" };
+  const s = await auth();
+  if (!s?.user) return { error: "Unauthorized" };
+  if (!betAmount || betAmount <= 0) return { error: "Invalid bet" };
   ensureGlobalState();
   const state = global.crashState!;
-  // Only accept a new bet if a round is not currently running.
-  // Use `running` as the single source of truth: allow placing pending bets when a round is not running.
-  if (state.running) {
-    return { error: "Betting is closed for this round" };
-  }
+  if (state.running) return { error: "Betting is closed" };
+  if (state.pendingBets[s.user.id] || state.activeBets[s.user.id])
+    return { error: "Already placed" };
 
-  // If user already has a pending bet, disallow placing another one
-  if (state.pendingBets?.[session.user.id]) {
-    return { error: "Bet already pending" };
-  }
-
-  const user = await db.user.findUnique({ where: { id: session.user.id } });
+  const user = await db.user.findUnique({ where: { id: s.user.id } });
   if (!user) return { error: "User not found" };
   if (user.credits < betAmount) return { error: "Insufficient credits" };
 
-  // Deduct now and put into pending
+  // Deduct credits immediately
   const newCredits = user.credits - betAmount;
   await db.user.update({
-    where: { id: user.id },
+    where: { id: s.user.id },
     data: { credits: newCredits },
   });
 
-  // Add pending bet
-  state.pendingBets[session.user.id] = {
-    playerId: session.user.id,
-    betAmount,
-  } as CrashActiveBet;
+  // Add to pending bets
+  const bet: CrashActiveBet = { playerId: s.user.id, betAmount };
+  state.pendingBets[s.user.id] = bet;
 
-  // Broadcast bet placed
-  await broadcast({ type: "player_bet", playerId: session.user.id, betAmount });
-
-  // Broadcast the full state so clients can update their local `attending` state
+  // Broadcast small events for UI and full state
+  await broadcast({ type: "player_bet", playerId: s.user.id, betAmount });
   await broadcast({ type: "state", state: global.crashState });
 
-  // Ensure the crash loop is running (even if no SSE clients are connected)
+  // Ensure server loop runs (start if needed)
   try {
     startCrashLoopIfNeeded();
   } catch {}
@@ -111,22 +105,23 @@ export async function placeBet(betAmount: number) {
   return { newCredits };
 }
 
+/**
+ * Cancel a pending bet: refund user and remove the pending entry.
+ */
 export async function cancelBet() {
-  const session = await auth();
-  if (!session?.user) return { error: "Unauthorized" };
+  const s = await auth();
+  if (!s?.user) return { error: "Unauthorized" };
   ensureGlobalState();
-  const pending = global.crashState!.pendingBets[session.user.id];
+  const pending = global.crashState!.pendingBets[s.user.id];
   if (!pending) return { error: "No pending bet" };
-
-  // Refund
   await db.user.update({
-    where: { id: session.user.id },
+    where: { id: s.user.id },
     data: { credits: { increment: pending.betAmount } },
   });
-  delete global.crashState!.pendingBets[session.user.id];
+  delete global.crashState!.pendingBets[s.user.id];
   await broadcast({
     type: "bet_cancelled",
-    playerId: session.user.id,
+    playerId: s.user.id,
     amount: pending.betAmount,
   });
   await broadcast({ type: "state", state: global.crashState });
@@ -134,29 +129,27 @@ export async function cancelBet() {
   return { ok: true };
 }
 
+/**
+ * Cash out an active bet for the current user.
+ */
 export async function cashOut() {
-  const session = await auth();
-  if (!session?.user) return { error: "Unauthorized" };
+  const s = await auth();
+  if (!s?.user) return { error: "Unauthorized" };
   ensureGlobalState();
-  const active = global.crashState!.activeBets[session.user.id];
+  const active = global.crashState!.activeBets[s.user.id];
   if (!active) return { error: "No active bet" };
   if (active.cashedOut) return { error: "Already cashed out" };
-
   const multiplier = global.crashState!.multiplier;
   const payout = Math.round(active.betAmount * multiplier);
-
-  // Add payout
   await db.user.update({
-    where: { id: session.user.id },
+    where: { id: s.user.id },
     data: { credits: { increment: payout } },
   });
-
   active.cashedOut = true;
   active.cashedOutMultiplier = multiplier;
-
   await broadcast({
     type: "player_cashed_out",
-    playerId: session.user.id,
+    playerId: s.user.id,
     payout,
     multiplier,
   });
@@ -164,7 +157,7 @@ export async function cashOut() {
   try {
     broadcastGlobal({
       type: "player_cashed_out",
-      playerId: session.user.id,
+      playerId: s.user.id,
       payout,
       multiplier,
       game: "crash",
@@ -177,7 +170,6 @@ export async function cashOut() {
 export async function startNextRound() {
   ensureGlobalState();
   if (global.crashState!.running) return { error: "Round already running" };
-  // This action triggers nothing; SSE loop handles rounds. Just broadcast a start signal
   await broadcast({ type: "admin_start_round" });
   return { ok: true };
 }

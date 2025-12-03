@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import type { CrashRoundState } from "./types";
 import {
   placeBet,
@@ -53,70 +53,6 @@ export default function CrashPage() {
   const cashedOutRef = useRef(false);
   type GraphPoint = { t: number; m: number };
   const [graphData, setGraphData] = useState<GraphPoint[]>([]);
-  const [emphasizedWin, setEmphasizedWin] = useState<{
-    amount: number;
-    id: number;
-    multiplier?: number;
-    betAmount?: number;
-  } | null>(null);
-  const [flyingCredits, setFlyingCredits] = useState<
-    { id: number; amount: number; animating: boolean }[]
-  >([]);
-  const [creditPulse, setCreditPulse] = useState(false);
-  const [countdownProgress, setCountdownProgress] = useState<number>(0);
-  const targetCountdownRef = useRef<number>(0);
-  const rafRef = useRef<number | null>(null);
-  const ringColor = useMemo(() => {
-    const f = Math.max(0, Math.min(1, countdownProgress ?? 0));
-    if (f > 0.66) return "#34D399"; // green
-    if (f > 0.33) return "#FBBF24"; // yellow
-    return "#F87171"; // red
-  }, [countdownProgress]);
-  const ringWidth = useMemo(() => {
-    if (countdownLeft === null) return 3;
-    return countdownLeft <= 2 ? 5 : 3;
-  }, [countdownLeft]);
-  // Update target fraction when countdown changes
-  useEffect(() => {
-    if (countdownLeft === null) {
-      targetCountdownRef.current = 0;
-      return;
-    }
-    const total = Math.max(1, countdownTotal ?? 1);
-    targetCountdownRef.current = countdownLeft / total;
-  }, [countdownLeft, countdownTotal]);
-
-  // Reset progress when phase changes from betting
-  useEffect(() => {
-    if (phase !== "betting") {
-      setCountdownLeft(null);
-      setCountdownProgress(0);
-      targetCountdownRef.current = 0;
-    }
-  }, [phase]);
-
-  // RAF loop: animate countdownProgress towards target fraction
-  useEffect(() => {
-    let mounted = true;
-    function tick() {
-      setCountdownProgress((prev) => {
-        const target = targetCountdownRef.current;
-        const delta = target - prev;
-        if (Math.abs(delta) < 0.001) return target;
-        return prev + delta * 0.15;
-      });
-      if (!mounted) return;
-      rafRef.current = requestAnimationFrame(tick);
-    }
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      mounted = false;
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    };
-  }, []);
-
-  // Simple RealtimeGraph: inline SVG sparkline
   function RealtimeGraph({
     data,
     width = 420,
@@ -191,11 +127,87 @@ export default function CrashPage() {
       </svg>
     );
   }
-
-  // SSE: Connect & update state
+  const [emphasizedWin, setEmphasizedWin] = useState<{
+    amount: number;
+    id: number;
+    multiplier?: number;
+    betAmount?: number;
+  } | null>(null);
+  const [flyingCredits, setFlyingCredits] = useState<
+    { id: number; amount: number; animating: boolean }[]
+  >([]);
+  const [creditPulse, setCreditPulse] = useState(false);
+  const [countdownProgress, setCountdownProgress] = useState<number>(0);
+  const targetCountdownRef = useRef<number>(0);
+  const lastRafTsRef = useRef<number | null>(null);
+  const rafRef = useRef<number | null>(null);
+  // Smoothly animate countdownProgress towards targetCountdownRef.current
+  const tick = useCallback((ts?: number) => {
+    const now = typeof ts === "number" ? ts : Date.now();
+    const last = lastRafTsRef.current ?? now;
+    const dt = Math.max(0, now - last) / 1000; // seconds
+    lastRafTsRef.current = now;
+    // lerp towards target with time-based smoothing
+    setCountdownProgress((prev) => {
+      const target = targetCountdownRef.current ?? 0;
+      const diff = target - prev;
+      // Speed factor: adjusts how quickly the progress moves (higher = faster)
+      const speed = 8; // per second
+      const alpha = Math.min(1, 1 - Math.exp(-speed * dt));
+      return prev + diff * alpha;
+    });
+    rafRef.current = requestAnimationFrame(tick);
+  }, []);
+  const ringColor = useMemo(() => {
+    const f = Math.max(0, Math.min(1, countdownProgress ?? 0));
+    if (f > 0.66) return "#34D399"; // green
+    if (f > 0.33) return "#FBBF24"; // yellow
+    return "#F87171"; // red
+  }, [countdownProgress]);
+  const ringWidth = useMemo(() => {
+    if (countdownLeft === null) return 3;
+    return countdownLeft <= 2 ? 5 : 3;
+  }, [countdownLeft]);
+  // Update target fraction when countdown changes
+  useEffect(() => {
+    if (countdownLeft === null) {
+      targetCountdownRef.current = 0;
+      return;
+    }
+    const total = Math.max(1, countdownTotal ?? 1);
+    targetCountdownRef.current = countdownLeft / total;
+  }, [countdownLeft, countdownTotal]);
   useEffect(() => {
     const es = new EventSource("/api/crash/sse");
     eventSourceRef.current = es;
+
+    function handleStateEvent(s: CrashRoundState) {
+      setRunning(Boolean(s.running));
+      setMultiplier(s.multiplier ?? 1);
+      setHistory(s.history ?? []);
+      setPhase(s.phase ?? "cooldown");
+
+      // Update myBet according to session user
+      const userId = sessionUserIdRef.current ?? "";
+      const pending = s.pendingBets?.[userId];
+      const active = s.activeBets?.[userId];
+      if (pending)
+        setMyBet({ status: "pending", betAmount: pending.betAmount });
+      else if (active) {
+        if (active.cashedOut)
+          setMyBet({
+            status: "cashed",
+            payout: Math.round((active.betAmount ?? 0) * (s.multiplier ?? 1)),
+          });
+        else
+          setMyBet({
+            status: "active",
+            betAmount: active.betAmount ?? 0,
+            cashedOut: false,
+          });
+      } else setMyBet({ status: "none" });
+    }
+
     const onMessage = (ev: MessageEvent) => {
       try {
         const parsed = JSON.parse(String(ev.data)) as Record<
@@ -206,185 +218,103 @@ export default function CrashPage() {
         const type = typeof parsed.type === "string" ? parsed.type : null;
         if (!type) return;
 
-        switch (type) {
-          case "tick": {
-            const m = parsed.multiplier as number | undefined;
-            setMultiplier(
-              typeof m === "number" ? m : Number(parsed.multiplier ?? 1),
-            );
-            // add graph point
-            setGraphData((prev) => {
-              const next = [
-                ...prev.slice(-199),
-                {
-                  t: Date.now(),
-                  m: typeof m === "number" ? m : Number(parsed.multiplier ?? 1),
-                },
-              ];
-              return next;
-            });
-            setRunning(true);
-            setPhase("running");
-            break;
-          }
-          case "round_start": {
-            setMultiplier(1);
-            // clear graph at start of round
-            setGraphData([]);
-            setRunning(true);
-            setPhase("running");
-            setMessage("Round started!");
-            setTimeout(() => setMessage(null), 2000);
-            break;
-          }
-          case "crash": {
-            const m = Number(parsed.multiplier ?? 1);
-            setMultiplier(m);
-            // last graph point: add crash point
-            setGraphData((prev) => [...prev.slice(-199), { t: Date.now(), m }]);
-            setRunning(false);
-            setPhase("crashed");
-            setMessage(`Crashed at ${m}x`);
-            setHistory((h) => [m, ...h].slice(0, 12));
-            setAttending(false);
-            setTimeout(() => setMessage(null), 2500);
-            break;
-          }
-          case "countdown": {
-            // Update countdown ticks: the server emits 6,5,4...; keep total as initial countdown length
-            const timeLeft = Number(parsed.timeLeft ?? 0);
-            setPhase("betting");
-            setMessage(`Betting: ${timeLeft}s`);
-            setCountdownLeft(timeLeft);
-            // Use functional update to avoid effect dependencies
-            setCountdownTotal((prev) => (timeLeft > prev ? timeLeft : prev));
-            break;
-          }
-          case "state": {
-            const s = parsed.state as CrashRoundState | undefined;
-            setRunning(Boolean(s?.running));
-            setMultiplier(s?.multiplier ?? 1);
-            setHistory(s?.history ?? []);
-            const pRaw = s?.phase;
-            function isPhase(
-              v: unknown,
-            ): v is "betting" | "running" | "crashed" | "cooldown" {
-              return (
-                typeof v === "string" &&
-                ["betting", "running", "crashed", "cooldown"].includes(v)
-              );
-            }
-            setPhase(isPhase(pRaw) ? pRaw : "cooldown");
-            const userId = sessionUserIdRef.current ?? "";
-            const pending = s?.pendingBets?.[userId] as
-              | { betAmount?: number }
-              | undefined;
-            const active = s?.activeBets?.[userId] as
-              | { betAmount?: number; cashedOut?: boolean }
-              | undefined;
-            const serverAttending = Boolean(pending ?? active);
-            const now = Date.now();
-            const inGrace =
-              typeof attendingGraceRef.current === "number" &&
-              attendingGraceRef.current > now;
-            setAttending(serverAttending || inGrace);
-            // Update myBet state
-            if (pending)
-              setMyBet({
-                status: "pending",
-                betAmount: pending.betAmount ?? betAmount,
-              });
-            else if (active) {
-              if (active.cashedOut)
-                setMyBet({
-                  status: "cashed",
-                  payout: Math.round(
-                    (active.betAmount ?? 0) * (s?.multiplier ?? 1),
-                  ),
-                });
-              else
-                setMyBet({
-                  status: "active",
-                  betAmount: active.betAmount ?? 0,
-                  cashedOut: false,
-                });
-            } else setMyBet({ status: "none" });
-            break;
-          }
-          case "player_bet": {
-            const pidRaw = parsed.playerId;
-            const pid =
-              typeof pidRaw === "string"
-                ? pidRaw
-                : typeof pidRaw === "number"
-                  ? String(pidRaw)
-                  : "";
-            if (pid === sessionUserIdRef.current) {
-              setAttending(true);
-              setMessage("Bet placed — waiting for round");
-            } else {
-              setMessage(`Player ${pid} placed a bet`);
-            }
-            setTimeout(() => setMessage(null), 2000);
-            break;
-          }
-          case "player_cashed_out": {
-            const pidRaw = parsed.playerId;
-            const pid =
-              typeof pidRaw === "string"
-                ? pidRaw
-                : typeof pidRaw === "number"
-                  ? String(pidRaw)
-                  : "";
-            const m =
-              typeof parsed.multiplier === "number"
-                ? parsed.multiplier
-                : Number(parsed.multiplier ?? 1);
-            if (pid === sessionUserIdRef.current) {
-              setMessage(`You cashed out at ${m}x`);
-              setAttending(false);
-              attendingGraceRef.current = null;
-              // emphasize the payout overlay for the player
-              const payoutAmt = Number(parsed.payout ?? parsed.amount ?? 0);
-              if (payoutAmt > 0) {
-                const myBetAmount =
-                  myBetRef.current &&
-                  (myBetRef.current.status === "pending" ||
-                    myBetRef.current.status === "active")
-                    ? myBetRef.current.betAmount
-                    : undefined;
-                setEmphasizedWin({
-                  amount: payoutAmt,
-                  id: Date.now(),
-                  multiplier: Number(m ?? 0),
-                  betAmount: myBetAmount,
-                });
-              }
-            } else setMessage(`Player ${pid} cashed out at ${m}x`);
-            setTimeout(() => setMessage(null), 2000);
-            break;
-          }
-          case "bet_cancelled": {
-            const pidRaw = parsed.playerId;
-            const pid =
-              typeof pidRaw === "string"
-                ? pidRaw
-                : typeof pidRaw === "number"
-                  ? String(pidRaw)
-                  : "";
-            if (pid === sessionUserIdRef.current) {
-              setAttending(false);
-              setMessage("Your bet was canceled");
-            } else {
-              setMessage(`Player ${pid} canceled their bet`);
-            }
-            setTimeout(() => setMessage(null), 2000);
-            break;
-          }
-          default:
-            break;
+        if (type === "state") {
+          const s = parsed.state as CrashRoundState | undefined;
+          if (!s) return;
+          handleStateEvent(s);
+          return;
         }
-      } catch {
+
+        if (type === "countdown") {
+          const timeLeft = Number(parsed.timeLeft ?? 0);
+          setPhase("betting");
+          setCountdownLeft(timeLeft);
+          setMessage(`Betting: ${timeLeft}s`);
+          setCountdownTotal((prev) => (timeLeft > prev ? timeLeft : prev));
+          return;
+        }
+
+        if (type === "tick") {
+          const m = Number(parsed.multiplier ?? 1);
+          setMultiplier(m);
+          setRunning(true);
+          setGraphData((prev) => [...prev.slice(-199), { t: Date.now(), m }]);
+          setPhase("running");
+          return;
+        }
+
+        if (type === "round_start") {
+          setMultiplier(1);
+          setGraphData([]);
+          setRunning(true);
+          setPhase("running");
+          setMessage("Round started!");
+          setTimeout(() => setMessage(null), 2000);
+          return;
+        }
+
+        if (type === "crash") {
+          const m = Number(parsed.multiplier ?? 1);
+          setMultiplier(m);
+          setGraphData((prev) => [...prev.slice(-199), { t: Date.now(), m }]);
+          setRunning(false);
+          setPhase("crashed");
+          setMessage(`Crashed at ${m}x`);
+          setHistory((h) => [m, ...h].slice(0, 12));
+          setAttending(false);
+          setTimeout(() => setMessage(null), 2500);
+          return;
+        }
+
+        if (type === "player_bet") {
+          const pid = String(parsed.playerId ?? "");
+          if (pid === sessionUserIdRef.current) {
+            setMessage("Bet placed — waiting for round");
+            // local grace will set attending
+            attendingGraceRef.current = Date.now() + 3000;
+          } else {
+            setMessage(`Player ${pid} placed a bet`);
+          }
+          setTimeout(() => setMessage(null), 2000);
+          return;
+        }
+
+        if (type === "player_cashed_out") {
+          const pid = String(parsed.playerId ?? "");
+          const m = Number(parsed.multiplier ?? 1);
+          const payoutAmt = Number(parsed.payout ?? parsed.amount ?? 0);
+          if (pid === sessionUserIdRef.current) {
+            setMessage(`You cashed out at ${m}x`);
+            attendingGraceRef.current = null;
+            setAttending(false);
+            // update emphasized win overlay
+            if (payoutAmt > 0)
+              setEmphasizedWin({
+                amount: payoutAmt,
+                id: Date.now(),
+                multiplier: m,
+              });
+          } else {
+            setMessage(`Player ${pid} cashed out at ${m}x`);
+          }
+          setTimeout(() => setMessage(null), 2000);
+          return;
+        }
+
+        if (type === "bet_cancelled") {
+          const pid = String(parsed.playerId ?? "");
+          if (pid === sessionUserIdRef.current) {
+            setMessage("Your bet was canceled");
+            setAttending(false);
+            attendingGraceRef.current = null;
+            setMyBet({ status: "none" });
+          } else {
+            setMessage(`Player ${pid} canceled their bet`);
+          }
+          setTimeout(() => setMessage(null), 2000);
+          return;
+        }
+      } catch (err) {
         // ignore malformed event
       }
     };
@@ -516,11 +446,23 @@ export default function CrashPage() {
   async function refreshCredits() {
     try {
       const c = await getCredits();
-      setCredits(c ?? null);
+      if (typeof c === "number") setCredits(c);
+      // kick off animation frame loop once we refresh credits
+      rafRef.current ??= requestAnimationFrame(tick);
     } catch {
       // ignore
     }
   }
+
+  // Ensure RAF is started and cleaned up with component lifecycle
+  useEffect(() => {
+    rafRef.current ??= requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      lastRafTsRef.current = null;
+    };
+  }, [tick]);
 
   async function onPlaceBet() {
     try {
@@ -785,7 +727,7 @@ export default function CrashPage() {
                   </div>
                 )}
               </div>
-              {attending && (
+              {myBet.status !== "none" && (
                 <div className="flex w-full gap-2 sm:w-auto sm:gap-3">
                   {myBet.status === "pending" && (
                     <button
