@@ -18,16 +18,15 @@ datasource db {
 // Necessary for Next auth
 
 model User {
-  id              String     @id @default(cuid())
+  id              String    @id @default(cuid())
   name            String?
-  email           String?    @unique
+  email           String?   @unique
   emailVerified   DateTime?
   image           String?
   password        String?
-  credits         Int        @default(0)
+  credits         Int       @default(0)
   lastDailyReward DateTime?
-  role            String     @default("user")
-  crashBets       CrashBet[]
+  role            String    @default("user")
 }
 
 model GameRoom {
@@ -40,26 +39,4 @@ model GameRoom {
   gameEnded          Boolean  @default(false)
   createdAt          DateTime @default(now())
   maxPlayers         Int
-}
-
-// Crash game models
-model CrashGame {
-  id         String     @id
-  crashPoint Float
-  startTime  DateTime   @default(now())
-  status     String
-  bets       CrashBet[]
-}
-
-model CrashBet {
-  id          String   @id @default(cuid())
-  userId      String
-  gameId      String
-  amount      Int
-  cashedOutAt Float?
-  winAmount   Int?
-  createdAt   DateTime @default(now())
-
-  user User      @relation(fields: [userId], references: [id])
-  game CrashGame @relation(fields: [gameId], references: [id])
 }

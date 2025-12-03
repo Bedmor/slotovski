@@ -76,18 +76,6 @@ export default async function HomePage() {
                 <p className="text-sm text-red-300">Multiplayer 21</p>
               </div>
             </Link>
-            <Link
-              href="/crash"
-              className="group relative w-full overflow-hidden rounded-2xl bg-linear-to-br from-yellow-500 to-red-500 p-1 shadow-[0_0_40px_rgba(234,179,8,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(234,179,8,0.5)]"
-            >
-              <div className="relative flex h-full flex-col items-center justify-center gap-2 rounded-xl bg-black/40 p-8 backdrop-blur-sm transition-all group-hover:bg-black/20">
-                <span className="text-6xl drop-shadow-md">📈</span>
-                <h3 className="text-2xl font-bold text-white drop-shadow-md">
-                  Crash
-                </h3>
-                <p className="text-sm text-yellow-300">Bet and cash out!</p>
-              </div>
-            </Link>
           </div>
 
           {user ? (

@@ -12,10 +12,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: [
-    "/slot/:path*",
-    "/diamonds/:path*",
-    "/blackjack/:path*",
-    "/crash/:path*",
-  ],
+  matcher: ["/slot/:path*", "/diamonds/:path*", "/blackjack/:path*"],
 };
