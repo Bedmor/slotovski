@@ -349,7 +349,8 @@ export default function CrashPage() {
               if (payoutAmt > 0) {
                 const myBetAmount =
                   myBetRef.current &&
-                  (myBetRef.current.status === "pending" || myBetRef.current.status === "active")
+                  (myBetRef.current.status === "pending" ||
+                    myBetRef.current.status === "active")
                     ? myBetRef.current.betAmount
                     : undefined;
                 setEmphasizedWin({
@@ -428,10 +429,16 @@ export default function CrashPage() {
             if (payout > 0) {
               const myBetAmount =
                 myBetRef.current &&
-                (myBetRef.current.status === "pending" || myBetRef.current.status === "active")
+                (myBetRef.current.status === "pending" ||
+                  myBetRef.current.status === "active")
                   ? myBetRef.current.betAmount
                   : undefined;
-              setEmphasizedWin({ amount: payout, id: Date.now(), multiplier: Number(parsed.multiplier ?? 0), betAmount: myBetAmount });
+              setEmphasizedWin({
+                amount: payout,
+                id: Date.now(),
+                multiplier: Number(parsed.multiplier ?? 0),
+                betAmount: myBetAmount,
+              });
             }
           } else {
             setMessage(`Player ${pid} won ${payout} credits`);
@@ -492,7 +499,9 @@ export default function CrashPage() {
     setFlyingCredits((s) => [...s, { id, amount, animating: false }]);
     // next tick: start animation
     const startT = setTimeout(() => {
-      setFlyingCredits((s) => s.map((f) => (f.id === id ? { ...f, animating: true } : f)));
+      setFlyingCredits((s) =>
+        s.map((f) => (f.id === id ? { ...f, animating: true } : f)),
+      );
     }, 20);
     // remove after animation
     const removeT = setTimeout(() => {
@@ -567,9 +576,19 @@ export default function CrashPage() {
         setMyBet({ status: "cashed", payout: r.payout ?? 0 });
         attendingGraceRef.current = null;
         // Emphasize the win in a big animated overlay with multiplier and bet amount
-        const betAmt = myBetRef.current && (myBetRef.current.status === "active" || myBetRef.current.status === "pending") ? myBetRef.current.betAmount : undefined;
+        const betAmt =
+          myBetRef.current &&
+          (myBetRef.current.status === "active" ||
+            myBetRef.current.status === "pending")
+            ? myBetRef.current.betAmount
+            : undefined;
         const calcMultiplier = betAmt ? (r.payout ?? 0) / betAmt : undefined;
-        setEmphasizedWin({ amount: r.payout ?? 0, id: Date.now(), multiplier: calcMultiplier, betAmount: betAmt });
+        setEmphasizedWin({
+          amount: r.payout ?? 0,
+          id: Date.now(),
+          multiplier: calcMultiplier,
+          betAmount: betAmt,
+        });
       }
     } catch {
       setMessage("Network error cashing out");
@@ -609,20 +628,24 @@ export default function CrashPage() {
       )}
 
       {/* Emphasized win overlay (big animated amount) */}
-          {emphasizedWin && (
+      {emphasizedWin && (
         <div className="pointer-events-none absolute inset-0 z-40 flex items-start justify-center pt-24">
           <div className="transform-gpu transition-all duration-300 ease-out">
             <div className="animate-pulse rounded-2xl bg-linear-to-r from-yellow-300 to-yellow-500 px-6 py-3 text-black shadow-2xl">
               <div className="text-sm font-bold text-black/70">You Won</div>
-                  <div className="text-3xl font-extrabold tracking-tight">
-                    {emphasizedWin.amount} credits
-                    {emphasizedWin.multiplier && (
-                      <span className="ml-2 text-lg font-bold text-black/60">· {emphasizedWin.multiplier.toFixed(2)}x</span>
-                    )}
-                    {emphasizedWin.betAmount && (
-                      <div className="mt-1 text-sm font-semibold text-black/70">(bet {emphasizedWin.betAmount})</div>
-                    )}
+              <div className="text-3xl font-extrabold tracking-tight">
+                {emphasizedWin.amount} credits
+                {emphasizedWin.multiplier && (
+                  <span className="ml-2 text-lg font-bold text-black/60">
+                    · {emphasizedWin.multiplier.toFixed(2)}x
+                  </span>
+                )}
+                {emphasizedWin.betAmount && (
+                  <div className="mt-1 text-sm font-semibold text-black/70">
+                    (bet {emphasizedWin.betAmount})
                   </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -674,7 +697,11 @@ export default function CrashPage() {
               <div className="mb-2">
                 <div className="mb-1 flex items-center justify-between text-xs text-gray-300">
                   <div>Betting</div>
-                  <div className={`font-bold ${countdownLeft !== null && countdownLeft <= 2 ? 'text-red-300 animate-pulse' : 'text-yellow-200'}`}>{countdownLeft}s</div>
+                  <div
+                    className={`font-bold ${countdownLeft !== null && countdownLeft <= 2 ? "animate-pulse text-red-300" : "text-yellow-200"}`}
+                  >
+                    {countdownLeft}s
+                  </div>
                 </div>
                 <div className="h-3 w-full overflow-hidden rounded bg-purple-900/30">
                   <div
@@ -743,7 +770,8 @@ export default function CrashPage() {
                               Math.PI *
                               2 *
                               15.9155,
-                            transition: "stroke-dashoffset 120ms linear, stroke 240ms linear, stroke-width 200ms linear",
+                            transition:
+                              "stroke-dashoffset 120ms linear, stroke 240ms linear, stroke-width 200ms linear",
                             stroke: ringColor,
                           }}
                         />
@@ -788,7 +816,7 @@ export default function CrashPage() {
         </div>
 
         <aside className="w-full rounded-2xl border-2 border-purple-900 bg-black/80 p-4 sm:w-80">
-          <div className="mb-4 text-center relative">
+          <div className="relative mb-4 text-center">
             <div className="text-sm text-purple-300">Credits</div>
             <div
               className={`text-2xl font-bold ${creditPulse ? "scale-105 transform animate-pulse text-yellow-200" : "text-yellow-400"}`}
@@ -796,7 +824,7 @@ export default function CrashPage() {
               {credits ?? "—"}
             </div>
             {/* Flying credit numbers */}
-            <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 mt-8">
+            <div className="pointer-events-none absolute top-0 left-1/2 mt-8 -translate-x-1/2">
               {flyingCredits.map((f) => (
                 <div
                   key={f.id}
@@ -804,8 +832,9 @@ export default function CrashPage() {
                   style={{
                     transform: `translateY(${f.animating ? -28 : 0}px)`,
                     opacity: f.animating ? 0 : 1,
-                    transition: "transform 1200ms cubic-bezier(.25,.8,.25,1), opacity 900ms ease-out",
-                    willChange: 'transform, opacity'
+                    transition:
+                      "transform 1200ms cubic-bezier(.25,.8,.25,1), opacity 900ms ease-out",
+                    willChange: "transform, opacity",
                   }}
                 >
                   +{f.amount}
