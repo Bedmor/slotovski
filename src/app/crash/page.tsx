@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any */
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
@@ -23,7 +22,7 @@ export default function CrashPage() {
     cashedOutAt: number | null;
   } | null>(null);
   const [lastCrashes, setLastCrashes] = useState<number[]>([]);
-  const [countdown, setCountdown] = useState<number>(0);
+  // countdown state removed (unused)
 
   const pointsRef = useRef<Point[]>([]);
   const [points, setPoints] = useState<Point[]>([]);
@@ -36,11 +35,17 @@ export default function CrashPage() {
     function isCrashUpdate(
       x: unknown,
     ): x is { type: "crash_update"; state: CrashState } {
+      if (!x || typeof x !== "object") return false;
+      const obj = x as { type?: unknown; state?: unknown };
+      if (obj.type !== "crash_update") return false;
+      if (!obj.state || typeof obj.state !== "object") return false;
+      // verify minimal CrashState fields to be safe
+      const s = obj.state as Partial<CrashState>;
       return (
-        !!x &&
-        typeof x === "object" &&
-        (x as any).type === "crash_update" &&
-        typeof (x as any).state === "object"
+        typeof s.currentMultiplier === "number" &&
+        (s.phase === "betting" ||
+          s.phase === "running" ||
+          s.phase === "crashed")
       );
     }
 

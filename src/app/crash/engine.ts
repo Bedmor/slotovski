@@ -1,5 +1,4 @@
 "use server";
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument */
 
 import { db } from "~/server/db";
 import { broadcastCrash } from "../api/crash/sse/sse-utils";
@@ -169,10 +168,10 @@ function getEngine(): Engine {
   return global.__crashEngine;
 }
 
-export function ensureCrashEngine() {
+export async function ensureCrashEngine() {
   getEngine().ensure();
 }
 
-export function getCrashState(): CrashState {
+export async function getCrashState(): Promise<CrashState> {
   return getEngine().state;
 }

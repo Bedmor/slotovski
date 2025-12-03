@@ -9,8 +9,14 @@ declare global {
 
 export async function GET(request: NextRequest) {
   // Make sure engine is running so we have a state to send
-  ensureCrashEngine();
-  const state = getCrashState();
+  await ensureCrashEngine();
+  let state: unknown;
+  try {
+    state = await getCrashState();
+  } catch (err) {
+    // Convert errors into a safe, serializable object so we don't assign an error-typed value.
+    state = { error: err instanceof Error ? err.message : String(err) };
+  }
 
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {

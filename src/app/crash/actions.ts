@@ -6,8 +6,9 @@ import { broadcastGlobal } from "~/app/api/sse/sse-utils";
 import { ensureCrashEngine, getCrashState } from "./engine";
 
 export async function getState() {
-  ensureCrashEngine();
-  return { success: true, state: getCrashState() };
+  await ensureCrashEngine();
+  const state = await getCrashState();
+  return { success: true, state };
 }
 
 export async function getCredits() {
@@ -23,8 +24,8 @@ export async function getCredits() {
 export async function getMyBet() {
   const session = await auth();
   if (!session?.user) return { hasBet: false } as const;
-  ensureCrashEngine();
-  const state = getCrashState();
+  await ensureCrashEngine();
+  const state = await getCrashState();
   if (!state.roundId) return { hasBet: false } as const;
   const bet = await db.crashBet.findFirst({
     where: { userId: session.user.id, gameId: state.roundId },
@@ -44,8 +45,8 @@ export async function placeBet(amount: number) {
   if (!Number.isFinite(amount) || amount <= 0)
     return { error: "Invalid bet" } as const;
 
-  ensureCrashEngine();
-  const state = getCrashState();
+  await ensureCrashEngine();
+  const state = await getCrashState();
   if (
     state.phase !== "betting" ||
     !state.roundId ||
@@ -91,8 +92,8 @@ export async function cashOut() {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
 
-  ensureCrashEngine();
-  const state = getCrashState();
+  await ensureCrashEngine();
+  const state = await getCrashState();
   if (state.phase !== "running" || !state.roundId || !state.startTime) {
     return { error: "Cannot cash out now" } as const;
   }
