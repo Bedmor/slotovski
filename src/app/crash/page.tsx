@@ -231,9 +231,10 @@ export default function CrashPage() {
               typeof parsed.multiplier === "number"
                 ? parsed.multiplier
                 : Number(parsed.multiplier ?? 1);
-            if (pid === sessionUserIdRef.current)
+            if (pid === sessionUserIdRef.current) {
               setMessage(`You cashed out at ${m}x`);
-            else setMessage(`Player ${pid} cashed out at ${m}x`);
+              setAttending(false);
+            } else setMessage(`Player ${pid} cashed out at ${m}x`);
             setTimeout(() => setMessage(null), 2000);
             break;
           }

@@ -51,6 +51,8 @@ export function startCrashLoopIfNeeded() {
           tl--;
         }
         state.timeLeft = 0;
+        // Broadcast state after countdown/pending collect so clients can update attendees
+        broadcast({ type: "state", state: global.crashState });
 
         // Move pending to active
         state.activeBets = { ...(state.pendingBets ?? {}) };
@@ -74,6 +76,8 @@ export function startCrashLoopIfNeeded() {
 
         // Broadcast start
         broadcast({ type: "round_start", roundId: state.roundId });
+        // Broadcast the new state so clients know about activeBets -> attendees
+        broadcast({ type: "state", state: global.crashState });
 
         // Run ticks
         while (state.multiplier < finalCrash) {
@@ -93,6 +97,8 @@ export function startCrashLoopIfNeeded() {
 
         // Clear active bets
         state.activeBets = {};
+        // Broadcast the state update after clearing active bets
+        broadcast({ type: "state", state: global.crashState });
 
         // Cooldown
         state.phase = "cooldown";

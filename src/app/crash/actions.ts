@@ -99,6 +99,9 @@ export async function placeBet(betAmount: number) {
   // Broadcast bet placed
   await broadcast({ type: "player_bet", playerId: session.user.id, betAmount });
 
+  // Broadcast the full state so clients can update their local `attending` state
+  await broadcast({ type: "state", state: global.crashState });
+
   // Ensure the crash loop is running (even if no SSE clients are connected)
   try {
     startCrashLoopIfNeeded();
@@ -126,6 +129,7 @@ export async function cancelBet() {
     playerId: session.user.id,
     amount: pending.betAmount,
   });
+  await broadcast({ type: "state", state: global.crashState });
   revalidatePath("/crash");
   return { ok: true };
 }
@@ -156,6 +160,7 @@ export async function cashOut() {
     payout,
     multiplier,
   });
+  await broadcast({ type: "state", state: global.crashState });
   try {
     broadcastGlobal({
       type: "player_cashed_out",
