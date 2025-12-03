@@ -652,10 +652,7 @@ export default function CrashPage() {
                   <div className="absolute -top-2 -right-2 z-50 flex items-center justify-center">
                     <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-black/60">
                       {/* Animated ring */}
-                      <svg
-                        className="absolute z-0 h-8 w-8"
-                        viewBox="0 0 36 36"
-                      >
+                      <svg className="absolute z-0 h-8 w-8" viewBox="0 0 36 36">
                         <path
                           className="text-purple-700/40"
                           d="M18 2.0845
