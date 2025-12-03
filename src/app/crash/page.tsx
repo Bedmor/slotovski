@@ -35,6 +35,7 @@ export default function CrashPage() {
     "betting" | "running" | "crashed" | "cooldown"
   >("cooldown");
   const sessionUserIdRef = useRef<string | null>(null);
+  const attendingGraceRef = useRef<number | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const cashedOutRef = useRef(false);
   type GraphPoint = { t: number; m: number };
@@ -194,12 +195,13 @@ export default function CrashPage() {
               );
             }
             setPhase(isPhase(pRaw) ? pRaw : "cooldown");
-            setAttending(
-              Boolean(
-                s?.pendingBets?.[sessionUserIdRef.current ?? ""] ??
-                  s?.activeBets?.[sessionUserIdRef.current ?? ""],
-              ),
+            const serverAttending = Boolean(
+              s?.pendingBets?.[sessionUserIdRef.current ?? ""] ??
+                s?.activeBets?.[sessionUserIdRef.current ?? ""],
             );
+            const now = Date.now();
+            const inGrace = typeof attendingGraceRef.current === "number" && attendingGraceRef.current > now;
+            setAttending(serverAttending || inGrace);
             break;
           }
           case "player_bet": {
@@ -234,6 +236,7 @@ export default function CrashPage() {
             if (pid === sessionUserIdRef.current) {
               setMessage(`You cashed out at ${m}x`);
               setAttending(false);
+                attendingGraceRef.current = null;
             } else setMessage(`Player ${pid} cashed out at ${m}x`);
             setTimeout(() => setMessage(null), 2000);
             break;
@@ -353,6 +356,8 @@ export default function CrashPage() {
       }
       if (r && "newCredits" in r) setCredits(r.newCredits ?? null);
       setAttending(true);
+      // small grace window: keep attending for 3s to avoid races with server state
+      attendingGraceRef.current = Date.now() + 3000;
     } catch {
       setMessage("Network error placing bet");
     }
@@ -367,6 +372,7 @@ export default function CrashPage() {
       }
       setMessage("Bet canceled and refunded");
       setAttending(false);
+      attendingGraceRef.current = null;
       await refreshCredits();
     } catch {
       setMessage("Network error canceling bet");
@@ -390,6 +396,7 @@ export default function CrashPage() {
         await refreshCredits();
         cashedOutRef.current = true;
         setAttending(false);
+        attendingGraceRef.current = null;
       }
     } catch {
       setMessage("Network error cashing out");
