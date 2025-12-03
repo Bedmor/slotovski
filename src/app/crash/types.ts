@@ -1,17 +1,15 @@
-export type CrashActiveBet = {
-  playerId: string;
-  betAmount: number;
-  cashedOut?: boolean;
-  cashedOutMultiplier?: number;
-};
+export type CrashPhase = "betting" | "running" | "crashed";
 
-export type CrashRoundState = {
-  running: boolean;
-  multiplier: number;
-  roundId?: string | null;
-  phase: "betting" | "running" | "crashed" | "cooldown";
-  timeLeft?: number; // seconds for betting phase
-  activeBets: Record<string, CrashActiveBet>;
-  pendingBets: Record<string, CrashActiveBet>;
-  history: number[];
+export type CrashState = {
+  roundId: string | null;
+  phase: CrashPhase;
+  // When phase === "running"
+  startTime?: number; // ms epoch
+  currentMultiplier: number; // e.g., 1.00+
+  // Chosen at round creation; not revealed to clients until crash
+  crashPoint?: number | null;
+  // When phase === "betting", countdown to start
+  bettingEndsAt?: number; // ms epoch
+  // When phase === "crashed", countdown to next betting round
+  nextRoundStartsAt?: number; // ms epoch
 };

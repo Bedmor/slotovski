@@ -23,6 +23,16 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type GameRoom = $Result.DefaultSelection<Prisma.$GameRoomPayload>
+/**
+ * Model CrashGame
+ * 
+ */
+export type CrashGame = $Result.DefaultSelection<Prisma.$CrashGamePayload>
+/**
+ * Model CrashBet
+ * 
+ */
+export type CrashBet = $Result.DefaultSelection<Prisma.$CrashBetPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -161,6 +171,26 @@ export class PrismaClient<
     * ```
     */
   get gameRoom(): Prisma.GameRoomDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.crashGame`: Exposes CRUD operations for the **CrashGame** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CrashGames
+    * const crashGames = await prisma.crashGame.findMany()
+    * ```
+    */
+  get crashGame(): Prisma.CrashGameDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.crashBet`: Exposes CRUD operations for the **CrashBet** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CrashBets
+    * const crashBets = await prisma.crashBet.findMany()
+    * ```
+    */
+  get crashBet(): Prisma.CrashBetDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -603,7 +633,9 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
-    GameRoom: 'GameRoom'
+    GameRoom: 'GameRoom',
+    CrashGame: 'CrashGame',
+    CrashBet: 'CrashBet'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -622,7 +654,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "gameRoom"
+      modelProps: "user" | "gameRoom" | "crashGame" | "crashBet"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -774,6 +806,154 @@ export namespace Prisma {
           }
         }
       }
+      CrashGame: {
+        payload: Prisma.$CrashGamePayload<ExtArgs>
+        fields: Prisma.CrashGameFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CrashGameFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CrashGameFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          findFirst: {
+            args: Prisma.CrashGameFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CrashGameFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          findMany: {
+            args: Prisma.CrashGameFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>[]
+          }
+          create: {
+            args: Prisma.CrashGameCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          createMany: {
+            args: Prisma.CrashGameCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CrashGameCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>[]
+          }
+          delete: {
+            args: Prisma.CrashGameDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          update: {
+            args: Prisma.CrashGameUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          deleteMany: {
+            args: Prisma.CrashGameDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CrashGameUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CrashGameUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>[]
+          }
+          upsert: {
+            args: Prisma.CrashGameUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashGamePayload>
+          }
+          aggregate: {
+            args: Prisma.CrashGameAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCrashGame>
+          }
+          groupBy: {
+            args: Prisma.CrashGameGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CrashGameGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CrashGameCountArgs<ExtArgs>
+            result: $Utils.Optional<CrashGameCountAggregateOutputType> | number
+          }
+        }
+      }
+      CrashBet: {
+        payload: Prisma.$CrashBetPayload<ExtArgs>
+        fields: Prisma.CrashBetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CrashBetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CrashBetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          findFirst: {
+            args: Prisma.CrashBetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CrashBetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          findMany: {
+            args: Prisma.CrashBetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>[]
+          }
+          create: {
+            args: Prisma.CrashBetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          createMany: {
+            args: Prisma.CrashBetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CrashBetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>[]
+          }
+          delete: {
+            args: Prisma.CrashBetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          update: {
+            args: Prisma.CrashBetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          deleteMany: {
+            args: Prisma.CrashBetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CrashBetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CrashBetUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>[]
+          }
+          upsert: {
+            args: Prisma.CrashBetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrashBetPayload>
+          }
+          aggregate: {
+            args: Prisma.CrashBetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCrashBet>
+          }
+          groupBy: {
+            args: Prisma.CrashBetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CrashBetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CrashBetCountArgs<ExtArgs>
+            result: $Utils.Optional<CrashBetCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -872,6 +1052,8 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     gameRoom?: GameRoomOmit
+    crashGame?: CrashGameOmit
+    crashBet?: CrashBetOmit
   }
 
   /* Types for Logging */
@@ -946,6 +1128,67 @@ export namespace Prisma {
    * Count Types
    */
 
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    crashBets: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crashBets?: boolean | UserCountOutputTypeCountCrashBetsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCrashBetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrashBetWhereInput
+  }
+
+
+  /**
+   * Count Type CrashGameCountOutputType
+   */
+
+  export type CrashGameCountOutputType = {
+    bets: number
+  }
+
+  export type CrashGameCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bets?: boolean | CrashGameCountOutputTypeCountBetsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CrashGameCountOutputType without action
+   */
+  export type CrashGameCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGameCountOutputType
+     */
+    select?: CrashGameCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CrashGameCountOutputType without action
+   */
+  export type CrashGameCountOutputTypeCountBetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrashBetWhereInput
+  }
 
 
   /**
@@ -1182,6 +1425,8 @@ export namespace Prisma {
     credits?: boolean
     lastDailyReward?: boolean
     role?: boolean
+    crashBets?: boolean | User$crashBetsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1221,10 +1466,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "credits" | "lastDailyReward" | "role", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    crashBets?: boolean | User$crashBetsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      crashBets: Prisma.$CrashBetPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string | null
@@ -1629,6 +1882,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    crashBets<T extends User$crashBetsArgs<ExtArgs> = {}>(args?: Subset<T, User$crashBetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1684,6 +1938,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1702,6 +1960,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -1719,6 +1981,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -1768,6 +2034,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -1816,6 +2086,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which Users to fetch.
      */
     where?: UserWhereInput
@@ -1858,6 +2132,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to create a User.
      */
@@ -1906,6 +2184,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -1973,6 +2255,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -1999,6 +2285,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -2019,6 +2309,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.crashBets
+   */
+  export type User$crashBetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    where?: CrashBetWhereInput
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    cursor?: CrashBetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrashBetScalarFieldEnum | CrashBetScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2030,6 +2344,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
   }
 
 
@@ -3107,6 +3425,2231 @@ export namespace Prisma {
 
 
   /**
+   * Model CrashGame
+   */
+
+  export type AggregateCrashGame = {
+    _count: CrashGameCountAggregateOutputType | null
+    _avg: CrashGameAvgAggregateOutputType | null
+    _sum: CrashGameSumAggregateOutputType | null
+    _min: CrashGameMinAggregateOutputType | null
+    _max: CrashGameMaxAggregateOutputType | null
+  }
+
+  export type CrashGameAvgAggregateOutputType = {
+    crashPoint: number | null
+  }
+
+  export type CrashGameSumAggregateOutputType = {
+    crashPoint: number | null
+  }
+
+  export type CrashGameMinAggregateOutputType = {
+    id: string | null
+    crashPoint: number | null
+    startTime: Date | null
+    status: string | null
+  }
+
+  export type CrashGameMaxAggregateOutputType = {
+    id: string | null
+    crashPoint: number | null
+    startTime: Date | null
+    status: string | null
+  }
+
+  export type CrashGameCountAggregateOutputType = {
+    id: number
+    crashPoint: number
+    startTime: number
+    status: number
+    _all: number
+  }
+
+
+  export type CrashGameAvgAggregateInputType = {
+    crashPoint?: true
+  }
+
+  export type CrashGameSumAggregateInputType = {
+    crashPoint?: true
+  }
+
+  export type CrashGameMinAggregateInputType = {
+    id?: true
+    crashPoint?: true
+    startTime?: true
+    status?: true
+  }
+
+  export type CrashGameMaxAggregateInputType = {
+    id?: true
+    crashPoint?: true
+    startTime?: true
+    status?: true
+  }
+
+  export type CrashGameCountAggregateInputType = {
+    id?: true
+    crashPoint?: true
+    startTime?: true
+    status?: true
+    _all?: true
+  }
+
+  export type CrashGameAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrashGame to aggregate.
+     */
+    where?: CrashGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashGames to fetch.
+     */
+    orderBy?: CrashGameOrderByWithRelationInput | CrashGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CrashGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CrashGames
+    **/
+    _count?: true | CrashGameCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CrashGameAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CrashGameSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CrashGameMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CrashGameMaxAggregateInputType
+  }
+
+  export type GetCrashGameAggregateType<T extends CrashGameAggregateArgs> = {
+        [P in keyof T & keyof AggregateCrashGame]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCrashGame[P]>
+      : GetScalarType<T[P], AggregateCrashGame[P]>
+  }
+
+
+
+
+  export type CrashGameGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrashGameWhereInput
+    orderBy?: CrashGameOrderByWithAggregationInput | CrashGameOrderByWithAggregationInput[]
+    by: CrashGameScalarFieldEnum[] | CrashGameScalarFieldEnum
+    having?: CrashGameScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CrashGameCountAggregateInputType | true
+    _avg?: CrashGameAvgAggregateInputType
+    _sum?: CrashGameSumAggregateInputType
+    _min?: CrashGameMinAggregateInputType
+    _max?: CrashGameMaxAggregateInputType
+  }
+
+  export type CrashGameGroupByOutputType = {
+    id: string
+    crashPoint: number
+    startTime: Date
+    status: string
+    _count: CrashGameCountAggregateOutputType | null
+    _avg: CrashGameAvgAggregateOutputType | null
+    _sum: CrashGameSumAggregateOutputType | null
+    _min: CrashGameMinAggregateOutputType | null
+    _max: CrashGameMaxAggregateOutputType | null
+  }
+
+  type GetCrashGameGroupByPayload<T extends CrashGameGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CrashGameGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CrashGameGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CrashGameGroupByOutputType[P]>
+            : GetScalarType<T[P], CrashGameGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CrashGameSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    crashPoint?: boolean
+    startTime?: boolean
+    status?: boolean
+    bets?: boolean | CrashGame$betsArgs<ExtArgs>
+    _count?: boolean | CrashGameCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crashGame"]>
+
+  export type CrashGameSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    crashPoint?: boolean
+    startTime?: boolean
+    status?: boolean
+  }, ExtArgs["result"]["crashGame"]>
+
+  export type CrashGameSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    crashPoint?: boolean
+    startTime?: boolean
+    status?: boolean
+  }, ExtArgs["result"]["crashGame"]>
+
+  export type CrashGameSelectScalar = {
+    id?: boolean
+    crashPoint?: boolean
+    startTime?: boolean
+    status?: boolean
+  }
+
+  export type CrashGameOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "crashPoint" | "startTime" | "status", ExtArgs["result"]["crashGame"]>
+  export type CrashGameInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    bets?: boolean | CrashGame$betsArgs<ExtArgs>
+    _count?: boolean | CrashGameCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CrashGameIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CrashGameIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $CrashGamePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CrashGame"
+    objects: {
+      bets: Prisma.$CrashBetPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      crashPoint: number
+      startTime: Date
+      status: string
+    }, ExtArgs["result"]["crashGame"]>
+    composites: {}
+  }
+
+  type CrashGameGetPayload<S extends boolean | null | undefined | CrashGameDefaultArgs> = $Result.GetResult<Prisma.$CrashGamePayload, S>
+
+  type CrashGameCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CrashGameFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CrashGameCountAggregateInputType | true
+    }
+
+  export interface CrashGameDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CrashGame'], meta: { name: 'CrashGame' } }
+    /**
+     * Find zero or one CrashGame that matches the filter.
+     * @param {CrashGameFindUniqueArgs} args - Arguments to find a CrashGame
+     * @example
+     * // Get one CrashGame
+     * const crashGame = await prisma.crashGame.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CrashGameFindUniqueArgs>(args: SelectSubset<T, CrashGameFindUniqueArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CrashGame that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CrashGameFindUniqueOrThrowArgs} args - Arguments to find a CrashGame
+     * @example
+     * // Get one CrashGame
+     * const crashGame = await prisma.crashGame.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CrashGameFindUniqueOrThrowArgs>(args: SelectSubset<T, CrashGameFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrashGame that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameFindFirstArgs} args - Arguments to find a CrashGame
+     * @example
+     * // Get one CrashGame
+     * const crashGame = await prisma.crashGame.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CrashGameFindFirstArgs>(args?: SelectSubset<T, CrashGameFindFirstArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrashGame that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameFindFirstOrThrowArgs} args - Arguments to find a CrashGame
+     * @example
+     * // Get one CrashGame
+     * const crashGame = await prisma.crashGame.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CrashGameFindFirstOrThrowArgs>(args?: SelectSubset<T, CrashGameFindFirstOrThrowArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CrashGames that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CrashGames
+     * const crashGames = await prisma.crashGame.findMany()
+     * 
+     * // Get first 10 CrashGames
+     * const crashGames = await prisma.crashGame.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const crashGameWithIdOnly = await prisma.crashGame.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CrashGameFindManyArgs>(args?: SelectSubset<T, CrashGameFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CrashGame.
+     * @param {CrashGameCreateArgs} args - Arguments to create a CrashGame.
+     * @example
+     * // Create one CrashGame
+     * const CrashGame = await prisma.crashGame.create({
+     *   data: {
+     *     // ... data to create a CrashGame
+     *   }
+     * })
+     * 
+     */
+    create<T extends CrashGameCreateArgs>(args: SelectSubset<T, CrashGameCreateArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CrashGames.
+     * @param {CrashGameCreateManyArgs} args - Arguments to create many CrashGames.
+     * @example
+     * // Create many CrashGames
+     * const crashGame = await prisma.crashGame.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CrashGameCreateManyArgs>(args?: SelectSubset<T, CrashGameCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CrashGames and returns the data saved in the database.
+     * @param {CrashGameCreateManyAndReturnArgs} args - Arguments to create many CrashGames.
+     * @example
+     * // Create many CrashGames
+     * const crashGame = await prisma.crashGame.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CrashGames and only return the `id`
+     * const crashGameWithIdOnly = await prisma.crashGame.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CrashGameCreateManyAndReturnArgs>(args?: SelectSubset<T, CrashGameCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CrashGame.
+     * @param {CrashGameDeleteArgs} args - Arguments to delete one CrashGame.
+     * @example
+     * // Delete one CrashGame
+     * const CrashGame = await prisma.crashGame.delete({
+     *   where: {
+     *     // ... filter to delete one CrashGame
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CrashGameDeleteArgs>(args: SelectSubset<T, CrashGameDeleteArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CrashGame.
+     * @param {CrashGameUpdateArgs} args - Arguments to update one CrashGame.
+     * @example
+     * // Update one CrashGame
+     * const crashGame = await prisma.crashGame.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CrashGameUpdateArgs>(args: SelectSubset<T, CrashGameUpdateArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CrashGames.
+     * @param {CrashGameDeleteManyArgs} args - Arguments to filter CrashGames to delete.
+     * @example
+     * // Delete a few CrashGames
+     * const { count } = await prisma.crashGame.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CrashGameDeleteManyArgs>(args?: SelectSubset<T, CrashGameDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrashGames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CrashGames
+     * const crashGame = await prisma.crashGame.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CrashGameUpdateManyArgs>(args: SelectSubset<T, CrashGameUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrashGames and returns the data updated in the database.
+     * @param {CrashGameUpdateManyAndReturnArgs} args - Arguments to update many CrashGames.
+     * @example
+     * // Update many CrashGames
+     * const crashGame = await prisma.crashGame.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CrashGames and only return the `id`
+     * const crashGameWithIdOnly = await prisma.crashGame.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CrashGameUpdateManyAndReturnArgs>(args: SelectSubset<T, CrashGameUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CrashGame.
+     * @param {CrashGameUpsertArgs} args - Arguments to update or create a CrashGame.
+     * @example
+     * // Update or create a CrashGame
+     * const crashGame = await prisma.crashGame.upsert({
+     *   create: {
+     *     // ... data to create a CrashGame
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CrashGame we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CrashGameUpsertArgs>(args: SelectSubset<T, CrashGameUpsertArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CrashGames.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameCountArgs} args - Arguments to filter CrashGames to count.
+     * @example
+     * // Count the number of CrashGames
+     * const count = await prisma.crashGame.count({
+     *   where: {
+     *     // ... the filter for the CrashGames we want to count
+     *   }
+     * })
+    **/
+    count<T extends CrashGameCountArgs>(
+      args?: Subset<T, CrashGameCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CrashGameCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CrashGame.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CrashGameAggregateArgs>(args: Subset<T, CrashGameAggregateArgs>): Prisma.PrismaPromise<GetCrashGameAggregateType<T>>
+
+    /**
+     * Group by CrashGame.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashGameGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CrashGameGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CrashGameGroupByArgs['orderBy'] }
+        : { orderBy?: CrashGameGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CrashGameGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCrashGameGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CrashGame model
+   */
+  readonly fields: CrashGameFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CrashGame.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CrashGameClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    bets<T extends CrashGame$betsArgs<ExtArgs> = {}>(args?: Subset<T, CrashGame$betsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CrashGame model
+   */
+  interface CrashGameFieldRefs {
+    readonly id: FieldRef<"CrashGame", 'String'>
+    readonly crashPoint: FieldRef<"CrashGame", 'Float'>
+    readonly startTime: FieldRef<"CrashGame", 'DateTime'>
+    readonly status: FieldRef<"CrashGame", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CrashGame findUnique
+   */
+  export type CrashGameFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashGame to fetch.
+     */
+    where: CrashGameWhereUniqueInput
+  }
+
+  /**
+   * CrashGame findUniqueOrThrow
+   */
+  export type CrashGameFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashGame to fetch.
+     */
+    where: CrashGameWhereUniqueInput
+  }
+
+  /**
+   * CrashGame findFirst
+   */
+  export type CrashGameFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashGame to fetch.
+     */
+    where?: CrashGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashGames to fetch.
+     */
+    orderBy?: CrashGameOrderByWithRelationInput | CrashGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrashGames.
+     */
+    cursor?: CrashGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrashGames.
+     */
+    distinct?: CrashGameScalarFieldEnum | CrashGameScalarFieldEnum[]
+  }
+
+  /**
+   * CrashGame findFirstOrThrow
+   */
+  export type CrashGameFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashGame to fetch.
+     */
+    where?: CrashGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashGames to fetch.
+     */
+    orderBy?: CrashGameOrderByWithRelationInput | CrashGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrashGames.
+     */
+    cursor?: CrashGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashGames.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrashGames.
+     */
+    distinct?: CrashGameScalarFieldEnum | CrashGameScalarFieldEnum[]
+  }
+
+  /**
+   * CrashGame findMany
+   */
+  export type CrashGameFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashGames to fetch.
+     */
+    where?: CrashGameWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashGames to fetch.
+     */
+    orderBy?: CrashGameOrderByWithRelationInput | CrashGameOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CrashGames.
+     */
+    cursor?: CrashGameWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashGames from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashGames.
+     */
+    skip?: number
+    distinct?: CrashGameScalarFieldEnum | CrashGameScalarFieldEnum[]
+  }
+
+  /**
+   * CrashGame create
+   */
+  export type CrashGameCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CrashGame.
+     */
+    data: XOR<CrashGameCreateInput, CrashGameUncheckedCreateInput>
+  }
+
+  /**
+   * CrashGame createMany
+   */
+  export type CrashGameCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CrashGames.
+     */
+    data: CrashGameCreateManyInput | CrashGameCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CrashGame createManyAndReturn
+   */
+  export type CrashGameCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * The data used to create many CrashGames.
+     */
+    data: CrashGameCreateManyInput | CrashGameCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CrashGame update
+   */
+  export type CrashGameUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CrashGame.
+     */
+    data: XOR<CrashGameUpdateInput, CrashGameUncheckedUpdateInput>
+    /**
+     * Choose, which CrashGame to update.
+     */
+    where: CrashGameWhereUniqueInput
+  }
+
+  /**
+   * CrashGame updateMany
+   */
+  export type CrashGameUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CrashGames.
+     */
+    data: XOR<CrashGameUpdateManyMutationInput, CrashGameUncheckedUpdateManyInput>
+    /**
+     * Filter which CrashGames to update
+     */
+    where?: CrashGameWhereInput
+    /**
+     * Limit how many CrashGames to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrashGame updateManyAndReturn
+   */
+  export type CrashGameUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * The data used to update CrashGames.
+     */
+    data: XOR<CrashGameUpdateManyMutationInput, CrashGameUncheckedUpdateManyInput>
+    /**
+     * Filter which CrashGames to update
+     */
+    where?: CrashGameWhereInput
+    /**
+     * Limit how many CrashGames to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrashGame upsert
+   */
+  export type CrashGameUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CrashGame to update in case it exists.
+     */
+    where: CrashGameWhereUniqueInput
+    /**
+     * In case the CrashGame found by the `where` argument doesn't exist, create a new CrashGame with this data.
+     */
+    create: XOR<CrashGameCreateInput, CrashGameUncheckedCreateInput>
+    /**
+     * In case the CrashGame was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CrashGameUpdateInput, CrashGameUncheckedUpdateInput>
+  }
+
+  /**
+   * CrashGame delete
+   */
+  export type CrashGameDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+    /**
+     * Filter which CrashGame to delete.
+     */
+    where: CrashGameWhereUniqueInput
+  }
+
+  /**
+   * CrashGame deleteMany
+   */
+  export type CrashGameDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrashGames to delete
+     */
+    where?: CrashGameWhereInput
+    /**
+     * Limit how many CrashGames to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrashGame.bets
+   */
+  export type CrashGame$betsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    where?: CrashBetWhereInput
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    cursor?: CrashBetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CrashBetScalarFieldEnum | CrashBetScalarFieldEnum[]
+  }
+
+  /**
+   * CrashGame without action
+   */
+  export type CrashGameDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashGame
+     */
+    select?: CrashGameSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashGame
+     */
+    omit?: CrashGameOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashGameInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CrashBet
+   */
+
+  export type AggregateCrashBet = {
+    _count: CrashBetCountAggregateOutputType | null
+    _avg: CrashBetAvgAggregateOutputType | null
+    _sum: CrashBetSumAggregateOutputType | null
+    _min: CrashBetMinAggregateOutputType | null
+    _max: CrashBetMaxAggregateOutputType | null
+  }
+
+  export type CrashBetAvgAggregateOutputType = {
+    amount: number | null
+    cashedOutAt: number | null
+    winAmount: number | null
+  }
+
+  export type CrashBetSumAggregateOutputType = {
+    amount: number | null
+    cashedOutAt: number | null
+    winAmount: number | null
+  }
+
+  export type CrashBetMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    gameId: string | null
+    amount: number | null
+    cashedOutAt: number | null
+    winAmount: number | null
+    createdAt: Date | null
+  }
+
+  export type CrashBetMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    gameId: string | null
+    amount: number | null
+    cashedOutAt: number | null
+    winAmount: number | null
+    createdAt: Date | null
+  }
+
+  export type CrashBetCountAggregateOutputType = {
+    id: number
+    userId: number
+    gameId: number
+    amount: number
+    cashedOutAt: number
+    winAmount: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CrashBetAvgAggregateInputType = {
+    amount?: true
+    cashedOutAt?: true
+    winAmount?: true
+  }
+
+  export type CrashBetSumAggregateInputType = {
+    amount?: true
+    cashedOutAt?: true
+    winAmount?: true
+  }
+
+  export type CrashBetMinAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    amount?: true
+    cashedOutAt?: true
+    winAmount?: true
+    createdAt?: true
+  }
+
+  export type CrashBetMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    amount?: true
+    cashedOutAt?: true
+    winAmount?: true
+    createdAt?: true
+  }
+
+  export type CrashBetCountAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    amount?: true
+    cashedOutAt?: true
+    winAmount?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CrashBetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrashBet to aggregate.
+     */
+    where?: CrashBetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashBets to fetch.
+     */
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CrashBetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashBets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashBets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CrashBets
+    **/
+    _count?: true | CrashBetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CrashBetAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CrashBetSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CrashBetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CrashBetMaxAggregateInputType
+  }
+
+  export type GetCrashBetAggregateType<T extends CrashBetAggregateArgs> = {
+        [P in keyof T & keyof AggregateCrashBet]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCrashBet[P]>
+      : GetScalarType<T[P], AggregateCrashBet[P]>
+  }
+
+
+
+
+  export type CrashBetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrashBetWhereInput
+    orderBy?: CrashBetOrderByWithAggregationInput | CrashBetOrderByWithAggregationInput[]
+    by: CrashBetScalarFieldEnum[] | CrashBetScalarFieldEnum
+    having?: CrashBetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CrashBetCountAggregateInputType | true
+    _avg?: CrashBetAvgAggregateInputType
+    _sum?: CrashBetSumAggregateInputType
+    _min?: CrashBetMinAggregateInputType
+    _max?: CrashBetMaxAggregateInputType
+  }
+
+  export type CrashBetGroupByOutputType = {
+    id: string
+    userId: string
+    gameId: string
+    amount: number
+    cashedOutAt: number | null
+    winAmount: number | null
+    createdAt: Date
+    _count: CrashBetCountAggregateOutputType | null
+    _avg: CrashBetAvgAggregateOutputType | null
+    _sum: CrashBetSumAggregateOutputType | null
+    _min: CrashBetMinAggregateOutputType | null
+    _max: CrashBetMaxAggregateOutputType | null
+  }
+
+  type GetCrashBetGroupByPayload<T extends CrashBetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CrashBetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CrashBetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CrashBetGroupByOutputType[P]>
+            : GetScalarType<T[P], CrashBetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CrashBetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    amount?: boolean
+    cashedOutAt?: boolean
+    winAmount?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crashBet"]>
+
+  export type CrashBetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    amount?: boolean
+    cashedOutAt?: boolean
+    winAmount?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crashBet"]>
+
+  export type CrashBetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    amount?: boolean
+    cashedOutAt?: boolean
+    winAmount?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crashBet"]>
+
+  export type CrashBetSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    amount?: boolean
+    cashedOutAt?: boolean
+    winAmount?: boolean
+    createdAt?: boolean
+  }
+
+  export type CrashBetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "gameId" | "amount" | "cashedOutAt" | "winAmount" | "createdAt", ExtArgs["result"]["crashBet"]>
+  export type CrashBetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }
+  export type CrashBetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }
+  export type CrashBetIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | CrashGameDefaultArgs<ExtArgs>
+  }
+
+  export type $CrashBetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CrashBet"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      game: Prisma.$CrashGamePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      gameId: string
+      amount: number
+      cashedOutAt: number | null
+      winAmount: number | null
+      createdAt: Date
+    }, ExtArgs["result"]["crashBet"]>
+    composites: {}
+  }
+
+  type CrashBetGetPayload<S extends boolean | null | undefined | CrashBetDefaultArgs> = $Result.GetResult<Prisma.$CrashBetPayload, S>
+
+  type CrashBetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CrashBetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CrashBetCountAggregateInputType | true
+    }
+
+  export interface CrashBetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CrashBet'], meta: { name: 'CrashBet' } }
+    /**
+     * Find zero or one CrashBet that matches the filter.
+     * @param {CrashBetFindUniqueArgs} args - Arguments to find a CrashBet
+     * @example
+     * // Get one CrashBet
+     * const crashBet = await prisma.crashBet.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CrashBetFindUniqueArgs>(args: SelectSubset<T, CrashBetFindUniqueArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CrashBet that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CrashBetFindUniqueOrThrowArgs} args - Arguments to find a CrashBet
+     * @example
+     * // Get one CrashBet
+     * const crashBet = await prisma.crashBet.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CrashBetFindUniqueOrThrowArgs>(args: SelectSubset<T, CrashBetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrashBet that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetFindFirstArgs} args - Arguments to find a CrashBet
+     * @example
+     * // Get one CrashBet
+     * const crashBet = await prisma.crashBet.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CrashBetFindFirstArgs>(args?: SelectSubset<T, CrashBetFindFirstArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrashBet that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetFindFirstOrThrowArgs} args - Arguments to find a CrashBet
+     * @example
+     * // Get one CrashBet
+     * const crashBet = await prisma.crashBet.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CrashBetFindFirstOrThrowArgs>(args?: SelectSubset<T, CrashBetFindFirstOrThrowArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CrashBets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CrashBets
+     * const crashBets = await prisma.crashBet.findMany()
+     * 
+     * // Get first 10 CrashBets
+     * const crashBets = await prisma.crashBet.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const crashBetWithIdOnly = await prisma.crashBet.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CrashBetFindManyArgs>(args?: SelectSubset<T, CrashBetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CrashBet.
+     * @param {CrashBetCreateArgs} args - Arguments to create a CrashBet.
+     * @example
+     * // Create one CrashBet
+     * const CrashBet = await prisma.crashBet.create({
+     *   data: {
+     *     // ... data to create a CrashBet
+     *   }
+     * })
+     * 
+     */
+    create<T extends CrashBetCreateArgs>(args: SelectSubset<T, CrashBetCreateArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CrashBets.
+     * @param {CrashBetCreateManyArgs} args - Arguments to create many CrashBets.
+     * @example
+     * // Create many CrashBets
+     * const crashBet = await prisma.crashBet.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CrashBetCreateManyArgs>(args?: SelectSubset<T, CrashBetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CrashBets and returns the data saved in the database.
+     * @param {CrashBetCreateManyAndReturnArgs} args - Arguments to create many CrashBets.
+     * @example
+     * // Create many CrashBets
+     * const crashBet = await prisma.crashBet.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CrashBets and only return the `id`
+     * const crashBetWithIdOnly = await prisma.crashBet.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CrashBetCreateManyAndReturnArgs>(args?: SelectSubset<T, CrashBetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CrashBet.
+     * @param {CrashBetDeleteArgs} args - Arguments to delete one CrashBet.
+     * @example
+     * // Delete one CrashBet
+     * const CrashBet = await prisma.crashBet.delete({
+     *   where: {
+     *     // ... filter to delete one CrashBet
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CrashBetDeleteArgs>(args: SelectSubset<T, CrashBetDeleteArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CrashBet.
+     * @param {CrashBetUpdateArgs} args - Arguments to update one CrashBet.
+     * @example
+     * // Update one CrashBet
+     * const crashBet = await prisma.crashBet.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CrashBetUpdateArgs>(args: SelectSubset<T, CrashBetUpdateArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CrashBets.
+     * @param {CrashBetDeleteManyArgs} args - Arguments to filter CrashBets to delete.
+     * @example
+     * // Delete a few CrashBets
+     * const { count } = await prisma.crashBet.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CrashBetDeleteManyArgs>(args?: SelectSubset<T, CrashBetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrashBets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CrashBets
+     * const crashBet = await prisma.crashBet.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CrashBetUpdateManyArgs>(args: SelectSubset<T, CrashBetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrashBets and returns the data updated in the database.
+     * @param {CrashBetUpdateManyAndReturnArgs} args - Arguments to update many CrashBets.
+     * @example
+     * // Update many CrashBets
+     * const crashBet = await prisma.crashBet.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CrashBets and only return the `id`
+     * const crashBetWithIdOnly = await prisma.crashBet.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CrashBetUpdateManyAndReturnArgs>(args: SelectSubset<T, CrashBetUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CrashBet.
+     * @param {CrashBetUpsertArgs} args - Arguments to update or create a CrashBet.
+     * @example
+     * // Update or create a CrashBet
+     * const crashBet = await prisma.crashBet.upsert({
+     *   create: {
+     *     // ... data to create a CrashBet
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CrashBet we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CrashBetUpsertArgs>(args: SelectSubset<T, CrashBetUpsertArgs<ExtArgs>>): Prisma__CrashBetClient<$Result.GetResult<Prisma.$CrashBetPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CrashBets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetCountArgs} args - Arguments to filter CrashBets to count.
+     * @example
+     * // Count the number of CrashBets
+     * const count = await prisma.crashBet.count({
+     *   where: {
+     *     // ... the filter for the CrashBets we want to count
+     *   }
+     * })
+    **/
+    count<T extends CrashBetCountArgs>(
+      args?: Subset<T, CrashBetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CrashBetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CrashBet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CrashBetAggregateArgs>(args: Subset<T, CrashBetAggregateArgs>): Prisma.PrismaPromise<GetCrashBetAggregateType<T>>
+
+    /**
+     * Group by CrashBet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrashBetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CrashBetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CrashBetGroupByArgs['orderBy'] }
+        : { orderBy?: CrashBetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CrashBetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCrashBetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CrashBet model
+   */
+  readonly fields: CrashBetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CrashBet.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CrashBetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    game<T extends CrashGameDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CrashGameDefaultArgs<ExtArgs>>): Prisma__CrashGameClient<$Result.GetResult<Prisma.$CrashGamePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CrashBet model
+   */
+  interface CrashBetFieldRefs {
+    readonly id: FieldRef<"CrashBet", 'String'>
+    readonly userId: FieldRef<"CrashBet", 'String'>
+    readonly gameId: FieldRef<"CrashBet", 'String'>
+    readonly amount: FieldRef<"CrashBet", 'Int'>
+    readonly cashedOutAt: FieldRef<"CrashBet", 'Float'>
+    readonly winAmount: FieldRef<"CrashBet", 'Int'>
+    readonly createdAt: FieldRef<"CrashBet", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CrashBet findUnique
+   */
+  export type CrashBetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashBet to fetch.
+     */
+    where: CrashBetWhereUniqueInput
+  }
+
+  /**
+   * CrashBet findUniqueOrThrow
+   */
+  export type CrashBetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashBet to fetch.
+     */
+    where: CrashBetWhereUniqueInput
+  }
+
+  /**
+   * CrashBet findFirst
+   */
+  export type CrashBetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashBet to fetch.
+     */
+    where?: CrashBetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashBets to fetch.
+     */
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrashBets.
+     */
+    cursor?: CrashBetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashBets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashBets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrashBets.
+     */
+    distinct?: CrashBetScalarFieldEnum | CrashBetScalarFieldEnum[]
+  }
+
+  /**
+   * CrashBet findFirstOrThrow
+   */
+  export type CrashBetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashBet to fetch.
+     */
+    where?: CrashBetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashBets to fetch.
+     */
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrashBets.
+     */
+    cursor?: CrashBetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashBets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashBets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrashBets.
+     */
+    distinct?: CrashBetScalarFieldEnum | CrashBetScalarFieldEnum[]
+  }
+
+  /**
+   * CrashBet findMany
+   */
+  export type CrashBetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter, which CrashBets to fetch.
+     */
+    where?: CrashBetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrashBets to fetch.
+     */
+    orderBy?: CrashBetOrderByWithRelationInput | CrashBetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CrashBets.
+     */
+    cursor?: CrashBetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrashBets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrashBets.
+     */
+    skip?: number
+    distinct?: CrashBetScalarFieldEnum | CrashBetScalarFieldEnum[]
+  }
+
+  /**
+   * CrashBet create
+   */
+  export type CrashBetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CrashBet.
+     */
+    data: XOR<CrashBetCreateInput, CrashBetUncheckedCreateInput>
+  }
+
+  /**
+   * CrashBet createMany
+   */
+  export type CrashBetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CrashBets.
+     */
+    data: CrashBetCreateManyInput | CrashBetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CrashBet createManyAndReturn
+   */
+  export type CrashBetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * The data used to create many CrashBets.
+     */
+    data: CrashBetCreateManyInput | CrashBetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrashBet update
+   */
+  export type CrashBetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CrashBet.
+     */
+    data: XOR<CrashBetUpdateInput, CrashBetUncheckedUpdateInput>
+    /**
+     * Choose, which CrashBet to update.
+     */
+    where: CrashBetWhereUniqueInput
+  }
+
+  /**
+   * CrashBet updateMany
+   */
+  export type CrashBetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CrashBets.
+     */
+    data: XOR<CrashBetUpdateManyMutationInput, CrashBetUncheckedUpdateManyInput>
+    /**
+     * Filter which CrashBets to update
+     */
+    where?: CrashBetWhereInput
+    /**
+     * Limit how many CrashBets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrashBet updateManyAndReturn
+   */
+  export type CrashBetUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * The data used to update CrashBets.
+     */
+    data: XOR<CrashBetUpdateManyMutationInput, CrashBetUncheckedUpdateManyInput>
+    /**
+     * Filter which CrashBets to update
+     */
+    where?: CrashBetWhereInput
+    /**
+     * Limit how many CrashBets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrashBet upsert
+   */
+  export type CrashBetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CrashBet to update in case it exists.
+     */
+    where: CrashBetWhereUniqueInput
+    /**
+     * In case the CrashBet found by the `where` argument doesn't exist, create a new CrashBet with this data.
+     */
+    create: XOR<CrashBetCreateInput, CrashBetUncheckedCreateInput>
+    /**
+     * In case the CrashBet was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CrashBetUpdateInput, CrashBetUncheckedUpdateInput>
+  }
+
+  /**
+   * CrashBet delete
+   */
+  export type CrashBetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+    /**
+     * Filter which CrashBet to delete.
+     */
+    where: CrashBetWhereUniqueInput
+  }
+
+  /**
+   * CrashBet deleteMany
+   */
+  export type CrashBetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrashBets to delete
+     */
+    where?: CrashBetWhereInput
+    /**
+     * Limit how many CrashBets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrashBet without action
+   */
+  export type CrashBetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrashBet
+     */
+    select?: CrashBetSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrashBet
+     */
+    omit?: CrashBetOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrashBetInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -3148,6 +5691,29 @@ export namespace Prisma {
   };
 
   export type GameRoomScalarFieldEnum = (typeof GameRoomScalarFieldEnum)[keyof typeof GameRoomScalarFieldEnum]
+
+
+  export const CrashGameScalarFieldEnum: {
+    id: 'id',
+    crashPoint: 'crashPoint',
+    startTime: 'startTime',
+    status: 'status'
+  };
+
+  export type CrashGameScalarFieldEnum = (typeof CrashGameScalarFieldEnum)[keyof typeof CrashGameScalarFieldEnum]
+
+
+  export const CrashBetScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    gameId: 'gameId',
+    amount: 'amount',
+    cashedOutAt: 'cashedOutAt',
+    winAmount: 'winAmount',
+    createdAt: 'createdAt'
+  };
+
+  export type CrashBetScalarFieldEnum = (typeof CrashBetScalarFieldEnum)[keyof typeof CrashBetScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -3288,6 +5854,7 @@ export namespace Prisma {
     credits?: IntFilter<"User"> | number
     lastDailyReward?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: StringFilter<"User"> | string
+    crashBets?: CrashBetListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -3300,6 +5867,7 @@ export namespace Prisma {
     credits?: SortOrder
     lastDailyReward?: SortOrderInput | SortOrder
     role?: SortOrder
+    crashBets?: CrashBetOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -3315,6 +5883,7 @@ export namespace Prisma {
     credits?: IntFilter<"User"> | number
     lastDailyReward?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: StringFilter<"User"> | string
+    crashBets?: CrashBetListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -3423,6 +5992,128 @@ export namespace Prisma {
     maxPlayers?: IntWithAggregatesFilter<"GameRoom"> | number
   }
 
+  export type CrashGameWhereInput = {
+    AND?: CrashGameWhereInput | CrashGameWhereInput[]
+    OR?: CrashGameWhereInput[]
+    NOT?: CrashGameWhereInput | CrashGameWhereInput[]
+    id?: StringFilter<"CrashGame"> | string
+    crashPoint?: FloatFilter<"CrashGame"> | number
+    startTime?: DateTimeFilter<"CrashGame"> | Date | string
+    status?: StringFilter<"CrashGame"> | string
+    bets?: CrashBetListRelationFilter
+  }
+
+  export type CrashGameOrderByWithRelationInput = {
+    id?: SortOrder
+    crashPoint?: SortOrder
+    startTime?: SortOrder
+    status?: SortOrder
+    bets?: CrashBetOrderByRelationAggregateInput
+  }
+
+  export type CrashGameWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CrashGameWhereInput | CrashGameWhereInput[]
+    OR?: CrashGameWhereInput[]
+    NOT?: CrashGameWhereInput | CrashGameWhereInput[]
+    crashPoint?: FloatFilter<"CrashGame"> | number
+    startTime?: DateTimeFilter<"CrashGame"> | Date | string
+    status?: StringFilter<"CrashGame"> | string
+    bets?: CrashBetListRelationFilter
+  }, "id">
+
+  export type CrashGameOrderByWithAggregationInput = {
+    id?: SortOrder
+    crashPoint?: SortOrder
+    startTime?: SortOrder
+    status?: SortOrder
+    _count?: CrashGameCountOrderByAggregateInput
+    _avg?: CrashGameAvgOrderByAggregateInput
+    _max?: CrashGameMaxOrderByAggregateInput
+    _min?: CrashGameMinOrderByAggregateInput
+    _sum?: CrashGameSumOrderByAggregateInput
+  }
+
+  export type CrashGameScalarWhereWithAggregatesInput = {
+    AND?: CrashGameScalarWhereWithAggregatesInput | CrashGameScalarWhereWithAggregatesInput[]
+    OR?: CrashGameScalarWhereWithAggregatesInput[]
+    NOT?: CrashGameScalarWhereWithAggregatesInput | CrashGameScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CrashGame"> | string
+    crashPoint?: FloatWithAggregatesFilter<"CrashGame"> | number
+    startTime?: DateTimeWithAggregatesFilter<"CrashGame"> | Date | string
+    status?: StringWithAggregatesFilter<"CrashGame"> | string
+  }
+
+  export type CrashBetWhereInput = {
+    AND?: CrashBetWhereInput | CrashBetWhereInput[]
+    OR?: CrashBetWhereInput[]
+    NOT?: CrashBetWhereInput | CrashBetWhereInput[]
+    id?: StringFilter<"CrashBet"> | string
+    userId?: StringFilter<"CrashBet"> | string
+    gameId?: StringFilter<"CrashBet"> | string
+    amount?: IntFilter<"CrashBet"> | number
+    cashedOutAt?: FloatNullableFilter<"CrashBet"> | number | null
+    winAmount?: IntNullableFilter<"CrashBet"> | number | null
+    createdAt?: DateTimeFilter<"CrashBet"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    game?: XOR<CrashGameScalarRelationFilter, CrashGameWhereInput>
+  }
+
+  export type CrashBetOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    amount?: SortOrder
+    cashedOutAt?: SortOrderInput | SortOrder
+    winAmount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    game?: CrashGameOrderByWithRelationInput
+  }
+
+  export type CrashBetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CrashBetWhereInput | CrashBetWhereInput[]
+    OR?: CrashBetWhereInput[]
+    NOT?: CrashBetWhereInput | CrashBetWhereInput[]
+    userId?: StringFilter<"CrashBet"> | string
+    gameId?: StringFilter<"CrashBet"> | string
+    amount?: IntFilter<"CrashBet"> | number
+    cashedOutAt?: FloatNullableFilter<"CrashBet"> | number | null
+    winAmount?: IntNullableFilter<"CrashBet"> | number | null
+    createdAt?: DateTimeFilter<"CrashBet"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    game?: XOR<CrashGameScalarRelationFilter, CrashGameWhereInput>
+  }, "id">
+
+  export type CrashBetOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    amount?: SortOrder
+    cashedOutAt?: SortOrderInput | SortOrder
+    winAmount?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CrashBetCountOrderByAggregateInput
+    _avg?: CrashBetAvgOrderByAggregateInput
+    _max?: CrashBetMaxOrderByAggregateInput
+    _min?: CrashBetMinOrderByAggregateInput
+    _sum?: CrashBetSumOrderByAggregateInput
+  }
+
+  export type CrashBetScalarWhereWithAggregatesInput = {
+    AND?: CrashBetScalarWhereWithAggregatesInput | CrashBetScalarWhereWithAggregatesInput[]
+    OR?: CrashBetScalarWhereWithAggregatesInput[]
+    NOT?: CrashBetScalarWhereWithAggregatesInput | CrashBetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CrashBet"> | string
+    userId?: StringWithAggregatesFilter<"CrashBet"> | string
+    gameId?: StringWithAggregatesFilter<"CrashBet"> | string
+    amount?: IntWithAggregatesFilter<"CrashBet"> | number
+    cashedOutAt?: FloatNullableWithAggregatesFilter<"CrashBet"> | number | null
+    winAmount?: IntNullableWithAggregatesFilter<"CrashBet"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"CrashBet"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name?: string | null
@@ -3433,6 +6124,7 @@ export namespace Prisma {
     credits?: number
     lastDailyReward?: Date | string | null
     role?: string
+    crashBets?: CrashBetCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -3445,6 +6137,7 @@ export namespace Prisma {
     credits?: number
     lastDailyReward?: Date | string | null
     role?: string
+    crashBets?: CrashBetUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -3457,6 +6150,7 @@ export namespace Prisma {
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: StringFieldUpdateOperationsInput | string
+    crashBets?: CrashBetUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -3469,6 +6163,7 @@ export namespace Prisma {
     credits?: IntFieldUpdateOperationsInput | number
     lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: StringFieldUpdateOperationsInput | string
+    crashBets?: CrashBetUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -3591,6 +6286,127 @@ export namespace Prisma {
     maxPlayers?: IntFieldUpdateOperationsInput | number
   }
 
+  export type CrashGameCreateInput = {
+    id: string
+    crashPoint: number
+    startTime?: Date | string
+    status: string
+    bets?: CrashBetCreateNestedManyWithoutGameInput
+  }
+
+  export type CrashGameUncheckedCreateInput = {
+    id: string
+    crashPoint: number
+    startTime?: Date | string
+    status: string
+    bets?: CrashBetUncheckedCreateNestedManyWithoutGameInput
+  }
+
+  export type CrashGameUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    bets?: CrashBetUpdateManyWithoutGameNestedInput
+  }
+
+  export type CrashGameUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    bets?: CrashBetUncheckedUpdateManyWithoutGameNestedInput
+  }
+
+  export type CrashGameCreateManyInput = {
+    id: string
+    crashPoint: number
+    startTime?: Date | string
+    status: string
+  }
+
+  export type CrashGameUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CrashGameUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CrashBetCreateInput = {
+    id?: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutCrashBetsInput
+    game: CrashGameCreateNestedOneWithoutBetsInput
+  }
+
+  export type CrashBetUncheckedCreateInput = {
+    id?: string
+    userId: string
+    gameId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCrashBetsNestedInput
+    game?: CrashGameUpdateOneRequiredWithoutBetsNestedInput
+  }
+
+  export type CrashBetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrashBetCreateManyInput = {
+    id?: string
+    userId: string
+    gameId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrashBetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -3643,9 +6459,19 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type CrashBetListRelationFilter = {
+    every?: CrashBetWhereInput
+    some?: CrashBetWhereInput
+    none?: CrashBetWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type CrashBetOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -3885,6 +6711,182 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type CrashGameCountOrderByAggregateInput = {
+    id?: SortOrder
+    crashPoint?: SortOrder
+    startTime?: SortOrder
+    status?: SortOrder
+  }
+
+  export type CrashGameAvgOrderByAggregateInput = {
+    crashPoint?: SortOrder
+  }
+
+  export type CrashGameMaxOrderByAggregateInput = {
+    id?: SortOrder
+    crashPoint?: SortOrder
+    startTime?: SortOrder
+    status?: SortOrder
+  }
+
+  export type CrashGameMinOrderByAggregateInput = {
+    id?: SortOrder
+    crashPoint?: SortOrder
+    startTime?: SortOrder
+    status?: SortOrder
+  }
+
+  export type CrashGameSumOrderByAggregateInput = {
+    crashPoint?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type CrashGameScalarRelationFilter = {
+    is?: CrashGameWhereInput
+    isNot?: CrashGameWhereInput
+  }
+
+  export type CrashBetCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    amount?: SortOrder
+    cashedOutAt?: SortOrder
+    winAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CrashBetAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    cashedOutAt?: SortOrder
+    winAmount?: SortOrder
+  }
+
+  export type CrashBetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    amount?: SortOrder
+    cashedOutAt?: SortOrder
+    winAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CrashBetMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    amount?: SortOrder
+    cashedOutAt?: SortOrder
+    winAmount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CrashBetSumOrderByAggregateInput = {
+    amount?: SortOrder
+    cashedOutAt?: SortOrder
+    winAmount?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type CrashBetCreateNestedManyWithoutUserInput = {
+    create?: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput> | CrashBetCreateWithoutUserInput[] | CrashBetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutUserInput | CrashBetCreateOrConnectWithoutUserInput[]
+    createMany?: CrashBetCreateManyUserInputEnvelope
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+  }
+
+  export type CrashBetUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput> | CrashBetCreateWithoutUserInput[] | CrashBetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutUserInput | CrashBetCreateOrConnectWithoutUserInput[]
+    createMany?: CrashBetCreateManyUserInputEnvelope
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -3905,12 +6907,134 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type CrashBetUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput> | CrashBetCreateWithoutUserInput[] | CrashBetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutUserInput | CrashBetCreateOrConnectWithoutUserInput[]
+    upsert?: CrashBetUpsertWithWhereUniqueWithoutUserInput | CrashBetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CrashBetCreateManyUserInputEnvelope
+    set?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    disconnect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    delete?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    update?: CrashBetUpdateWithWhereUniqueWithoutUserInput | CrashBetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CrashBetUpdateManyWithWhereWithoutUserInput | CrashBetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+  }
+
+  export type CrashBetUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput> | CrashBetCreateWithoutUserInput[] | CrashBetUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutUserInput | CrashBetCreateOrConnectWithoutUserInput[]
+    upsert?: CrashBetUpsertWithWhereUniqueWithoutUserInput | CrashBetUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CrashBetCreateManyUserInputEnvelope
+    set?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    disconnect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    delete?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    update?: CrashBetUpdateWithWhereUniqueWithoutUserInput | CrashBetUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CrashBetUpdateManyWithWhereWithoutUserInput | CrashBetUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type CrashBetCreateNestedManyWithoutGameInput = {
+    create?: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput> | CrashBetCreateWithoutGameInput[] | CrashBetUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutGameInput | CrashBetCreateOrConnectWithoutGameInput[]
+    createMany?: CrashBetCreateManyGameInputEnvelope
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+  }
+
+  export type CrashBetUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput> | CrashBetCreateWithoutGameInput[] | CrashBetUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutGameInput | CrashBetCreateOrConnectWithoutGameInput[]
+    createMany?: CrashBetCreateManyGameInputEnvelope
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type CrashBetUpdateManyWithoutGameNestedInput = {
+    create?: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput> | CrashBetCreateWithoutGameInput[] | CrashBetUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutGameInput | CrashBetCreateOrConnectWithoutGameInput[]
+    upsert?: CrashBetUpsertWithWhereUniqueWithoutGameInput | CrashBetUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: CrashBetCreateManyGameInputEnvelope
+    set?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    disconnect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    delete?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    update?: CrashBetUpdateWithWhereUniqueWithoutGameInput | CrashBetUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: CrashBetUpdateManyWithWhereWithoutGameInput | CrashBetUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+  }
+
+  export type CrashBetUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput> | CrashBetCreateWithoutGameInput[] | CrashBetUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: CrashBetCreateOrConnectWithoutGameInput | CrashBetCreateOrConnectWithoutGameInput[]
+    upsert?: CrashBetUpsertWithWhereUniqueWithoutGameInput | CrashBetUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: CrashBetCreateManyGameInputEnvelope
+    set?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    disconnect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    delete?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    connect?: CrashBetWhereUniqueInput | CrashBetWhereUniqueInput[]
+    update?: CrashBetUpdateWithWhereUniqueWithoutGameInput | CrashBetUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: CrashBetUpdateManyWithWhereWithoutGameInput | CrashBetUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutCrashBetsInput = {
+    create?: XOR<UserCreateWithoutCrashBetsInput, UserUncheckedCreateWithoutCrashBetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCrashBetsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CrashGameCreateNestedOneWithoutBetsInput = {
+    create?: XOR<CrashGameCreateWithoutBetsInput, CrashGameUncheckedCreateWithoutBetsInput>
+    connectOrCreate?: CrashGameCreateOrConnectWithoutBetsInput
+    connect?: CrashGameWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutCrashBetsNestedInput = {
+    create?: XOR<UserCreateWithoutCrashBetsInput, UserUncheckedCreateWithoutCrashBetsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCrashBetsInput
+    upsert?: UserUpsertWithoutCrashBetsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCrashBetsInput, UserUpdateWithoutCrashBetsInput>, UserUncheckedUpdateWithoutCrashBetsInput>
+  }
+
+  export type CrashGameUpdateOneRequiredWithoutBetsNestedInput = {
+    create?: XOR<CrashGameCreateWithoutBetsInput, CrashGameUncheckedCreateWithoutBetsInput>
+    connectOrCreate?: CrashGameCreateOrConnectWithoutBetsInput
+    upsert?: CrashGameUpsertWithoutBetsInput
+    connect?: CrashGameWhereUniqueInput
+    update?: XOR<XOR<CrashGameUpdateToOneWithWhereWithoutBetsInput, CrashGameUpdateWithoutBetsInput>, CrashGameUncheckedUpdateWithoutBetsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -4108,6 +7232,346 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type CrashBetCreateWithoutUserInput = {
+    id?: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+    game: CrashGameCreateNestedOneWithoutBetsInput
+  }
+
+  export type CrashBetUncheckedCreateWithoutUserInput = {
+    id?: string
+    gameId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetCreateOrConnectWithoutUserInput = {
+    where: CrashBetWhereUniqueInput
+    create: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput>
+  }
+
+  export type CrashBetCreateManyUserInputEnvelope = {
+    data: CrashBetCreateManyUserInput | CrashBetCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CrashBetUpsertWithWhereUniqueWithoutUserInput = {
+    where: CrashBetWhereUniqueInput
+    update: XOR<CrashBetUpdateWithoutUserInput, CrashBetUncheckedUpdateWithoutUserInput>
+    create: XOR<CrashBetCreateWithoutUserInput, CrashBetUncheckedCreateWithoutUserInput>
+  }
+
+  export type CrashBetUpdateWithWhereUniqueWithoutUserInput = {
+    where: CrashBetWhereUniqueInput
+    data: XOR<CrashBetUpdateWithoutUserInput, CrashBetUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CrashBetUpdateManyWithWhereWithoutUserInput = {
+    where: CrashBetScalarWhereInput
+    data: XOR<CrashBetUpdateManyMutationInput, CrashBetUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CrashBetScalarWhereInput = {
+    AND?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+    OR?: CrashBetScalarWhereInput[]
+    NOT?: CrashBetScalarWhereInput | CrashBetScalarWhereInput[]
+    id?: StringFilter<"CrashBet"> | string
+    userId?: StringFilter<"CrashBet"> | string
+    gameId?: StringFilter<"CrashBet"> | string
+    amount?: IntFilter<"CrashBet"> | number
+    cashedOutAt?: FloatNullableFilter<"CrashBet"> | number | null
+    winAmount?: IntNullableFilter<"CrashBet"> | number | null
+    createdAt?: DateTimeFilter<"CrashBet"> | Date | string
+  }
+
+  export type CrashBetCreateWithoutGameInput = {
+    id?: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutCrashBetsInput
+  }
+
+  export type CrashBetUncheckedCreateWithoutGameInput = {
+    id?: string
+    userId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetCreateOrConnectWithoutGameInput = {
+    where: CrashBetWhereUniqueInput
+    create: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput>
+  }
+
+  export type CrashBetCreateManyGameInputEnvelope = {
+    data: CrashBetCreateManyGameInput | CrashBetCreateManyGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CrashBetUpsertWithWhereUniqueWithoutGameInput = {
+    where: CrashBetWhereUniqueInput
+    update: XOR<CrashBetUpdateWithoutGameInput, CrashBetUncheckedUpdateWithoutGameInput>
+    create: XOR<CrashBetCreateWithoutGameInput, CrashBetUncheckedCreateWithoutGameInput>
+  }
+
+  export type CrashBetUpdateWithWhereUniqueWithoutGameInput = {
+    where: CrashBetWhereUniqueInput
+    data: XOR<CrashBetUpdateWithoutGameInput, CrashBetUncheckedUpdateWithoutGameInput>
+  }
+
+  export type CrashBetUpdateManyWithWhereWithoutGameInput = {
+    where: CrashBetScalarWhereInput
+    data: XOR<CrashBetUpdateManyMutationInput, CrashBetUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type UserCreateWithoutCrashBetsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    password?: string | null
+    credits?: number
+    lastDailyReward?: Date | string | null
+    role?: string
+  }
+
+  export type UserUncheckedCreateWithoutCrashBetsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    password?: string | null
+    credits?: number
+    lastDailyReward?: Date | string | null
+    role?: string
+  }
+
+  export type UserCreateOrConnectWithoutCrashBetsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCrashBetsInput, UserUncheckedCreateWithoutCrashBetsInput>
+  }
+
+  export type CrashGameCreateWithoutBetsInput = {
+    id: string
+    crashPoint: number
+    startTime?: Date | string
+    status: string
+  }
+
+  export type CrashGameUncheckedCreateWithoutBetsInput = {
+    id: string
+    crashPoint: number
+    startTime?: Date | string
+    status: string
+  }
+
+  export type CrashGameCreateOrConnectWithoutBetsInput = {
+    where: CrashGameWhereUniqueInput
+    create: XOR<CrashGameCreateWithoutBetsInput, CrashGameUncheckedCreateWithoutBetsInput>
+  }
+
+  export type UserUpsertWithoutCrashBetsInput = {
+    update: XOR<UserUpdateWithoutCrashBetsInput, UserUncheckedUpdateWithoutCrashBetsInput>
+    create: XOR<UserCreateWithoutCrashBetsInput, UserUncheckedCreateWithoutCrashBetsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCrashBetsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCrashBetsInput, UserUncheckedUpdateWithoutCrashBetsInput>
+  }
+
+  export type UserUpdateWithoutCrashBetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    credits?: IntFieldUpdateOperationsInput | number
+    lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUncheckedUpdateWithoutCrashBetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    credits?: IntFieldUpdateOperationsInput | number
+    lastDailyReward?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    role?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CrashGameUpsertWithoutBetsInput = {
+    update: XOR<CrashGameUpdateWithoutBetsInput, CrashGameUncheckedUpdateWithoutBetsInput>
+    create: XOR<CrashGameCreateWithoutBetsInput, CrashGameUncheckedCreateWithoutBetsInput>
+    where?: CrashGameWhereInput
+  }
+
+  export type CrashGameUpdateToOneWithWhereWithoutBetsInput = {
+    where?: CrashGameWhereInput
+    data: XOR<CrashGameUpdateWithoutBetsInput, CrashGameUncheckedUpdateWithoutBetsInput>
+  }
+
+  export type CrashGameUpdateWithoutBetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CrashGameUncheckedUpdateWithoutBetsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crashPoint?: FloatFieldUpdateOperationsInput | number
+    startTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CrashBetCreateManyUserInput = {
+    id?: string
+    gameId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    game?: CrashGameUpdateOneRequiredWithoutBetsNestedInput
+  }
+
+  export type CrashBetUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrashBetUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrashBetCreateManyGameInput = {
+    id?: string
+    userId: string
+    amount: number
+    cashedOutAt?: number | null
+    winAmount?: number | null
+    createdAt?: Date | string
+  }
+
+  export type CrashBetUpdateWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCrashBetsNestedInput
+  }
+
+  export type CrashBetUncheckedUpdateWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrashBetUncheckedUpdateManyWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    cashedOutAt?: NullableFloatFieldUpdateOperationsInput | number | null
+    winAmount?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
