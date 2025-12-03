@@ -29,17 +29,73 @@ export default function CrashPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [betAmount, setBetAmount] = useState<number>(DEFAULT_BET);
   const [attending, setAttending] = useState(false);
+  type MyBetState =
+    | { status: "none" }
+    | { status: "pending"; betAmount: number }
+    | { status: "active"; betAmount: number; cashedOut?: boolean }
+    | { status: "cashed"; payout: number };
+  const [myBet, setMyBet] = useState<MyBetState>({ status: "none" });
   const [history, setHistory] = useState<number[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [phase, setPhase] = useState<
     "betting" | "running" | "crashed" | "cooldown"
   >("cooldown");
+  // Countdown/Betting progress
+  const [countdownLeft, setCountdownLeft] = useState<number | null>(null);
+  const [countdownTotal, setCountdownTotal] = useState<number>(6);
   const sessionUserIdRef = useRef<string | null>(null);
   const attendingGraceRef = useRef<number | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const cashedOutRef = useRef(false);
   type GraphPoint = { t: number; m: number };
   const [graphData, setGraphData] = useState<GraphPoint[]>([]);
+  const [emphasizedWin, setEmphasizedWin] = useState<{
+    amount: number;
+    id: number;
+  } | null>(null);
+  const [creditPulse, setCreditPulse] = useState(false);
+  const [countdownProgress, setCountdownProgress] = useState<number>(0);
+  const targetCountdownRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
+  // Update target fraction when countdown changes
+  useEffect(() => {
+    if (countdownLeft === null) {
+      targetCountdownRef.current = 0;
+      return;
+    }
+    const total = Math.max(1, countdownTotal ?? 1);
+    targetCountdownRef.current = countdownLeft / total;
+  }, [countdownLeft, countdownTotal]);
+
+  // Reset progress when phase changes from betting
+  useEffect(() => {
+    if (phase !== "betting") {
+      setCountdownLeft(null);
+      setCountdownProgress(0);
+      targetCountdownRef.current = 0;
+    }
+  }, [phase]);
+
+  // RAF loop: animate countdownProgress towards target fraction
+  useEffect(() => {
+    let mounted = true;
+    function tick() {
+      setCountdownProgress((prev) => {
+        const target = targetCountdownRef.current;
+        const delta = target - prev;
+        if (Math.abs(delta) < 0.001) return target;
+        return prev + delta * 0.15;
+      });
+      if (!mounted) return;
+      rafRef.current = requestAnimationFrame(tick);
+    }
+    rafRef.current = requestAnimationFrame(tick) as unknown as number;
+    return () => {
+      mounted = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, []);
 
   // Simple RealtimeGraph: inline SVG sparkline
   function RealtimeGraph({
@@ -176,8 +232,13 @@ export default function CrashPage() {
             break;
           }
           case "countdown": {
+            // Update countdown ticks: the server emits 6,5,4...; keep total as initial countdown length
+            const timeLeft = Number(parsed.timeLeft ?? 0);
             setPhase("betting");
-            setMessage(`Betting: ${Number(parsed.timeLeft ?? 0)}s`);
+            setMessage(`Betting: ${timeLeft}s`);
+            setCountdownLeft(timeLeft);
+            // Use functional update to avoid effect dependencies
+            setCountdownTotal((prev) => (timeLeft > prev ? timeLeft : prev));
             break;
           }
           case "state": {
@@ -195,15 +256,40 @@ export default function CrashPage() {
               );
             }
             setPhase(isPhase(pRaw) ? pRaw : "cooldown");
-            const serverAttending = Boolean(
-              s?.pendingBets?.[sessionUserIdRef.current ?? ""] ??
-                s?.activeBets?.[sessionUserIdRef.current ?? ""],
-            );
+            const userId = sessionUserIdRef.current ?? "";
+            const pending = s?.pendingBets?.[userId] as
+              | { betAmount?: number }
+              | undefined;
+            const active = s?.activeBets?.[userId] as
+              | { betAmount?: number; cashedOut?: boolean }
+              | undefined;
+            const serverAttending = Boolean(pending ?? active);
             const now = Date.now();
             const inGrace =
               typeof attendingGraceRef.current === "number" &&
               attendingGraceRef.current > now;
             setAttending(serverAttending || inGrace);
+            // Update myBet state
+            if (pending)
+              setMyBet({
+                status: "pending",
+                betAmount: pending.betAmount ?? betAmount,
+              });
+            else if (active) {
+              if (active.cashedOut)
+                setMyBet({
+                  status: "cashed",
+                  payout: Math.round(
+                    (active.betAmount ?? 0) * (s?.multiplier ?? 1),
+                  ),
+                });
+              else
+                setMyBet({
+                  status: "active",
+                  betAmount: active.betAmount ?? 0,
+                  cashedOut: false,
+                });
+            } else setMyBet({ status: "none" });
             break;
           }
           case "player_bet": {
@@ -239,6 +325,10 @@ export default function CrashPage() {
               setMessage(`You cashed out at ${m}x`);
               setAttending(false);
               attendingGraceRef.current = null;
+              // emphasize the payout overlay for the player
+              const payoutAmt = Number(parsed.payout ?? parsed.amount ?? 0);
+              if (payoutAmt > 0)
+                setEmphasizedWin({ amount: payoutAmt, id: Date.now() });
             } else setMessage(`Player ${pid} cashed out at ${m}x`);
             setTimeout(() => setMessage(null), 2000);
             break;
@@ -275,7 +365,7 @@ export default function CrashPage() {
       } catch {}
       if (eventSourceRef.current === es) eventSourceRef.current = null;
     };
-  }, []);
+  }, [betAmount]);
 
   // Global site SSE for notifications from other games
   useEffect(() => {
@@ -304,6 +394,9 @@ export default function CrashPage() {
             setMessage(`You won ${payout} credits!`);
             setShowConfetti(true);
             setTimeout(() => setShowConfetti(false), 5000);
+            // emphasized win overlay for the user's big wins from anywhere
+            if (payout > 0)
+              setEmphasizedWin({ amount: payout, id: Date.now() });
           } else {
             setMessage(`Player ${pid} won ${payout} credits`);
             setTimeout(() => setMessage(null), 3000);
@@ -340,6 +433,21 @@ export default function CrashPage() {
     };
   }, []);
 
+  // Remove emphasis overlay after a short duration
+  useEffect(() => {
+    if (!emphasizedWin) return;
+    const tid = setTimeout(() => setEmphasizedWin(null), 3500);
+    return () => clearTimeout(tid);
+  }, [emphasizedWin]);
+
+  // Show pulse on credits when a win overlay appears
+  useEffect(() => {
+    if (!emphasizedWin) return;
+    setCreditPulse(true);
+    const t = setTimeout(() => setCreditPulse(false), 1400);
+    return () => clearTimeout(t);
+  }, [emphasizedWin]);
+
   async function refreshCredits() {
     try {
       const c = await getCredits();
@@ -358,6 +466,7 @@ export default function CrashPage() {
       }
       if (r && "newCredits" in r) setCredits(r.newCredits ?? null);
       setAttending(true);
+      setMyBet({ status: "pending", betAmount });
       // small grace window: keep attending for 3s to avoid races with server state
       attendingGraceRef.current = Date.now() + 3000;
     } catch {
@@ -374,6 +483,7 @@ export default function CrashPage() {
       }
       setMessage("Bet canceled and refunded");
       setAttending(false);
+      setMyBet({ status: "none" });
       attendingGraceRef.current = null;
       await refreshCredits();
     } catch {
@@ -398,7 +508,10 @@ export default function CrashPage() {
         await refreshCredits();
         cashedOutRef.current = true;
         setAttending(false);
+        setMyBet({ status: "cashed", payout: r.payout ?? 0 });
         attendingGraceRef.current = null;
+        // Emphasize the win in a big animated overlay
+        setEmphasizedWin({ amount: r.payout ?? 0, id: Date.now() });
       }
     } catch {
       setMessage("Network error cashing out");
@@ -435,6 +548,20 @@ export default function CrashPage() {
           recycle={false}
           numberOfPieces={500}
         />
+      )}
+
+      {/* Emphasized win overlay (big animated amount) */}
+      {emphasizedWin && (
+        <div className="pointer-events-none absolute inset-0 z-40 flex items-start justify-center pt-24">
+          <div className="transform-gpu transition-all duration-300 ease-out">
+            <div className="animate-pulse rounded-2xl bg-linear-to-r from-yellow-300 to-yellow-500 px-6 py-3 text-black shadow-2xl">
+              <div className="text-sm font-bold text-black/70">You Won</div>
+              <div className="text-3xl font-extrabold tracking-tight">
+                {emphasizedWin.amount} credits
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="group absolute top-2 right-2 z-50 sm:top-4 sm:right-4">
@@ -479,6 +606,22 @@ export default function CrashPage() {
             <div className="mb-1 text-xs text-gray-400">
               Phase: <span className="font-bold text-yellow-400">{phase}</span>
             </div>
+            {phase === "betting" && countdownLeft !== null && (
+              <div className="mb-2">
+                <div className="mb-1 flex items-center justify-between text-xs text-gray-300">
+                  <div>Betting</div>
+                  <div className="text-yellow-200">{countdownLeft}s</div>
+                </div>
+                <div className="h-3 w-full overflow-hidden rounded bg-purple-900/30">
+                  <div
+                    className="h-full rounded bg-yellow-400 transition-all"
+                    style={{
+                      width: `${Math.max(0, Math.min(1, countdownProgress)) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
             <div
               className={`mb-2 text-5xl font-black drop-shadow-lg transition-transform sm:text-6xl md:text-8xl lg:text-9xl ${running ? "scale-105" : "scale-100"}`}
             >
@@ -497,28 +640,85 @@ export default function CrashPage() {
             </div>
 
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <button
-                onClick={onPlaceBet}
-                disabled={!canPlace}
-                className={betButtonClass}
-              >
-                Bet {betAmount}
-              </button>
+              <div className="relative inline-block">
+                <button
+                  onClick={onPlaceBet}
+                  disabled={!canPlace}
+                  className={betButtonClass}
+                >
+                  Bet {betAmount}
+                </button>
+                {phase === "betting" && countdownLeft !== null && (
+                  <div className="absolute -top-2 -right-2 z-50 flex items-center justify-center">
+                    <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-black/60">
+                      {/* Animated ring */}
+                      <svg
+                        className="absolute -z-10 h-8 w-8"
+                        viewBox="0 0 36 36"
+                      >
+                        <path
+                          className="text-purple-700/40"
+                          d="M18 2.0845
+                             a 15.9155 15.9155 0 0 1 0 31.831
+                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="rgba(124,58,237,0.16)"
+                          strokeWidth="3"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeWidth="3"
+                          className="text-yellow-400"
+                          d="M18 2.0845
+                             a 15.9155 15.9155 0 0 1 0 31.831
+                             a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#fef08a"
+                          strokeDasharray={Math.PI * 2 * 15.9155}
+                          style={{
+                            strokeDashoffset:
+                              (1 -
+                                Math.max(0, Math.min(1, countdownProgress))) *
+                              Math.PI *
+                              2 *
+                              15.9155,
+                            transition: "stroke-dashoffset 120ms linear",
+                          }}
+                        />
+                      </svg>
+                      <div
+                        className={`z-10 text-xs font-bold text-white ${countdownLeft <= 2 ? "animate-pulse text-yellow-200" : "text-purple-200"}`}
+                      >
+                        {countdownLeft}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               {attending && (
                 <div className="flex w-full gap-2 sm:w-auto sm:gap-3">
-                  <button
-                    onClick={onCancelBet}
-                    className="w-full rounded-full bg-red-600 px-4 py-2 font-bold sm:w-auto"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={onCashOut}
-                    disabled={!running}
-                    className="w-full rounded-full bg-yellow-400 px-4 py-2 font-bold sm:w-auto"
-                  >
-                    Cash Out
-                  </button>
+                  {myBet.status === "pending" && (
+                    <button
+                      onClick={onCancelBet}
+                      className="w-full rounded-full bg-red-600 px-4 py-2 font-bold sm:w-auto"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  {myBet.status === "active" && (
+                    <button
+                      onClick={onCashOut}
+                      disabled={!running}
+                      className="w-full rounded-full bg-yellow-400 px-4 py-2 font-bold sm:w-auto"
+                    >
+                      Cash Out
+                    </button>
+                  )}
+                  {myBet.status === "cashed" && (
+                    <div className="w-full rounded bg-green-700 px-4 py-2 text-center text-sm font-bold text-white">
+                      Cashed
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -528,7 +728,9 @@ export default function CrashPage() {
         <aside className="w-full rounded-2xl border-2 border-purple-900 bg-black/80 p-4 sm:w-80">
           <div className="mb-4 text-center">
             <div className="text-sm text-purple-300">Credits</div>
-            <div className="text-2xl font-bold text-yellow-400">
+            <div
+              className={`text-2xl font-bold ${creditPulse ? "scale-105 transform animate-pulse text-yellow-200" : "text-yellow-400"}`}
+            >
               {credits ?? "—"}
             </div>
           </div>
