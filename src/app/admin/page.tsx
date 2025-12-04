@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { getUsers } from "./actions";
 import { UserTable } from "./user-table";
 import { auth } from "~/server/auth";
