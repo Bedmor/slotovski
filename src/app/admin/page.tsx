@@ -3,7 +3,7 @@ import { UserTable } from "./user-table";
 import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { redirect } from "next/navigation";
-
+import Refresh from "./refresh";
 export default async function AdminPage() {
   const session = await auth();
 
@@ -38,14 +38,7 @@ export default async function AdminPage() {
         <h1 className="mb-8 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-black tracking-tighter text-transparent drop-shadow-lg">
           ADMIN PANEL
         </h1>
-        <button
-          className="mb-6 rounded-lg bg-purple-600/30 px-4 py-2 font-medium text-purple-200 transition hover:bg-purple-600/50"
-          onClick={async () => {
-            users = await getUsers();
-          }}
-        >
-          Refresh
-        </button>
+        <Refresh />
         <div className="rounded-3xl border border-purple-500/20 bg-black/40 p-6 shadow-xl backdrop-blur-md">
           <UserTable initialUsers={users} />
         </div>
