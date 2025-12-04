@@ -30,7 +30,7 @@ export default async function AdminPage() {
     );
   }
 
-  const users = await getUsers();
+  let users = await getUsers();
 
   return (
     <div className="min-h-screen bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-8 text-white">
@@ -38,6 +38,14 @@ export default async function AdminPage() {
         <h1 className="mb-8 bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-4xl font-black tracking-tighter text-transparent drop-shadow-lg">
           ADMIN PANEL
         </h1>
+        <button
+          className="mb-6 rounded-lg bg-purple-600/30 px-4 py-2 font-medium text-purple-200 transition hover:bg-purple-600/50"
+          onClick={async () => {
+            users = await getUsers();
+          }}
+        >
+          Refresh
+        </button>
         <div className="rounded-3xl border border-purple-500/20 bg-black/40 p-6 shadow-xl backdrop-blur-md">
           <UserTable initialUsers={users} />
         </div>
