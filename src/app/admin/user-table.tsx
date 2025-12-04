@@ -46,21 +46,24 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-purple-500/30 bg-black/40 backdrop-blur-sm">
-      <table className="w-full text-left text-sm text-gray-300">
-        <thead className="bg-purple-900/50 text-xs text-purple-300 uppercase">
+    <div className="overflow-x-auto rounded-2xl border border-purple-500/20 bg-black/40 backdrop-blur-md">
+      <table className="w-full text-left text-sm text-purple-100/70">
+        <thead className="bg-purple-900/30 text-xs font-bold tracking-wider text-purple-300 uppercase">
           <tr>
-            <th className="px-6 py-4">ID</th>
-            <th className="px-6 py-4">Name</th>
-            <th className="px-6 py-4">Credits</th>
-            <th className="px-6 py-4">Role</th>
-            <th className="px-6 py-4">Actions</th>
+            <th className="px-6 py-5">ID</th>
+            <th className="px-6 py-5">Name</th>
+            <th className="px-6 py-5">Credits</th>
+            <th className="px-6 py-5">Role</th>
+            <th className="px-6 py-5">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-purple-500/10">
           {users.map((user) => (
-            <tr key={user.id} className="hover:bg-white/5">
-              <td className="px-6 py-4 font-mono text-xs text-gray-500">
+            <tr
+              key={user.id}
+              className="transition-colors hover:bg-purple-500/5"
+            >
+              <td className="px-6 py-4 font-mono text-xs text-purple-400/50">
                 {user.id}
               </td>
               <td className="px-6 py-4">
@@ -71,10 +74,10 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
                     }
-                    className="rounded bg-white/10 px-2 py-1 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-full rounded-lg border border-purple-500/30 bg-black/40 px-3 py-2 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-500/50 focus:outline-none"
                   />
                 ) : (
-                  <span className="font-medium text-white">
+                  <span className="font-bold text-white">
                     {user.name ?? "N/A"}
                   </span>
                 )}
@@ -90,10 +93,10 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                         credits: parseInt(e.target.value) || 0,
                       })
                     }
-                    className="w-24 rounded bg-white/10 px-2 py-1 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="w-24 rounded-lg border border-purple-500/30 bg-black/40 px-3 py-2 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-500/50 focus:outline-none"
                   />
                 ) : (
-                  <span className="font-bold text-yellow-400">
+                  <span className="font-black text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.3)]">
                     {user.credits}
                   </span>
                 )}
@@ -105,7 +108,7 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                     onChange={(e) =>
                       setEditForm({ ...editForm, role: e.target.value })
                     }
-                    className="rounded bg-white/10 px-2 py-1 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                    className="rounded-lg border border-purple-500/30 bg-black/40 px-3 py-2 text-white focus:border-purple-400 focus:ring-1 focus:ring-purple-500/50 focus:outline-none"
                   >
                     <option value="user" className="bg-gray-900">
                       User
@@ -116,10 +119,10 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                   </select>
                 ) : (
                   <span
-                    className={`rounded-full px-2 py-1 text-xs font-bold uppercase ${
+                    className={`rounded-full px-3 py-1 text-xs font-black tracking-wider uppercase ${
                       user.role === "admin"
-                        ? "bg-red-500/20 text-red-400"
-                        : "bg-blue-500/20 text-blue-400"
+                        ? "border border-red-500/20 bg-red-500/20 text-red-400"
+                        : "border border-blue-500/20 bg-blue-500/20 text-blue-400"
                     }`}
                   >
                     {user.role}
@@ -131,13 +134,13 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleSave(user.id)}
-                      className="rounded bg-green-600 p-1 hover:bg-green-500"
+                      className="rounded-lg bg-green-600/20 p-2 text-green-400 transition-colors hover:bg-green-600 hover:text-white"
                     >
                       <Save size={16} />
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
-                      className="rounded bg-red-600 p-1 hover:bg-red-500"
+                      className="rounded-lg bg-red-600/20 p-2 text-red-400 transition-colors hover:bg-red-600 hover:text-white"
                     >
                       <X size={16} />
                     </button>
@@ -145,7 +148,7 @@ export function UserTable({ initialUsers }: { initialUsers: User[] }) {
                 ) : (
                   <button
                     onClick={() => handleEdit(user)}
-                    className="rounded bg-purple-600 p-1 hover:bg-purple-500"
+                    className="rounded-lg bg-purple-600/20 p-2 text-purple-400 transition-colors hover:bg-purple-600 hover:text-white"
                   >
                     <Pencil size={16} />
                   </button>

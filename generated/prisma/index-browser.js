@@ -145,6 +145,16 @@ exports.Prisma.GameRoomScalarFieldEnum = {
   maxPlayers: 'maxPlayers'
 };
 
+exports.Prisma.CrashGameScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  betAmount: 'betAmount',
+  crashPoint: 'crashPoint',
+  cashOutPoint: 'cashOutPoint',
+  result: 'result',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -173,7 +183,8 @@ exports.Prisma.JsonNullValueFilter = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  GameRoom: 'GameRoom'
+  GameRoom: 'GameRoom',
+  CrashGame: 'CrashGame'
 };
 
 /**

@@ -80,8 +80,10 @@ export function ProfileImageUpload({
 
   return (
     <div className="group relative">
-      <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-purple-600 text-white shadow-lg">
-        {isUploading && <Loader2 className="h-6 w-6 animate-spin" />}
+      <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-purple-500/30 bg-purple-900/50 text-white shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all group-hover:border-purple-500/50 group-hover:shadow-[0_0_30px_rgba(168,85,247,0.5)]">
+        {isUploading && (
+          <Loader2 className="h-8 w-8 animate-spin text-purple-400" />
+        )}
         {!isUploading && currentImage && (
           <Image
             src={currentImage}
@@ -90,15 +92,17 @@ export function ProfileImageUpload({
             className="object-cover"
           />
         )}
-        {!isUploading && !currentImage && <User size={32} />}
+        {!isUploading && !currentImage && (
+          <User size={40} className="text-purple-300" />
+        )}
       </div>
 
       <button
         onClick={() => fileInputRef.current?.click()}
         disabled={isUploading}
-        className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 disabled:cursor-not-allowed"
+        className="absolute inset-0 flex items-center justify-center rounded-full bg-black/60 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100 disabled:cursor-not-allowed"
       >
-        <Camera className="h-6 w-6 text-white" />
+        <Camera className="h-8 w-8 text-white drop-shadow-md" />
       </button>
 
       <input

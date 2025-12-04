@@ -40,3 +40,13 @@ model GameRoom {
   createdAt          DateTime @default(now())
   maxPlayers         Int
 }
+
+model CrashGame {
+  id           String   @id @default(cuid())
+  userId       String
+  betAmount    Int
+  crashPoint   Float
+  cashOutPoint Float?
+  result       String // "WIN" | "LOSS"
+  createdAt    DateTime @default(now())
+}

@@ -114,131 +114,131 @@ export default function MinesweeperGame({
     setTimeout(() => setShowConfetti(false), 5000);
   };
 
-  const getMineMultiplierInfo = (mines: number) => {
-    const baseIncrease = 0.1 + mines / 100;
-    return baseIncrease.toFixed(3);
-  };
-
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 pt-16 font-sans text-white sm:p-4 sm:pt-20">
-      {showConfetti && (
-        <Confetti
-          width={width}
-          height={height}
-          recycle={false}
-          numberOfPieces={500}
-        />
-      )}
+    <main className="flex min-h-screen flex-col items-center justify-center bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-4 text-white sm:p-8">
+      {showConfetti && <Confetti width={width} height={height} />}
 
-      <Link
-        href="/"
-        className="absolute top-2 left-2 flex items-center gap-2 rounded-lg bg-purple-800/50 px-3 py-2 text-sm transition-colors hover:bg-purple-700 sm:top-4 sm:left-4 sm:px-4"
-      >
-        🏠 Home
-      </Link>
-
-      <div className="mb-4 text-center sm:mb-8">
-        <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-3xl font-extrabold tracking-tighter text-transparent drop-shadow-lg sm:text-4xl md:text-6xl">
+      {/* Header */}
+      <div className="mb-4 flex w-full max-w-6xl items-center justify-between sm:mb-8">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-full bg-black/40 px-4 py-2 text-sm font-bold text-purple-300 backdrop-blur-md transition hover:bg-black/60 hover:text-white sm:px-6 sm:py-3 sm:text-base"
+        >
+          ← Back
+        </Link>
+        <h1 className="bg-linear-to-r from-cyan-400 to-blue-600 bg-clip-text text-2xl font-black tracking-tighter text-transparent drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] sm:text-4xl md:text-5xl">
           DIAMOND MINES
         </h1>
-        <p className="mt-1 text-base text-purple-300 sm:mt-2 sm:text-lg">
-          Find diamonds, avoid mines!
-        </p>
+        <div className="w-20 sm:w-[100px]"></div> {/* Spacer */}
       </div>
 
-      <div className="flex w-full max-w-6xl flex-col items-center gap-4 px-2 lg:flex-row lg:items-start lg:gap-8">
-        {/* Game Board */}
-        <div className="relative w-full max-w-2xl rounded-2xl border-2 border-purple-900 bg-black/80 p-4 shadow-2xl shadow-purple-900/50 sm:border-4 sm:p-6 md:p-8">
+      <div className="flex w-full max-w-6xl flex-col items-start gap-8 lg:flex-row lg:items-start">
+        {/* Game Container */}
+        <div className="relative flex w-full flex-col rounded-3xl border border-cyan-500/20 bg-black/40 p-4 shadow-[0_0_50px_rgba(34,211,238,0.15)] backdrop-blur-md sm:rounded-[3rem] sm:border-2 sm:p-8 lg:flex-1">
           {!gameState ? (
-            <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-8 py-8">
               <div className="text-center">
-                <h2 className="mb-2 text-2xl font-bold text-purple-300">
-                  Start New Game
+                <h2 className="text-2xl font-bold text-white sm:text-3xl">
+                  Place Your Bet
                 </h2>
-                <p className="text-sm text-gray-400">
-                  Configure your bet and mine count
+                <p className="text-cyan-200/70">
+                  Select mines and bet amount to start
                 </p>
               </div>
 
               <div className="flex w-full max-w-md flex-col gap-6">
                 <div className="flex flex-col gap-2">
-                  <label className="text-lg font-bold text-purple-300">
-                    Bet Amount: {betAmount}
+                  <label className="text-sm font-bold tracking-widest text-cyan-400 uppercase">
+                    Bet Amount
                   </label>
-                  <input
-                    type="range"
-                    min="10"
-                    max={credits}
-                    step="10"
-                    value={betAmount}
-                    onChange={(e) => setBetAmount(parseInt(e.target.value))}
-                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-purple-500"
-                  />
-                  <div className="flex justify-between text-xs text-gray-400">
-                    <span>10</span>
-                    <span>{credits}</span>
+                  <div className="flex items-center gap-4 rounded-xl border border-cyan-500/20 bg-black/40 p-2">
+                    <button
+                      onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/20 text-xl font-bold text-cyan-300 transition-colors hover:bg-cyan-500/40 hover:text-white"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      value={betAmount}
+                      onChange={(e) => setBetAmount(Number(e.target.value))}
+                      className="w-full bg-transparent text-center text-2xl font-bold text-white focus:outline-none"
+                    />
+                    <button
+                      onClick={() => setBetAmount(betAmount + 10)}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/20 text-xl font-bold text-cyan-300 transition-colors hover:bg-cyan-500/40 hover:text-white"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-lg font-bold text-purple-300">
-                    Mines: {mineCount}
-                    <span className="ml-2 text-sm text-yellow-400">
-                      (+{getMineMultiplierInfo(mineCount)} per diamond)
-                    </span>
+                  <label className="text-sm font-bold tracking-widest text-cyan-400 uppercase">
+                    Mines
                   </label>
-                  <input
-                    type="range"
-                    min="5"
-                    max="20"
-                    step="1"
-                    value={mineCount}
-                    onChange={(e) => setMineCount(parseInt(e.target.value))}
-                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-red-500"
-                  />
-                  <div className="flex justify-between text-xs text-gray-400">
-                    <span>8 (Easy)</span>
-                    <span>20 (Hard)</span>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="range"
+                      min="1"
+                      max="24"
+                      value={mineCount}
+                      onChange={(e) => setMineCount(Number(e.target.value))}
+                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-cyan-900/50 accent-cyan-400 hover:accent-cyan-300"
+                    />
+                    <span className="min-w-[3ch] text-2xl font-bold text-cyan-400">
+                      {mineCount}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs font-medium text-cyan-400/50">
+                    <span>1 (Easy)</span>
+                    <span>24 (Hard)</span>
                   </div>
                 </div>
 
                 <button
                   onClick={handleStartGame}
                   disabled={isStarting || credits < betAmount}
-                  className="rounded-full bg-linear-to-r from-pink-600 to-purple-600 px-8 py-4 text-xl font-bold tracking-wider uppercase shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-all hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-2xl border border-cyan-400/30 bg-linear-to-r from-cyan-600 to-blue-600 px-8 py-4 text-xl font-black tracking-wider text-white uppercase shadow-[0_0_30px_rgba(34,211,238,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_50px_rgba(34,211,238,0.6)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isStarting ? "Starting..." : `Start Game (${betAmount})`}
                 </button>
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               {/* Game Info */}
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg bg-purple-900/30 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-500/20 bg-black/40 p-4 backdrop-blur-md">
                 <div className="flex flex-col">
-                  <span className="text-sm text-gray-400">Multiplier</span>
-                  <span className="text-2xl font-bold text-yellow-400">
+                  <span className="text-xs font-bold tracking-wider text-cyan-400/70 uppercase">
+                    Multiplier
+                  </span>
+                  <span className="text-2xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]">
                     {gameState.currentMultiplier.toFixed(2)}x
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm text-gray-400">Diamonds Found</span>
-                  <span className="text-2xl font-bold text-cyan-400">
+                  <span className="text-xs font-bold tracking-wider text-cyan-400/70 uppercase">
+                    Diamonds
+                  </span>
+                  <span className="text-2xl font-black text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]">
                     {gameState.diamondsFound}/
                     {36 -
                       gameState.grid.flat().filter((t) => t === "mine").length}
                   </span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-sm text-gray-400">Potential Win</span>
-                  <span className="text-2xl font-bold text-green-400">
+                  <span className="text-xs font-bold tracking-wider text-cyan-400/70 uppercase">
+                    Potential Win
+                  </span>
+                  <span className="text-2xl font-black text-green-400 drop-shadow-[0_0_10px_rgba(74,222,128,0.3)]">
                     {Math.round(betAmount * gameState.currentMultiplier)}
                   </span>
                 </div>
               </div>
 
               {/* Grid */}
-              <div className="grid grid-cols-6 gap-1 sm:gap-2">
+              <div className="grid grid-cols-6 gap-2 sm:gap-3">
                 {gameState.grid.map((row, rowIndex) =>
                   row.map((cell, colIndex) => {
                     const isRevealed = gameState.revealed[rowIndex]?.[colIndex];
@@ -253,22 +253,24 @@ export default function MinesweeperGame({
                           isRevealing ||
                           gameState.isGameOver
                         }
-                        className={`aspect-square w-full rounded-lg border-2 transition-all duration-200 ${
+                        className={`aspect-square w-full rounded-xl border-2 shadow-lg transition-all duration-300 ${
                           isRevealed
                             ? isMine
-                              ? "border-red-500 bg-red-900/50"
-                              : "border-cyan-400 bg-cyan-900/50"
-                            : "border-purple-600 bg-purple-800/50 hover:scale-105 hover:border-purple-400 active:scale-95 disabled:cursor-not-allowed"
+                              ? "scale-95 border-red-500 bg-red-900/80 shadow-[0_0_20px_rgba(239,68,68,0.5)]"
+                              : "scale-95 border-cyan-400 bg-cyan-900/80 shadow-[0_0_20px_rgba(34,211,238,0.5)]"
+                            : "border-cyan-500/30 bg-cyan-900/20 hover:scale-105 hover:border-cyan-400 hover:bg-cyan-800/40 hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] active:scale-95 disabled:cursor-not-allowed disabled:hover:scale-100"
                         }`}
                       >
                         {isRevealed ? (
                           isMine ? (
-                            <Bomb className="mx-auto h-6 w-6 text-red-400 sm:h-8 sm:w-8" />
+                            <Bomb className="mx-auto h-6 w-6 animate-bounce text-red-400 sm:h-8 sm:w-8" />
                           ) : (
-                            <Diamond className="mx-auto h-6 w-6 text-cyan-400 sm:h-8 sm:w-8" />
+                            <Diamond className="mx-auto h-6 w-6 animate-pulse text-cyan-400 sm:h-8 sm:w-8" />
                           )
                         ) : (
-                          <div className="text-2xl">?</div>
+                          <div className="text-xl font-bold text-cyan-500/30">
+                            ?
+                          </div>
                         )}
                       </button>
                     );
@@ -277,7 +279,7 @@ export default function MinesweeperGame({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={handleCashOut}
                   disabled={
@@ -285,9 +287,9 @@ export default function MinesweeperGame({
                     gameState.diamondsFound === 0 ||
                     isRevealing
                   }
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full bg-green-600 px-6 py-3 font-bold uppercase transition-all hover:bg-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-4 font-black text-white uppercase shadow-[0_0_20px_rgba(34,197,94,0.4)] transition-all hover:scale-105 hover:bg-green-500 hover:shadow-[0_0_30px_rgba(34,197,94,0.6)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
                 >
-                  <Trophy className="h-5 w-5" />
+                  <Trophy className="h-6 w-6" />
                   Cash Out (
                   {Math.round(betAmount * gameState.currentMultiplier)})
                 </button>
@@ -296,7 +298,7 @@ export default function MinesweeperGame({
                     setGameState(null);
                     setMessage(null);
                   }}
-                  className="rounded-full bg-purple-800 px-6 py-3 font-bold uppercase transition-all hover:bg-purple-700"
+                  className="rounded-xl border border-cyan-500/30 bg-cyan-900/30 px-6 py-4 font-bold text-cyan-300 uppercase transition-all hover:border-cyan-400/50 hover:bg-cyan-900/50 hover:text-white"
                 >
                   New Game
                 </button>
@@ -307,12 +309,12 @@ export default function MinesweeperGame({
           {/* Message Display */}
           {message && (
             <div
-              className={`mt-4 rounded-lg p-4 text-center font-bold ${
+              className={`animate-fade-in mt-6 rounded-xl border p-4 text-center font-bold backdrop-blur-md ${
                 message.type === "success"
-                  ? "bg-green-900/50 text-green-300"
+                  ? "border-green-500/30 bg-green-900/30 text-green-300"
                   : message.type === "error"
-                    ? "bg-red-900/50 text-red-300"
-                    : "bg-blue-900/50 text-blue-300"
+                    ? "border-red-500/30 bg-red-900/30 text-red-300"
+                    : "border-blue-500/30 bg-blue-900/30 text-blue-300"
               }`}
             >
               {message.text}
@@ -321,45 +323,51 @@ export default function MinesweeperGame({
         </div>
 
         {/* Side Panel */}
-        <div className="flex w-full max-w-md flex-col gap-4 rounded-2xl border-2 border-purple-900 bg-black/80 p-4 shadow-xl sm:border-4 sm:p-6 lg:w-auto">
+        <div className="flex w-full max-w-md flex-col gap-6 rounded-3xl border border-cyan-500/20 bg-black/40 p-6 shadow-xl backdrop-blur-md lg:w-80">
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-xl font-bold text-purple-300">Credits</h2>
-            <div className="text-3xl font-bold text-yellow-400">{credits}</div>
+            <h2 className="text-sm font-bold tracking-widest text-cyan-400 uppercase">
+              Credits
+            </h2>
+            <div className="text-4xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+              {credits}
+            </div>
           </div>
 
-          <div className="h-px w-full bg-purple-800/50"></div>
+          <div className="h-px w-full bg-linear-to-r from-transparent via-cyan-500/30 to-transparent"></div>
 
-          <div className="flex flex-col gap-3">
-            <h3 className="text-lg font-bold text-purple-300">How to Play</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li className="flex items-start gap-2">
-                <span className="text-cyan-400">💎</span>
+          <div className="flex flex-col gap-4">
+            <h3 className="text-sm font-bold tracking-widest text-cyan-400 uppercase">
+              How to Play
+            </h3>
+            <ul className="space-y-3 text-sm text-cyan-100/70">
+              <li className="flex items-start gap-3">
+                <span className="text-xl">💎</span>
                 <span>
                   Click tiles to reveal diamonds and increase your multiplier
                 </span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-red-400">💣</span>
+              <li className="flex items-start gap-3">
+                <span className="text-xl">💣</span>
                 <span>Avoid mines! Hitting one ends the game</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-yellow-400">⚡</span>
+              <li className="flex items-start gap-3">
+                <span className="text-xl">⚡</span>
                 <span>More mines = higher multiplier per diamond</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-green-400">💰</span>
+              <li className="flex items-start gap-3">
+                <span className="text-xl">💰</span>
                 <span>Cash out anytime to secure your winnings</span>
               </li>
             </ul>
           </div>
 
-          <div className="h-px w-full bg-purple-800/50"></div>
+          <div className="h-px w-full bg-linear-to-r from-transparent via-cyan-500/30 to-transparent"></div>
 
-          <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-bold text-purple-300">
+          <div className="flex flex-col gap-4">
+            <h3 className="text-sm font-bold tracking-widest text-cyan-400 uppercase">
               Multiplier Info
             </h3>
-            <div className="space-y-1 text-xs text-gray-400">
+            <div className="space-y-2 text-xs font-medium text-cyan-200/50">
               <div className="flex justify-between">
                 <span>1 Mine:</span>
                 <span className="text-yellow-400">+0.11x per diamond</span>

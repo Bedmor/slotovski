@@ -32,7 +32,10 @@ export const authConfig = {
         // Allow login by email or username. Explicitly select `password` so TS knows it's present.
         const user = await db.user.findFirst({
           where: {
-            OR: [{ email: identifier }, { name: identifier }],
+            OR: [
+              { email: { equals: identifier, mode: "insensitive" } },
+              { name: { equals: identifier, mode: "insensitive" } },
+            ],
           },
           select: {
             id: true,

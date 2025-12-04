@@ -173,12 +173,6 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden bg-linear-to-b from-[#1a0b2e] to-[#0f0f1a] p-2 font-sans text-white sm:p-4">
-      <Link
-        href="/"
-        className="absolute top-2 left-2 flex items-center gap-2 rounded-lg bg-purple-800/50 px-3 py-2 text-sm transition-colors hover:bg-purple-700 sm:top-4 sm:left-4 sm:px-4"
-      >
-        🏠 Home
-      </Link>
       {showConfetti && (
         <Confetti
           width={width}
@@ -271,13 +265,17 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         </div>
       </div>
 
-      <div className="mb-4 text-center sm:mb-8">
-        <h1 className="bg-linear-to-r from-purple-400 to-pink-600 bg-clip-text text-3xl font-extrabold tracking-tighter text-transparent drop-shadow-lg sm:text-4xl md:text-6xl">
-          SLOTOVSKI
+      <div className="mb-4 flex w-full max-w-6xl items-center justify-between sm:mb-8">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-full bg-black/40 px-4 py-2 text-sm font-bold text-purple-300 backdrop-blur-md transition hover:bg-black/60 hover:text-white sm:px-6 sm:py-3 sm:text-base"
+        >
+          ← Back
+        </Link>
+        <h1 className="bg-linear-to-r from-purple-400 to-pink-500 bg-clip-text text-2xl font-black tracking-tighter text-transparent drop-shadow-[0_0_10px_rgba(34,211,238,0.5)] sm:text-4xl md:text-5xl">
+          Slotovski
         </h1>
-        <p className="mt-1 text-base text-purple-300 sm:mt-2 sm:text-lg">
-          Spin to Win!
-        </p>
+        <div className="w-20 sm:w-[100px]"></div> {/* Spacer */}
       </div>
 
       <div className="flex w-full max-w-fit flex-col items-center gap-4 px-2 sm:gap-8 lg:flex-row lg:items-start">
@@ -328,7 +326,7 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
           </div>
 
           {/* Controls */}
-          <div className="mt-4 flex flex-col items-center gap-3 sm:mt-8 sm:gap-6">
+          <div className="mt-6 flex flex-col items-center gap-4 sm:mt-8 sm:gap-6">
             <div className="min-h-8 text-center text-base font-bold text-yellow-400 drop-shadow-md sm:text-xl md:min-h-12 md:text-2xl">
               {winMessage && (
                 <div className="flex animate-bounce items-center gap-2">
@@ -346,14 +344,14 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               )}
             </div>
 
-            <div className="flex flex-col items-center gap-2 sm:gap-4">
+            <div className="flex flex-col items-center gap-3 sm:gap-4">
               <button
                 onClick={handleSpin}
                 disabled={spinning || autoSpinning}
-                className={`group relative rounded-full px-6 py-2 text-base font-bold tracking-wider uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-xl md:px-12 md:py-4 md:text-2xl ${
+                className={`group relative rounded-2xl px-8 py-3 text-base font-black tracking-wider uppercase transition-all duration-200 sm:px-10 sm:py-4 sm:text-xl md:px-16 md:py-5 md:text-2xl ${
                   spinning || autoSpinning
-                    ? "cursor-not-allowed bg-gray-700 text-gray-500"
-                    : "bg-linear-to-r from-pink-600 to-purple-600 text-white shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-105 hover:from-pink-500 hover:to-purple-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.7)] active:scale-95"
+                    ? "cursor-not-allowed border border-gray-700 bg-gray-800 text-gray-600"
+                    : "border border-purple-400/30 bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:scale-105 hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] active:scale-95"
                 } `}
               >
                 {spinning ? "Spinning..." : `SPIN (${betAmount})`}
@@ -362,10 +360,10 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
               <button
                 onClick={() => setAutoSpinning(!autoSpinning)}
                 disabled={spinning && !autoSpinning}
-                className={`rounded-full px-4 py-2 text-sm font-bold uppercase transition-all duration-200 sm:px-6 sm:py-3 sm:text-lg ${
+                className={`rounded-xl px-6 py-2 text-sm font-bold uppercase transition-all duration-200 sm:px-8 sm:py-3 sm:text-base ${
                   autoSpinning
-                    ? "bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)] hover:bg-red-500"
-                    : "bg-purple-800 text-purple-200 hover:bg-purple-700"
+                    ? "border border-red-500/50 bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                    : "border border-purple-500/30 bg-purple-900/30 text-purple-300 hover:bg-purple-900/50 hover:text-white"
                 }`}
               >
                 {autoSpinning ? "Stop Auto" : "Auto Spin"}
@@ -375,27 +373,27 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
         </div>
 
         {/* Side Panel */}
-        <div className="flex w-full flex-col gap-4 rounded-2xl border-2 border-purple-900 bg-black/80 p-4 shadow-xl sm:gap-6 sm:rounded-3xl sm:border-4 sm:p-6 lg:w-auto">
-          <div className="flex flex-col items-center gap-1 sm:gap-2">
-            <h2 className="text-lg font-bold text-purple-300 sm:text-xl">
+        <div className="flex w-full flex-col gap-6 rounded-3xl border border-purple-500/20 bg-black/40 p-6 shadow-xl backdrop-blur-md lg:w-80">
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-sm font-bold tracking-widest text-purple-400 uppercase">
               Credits
             </h2>
-            <div className="text-2xl font-bold text-yellow-400 sm:text-3xl">
+            <div className="text-4xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]">
               {credits}
             </div>
           </div>
 
-          <div className="h-px w-full bg-purple-800/50"></div>
+          <div className="h-px w-full bg-linear-to-r from-transparent via-purple-500/30 to-transparent"></div>
 
-          <div className="flex w-full flex-col items-center gap-2 sm:gap-4">
-            <h2 className="text-lg font-bold text-purple-300 sm:text-xl">
+          <div className="flex w-full flex-col items-center gap-4">
+            <h2 className="text-sm font-bold tracking-widest text-purple-400 uppercase">
               Bet Amount
             </h2>
-            <div className="flex w-full flex-col items-center gap-2 px-2 sm:gap-3 sm:px-4">
-              <div className="flex flex-row items-center gap-2 sm:gap-4">
+            <div className="flex w-full flex-col items-center gap-4">
+              <div className="flex w-full items-center justify-between gap-2 rounded-xl border border-purple-500/20 bg-black/40 p-2">
                 <button
                   onClick={() => setBetAmount(Math.max(10, betAmount - 10))}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 text-xl font-bold text-purple-300 transition-colors hover:bg-purple-500/40 hover:text-white disabled:opacity-50"
                   disabled={spinning}
                 >
                   -
@@ -409,30 +407,33 @@ export default function SlotMachine({ initialCredits }: SlotMachineProps) {
                     else setBetAmount(0);
                   }}
                   onBlur={() => setBetAmount(Math.max(10, betAmount))}
-                  className="w-20 border-b-2 border-purple-500/50 bg-transparent text-center text-2xl font-bold text-white focus:border-purple-500 focus:outline-none sm:w-24 sm:text-3xl"
+                  className="w-24 bg-transparent text-center text-2xl font-bold text-white focus:outline-none"
                   disabled={spinning}
                 />
                 <button
                   onClick={() => setBetAmount(betAmount + 10)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-700 text-xl font-bold hover:bg-purple-600 disabled:opacity-50"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20 text-xl font-bold text-purple-300 transition-colors hover:bg-purple-500/40 hover:text-white disabled:opacity-50"
                   disabled={spinning}
                 >
                   +
                 </button>
               </div>
-              <input
-                type="range"
-                min="1"
-                max={credits}
-                step={credits >= 10 ? 10 : 1}
-                value={betAmount}
-                onChange={(e) => setBetAmount(parseInt(e.target.value))}
-                className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900 accent-purple-500 hover:accent-purple-400"
-                disabled={spinning}
-              />
-              <div className="flex w-full justify-between px-1 text-xs text-purple-400/50">
-                <span>{Math.min(10, credits - 1)}</span>
-                <span>{credits}</span>
+
+              <div className="w-full px-2">
+                <input
+                  type="range"
+                  min="1"
+                  max={credits}
+                  step={credits >= 10 ? 10 : 1}
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(parseInt(e.target.value))}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-purple-900/50 accent-purple-500 hover:accent-purple-400"
+                  disabled={spinning}
+                />
+                <div className="mt-2 flex w-full justify-between text-xs font-medium text-purple-400/50">
+                  <span>Min</span>
+                  <span>Max</span>
+                </div>
               </div>
             </div>
           </div>
