@@ -5,7 +5,7 @@ import { Play, Info } from "lucide-react";
 import Link from "next/link";
 
 import { play as playAction } from "./actions";
-const MULTIPLIERS = [0.1, 0.3, 0.5, 0.8, 1.5, 2.0, 1.5, 0.8, 0.5, 0.3, 0.1];
+const MULTIPLIERS = [3, 2, 1.5, 1.25, 1, 0.75, 1, 1.25, 1.5, 2, 3];
 
 type Ball = {
   x: number;

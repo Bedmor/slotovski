@@ -34,7 +34,7 @@ export async function play(betAmount: number, numBalls: number) {
 
   // Determine bins and multipliers
   const binsCount = 11;
-  const multipliers = [0.1, 0.3, 0.5, 0.8, 1.2, 3.0, 1.2, 0.8, 0.5, 0.3, 0.1];
+  const multipliers = [3, 2, 1.5, 1.25, 1, 0.75, 1, 1.25, 1.5, 2, 3];
 
   // A helper to approximate a normal distribution via CLT - sum of uniform samples
   function sampleBinIndex() {
