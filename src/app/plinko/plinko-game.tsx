@@ -5,7 +5,7 @@ import { Play, Info } from "lucide-react";
 import Link from "next/link";
 
 import { play as playAction } from "./actions";
-const MULTIPLIERS = [0.1, 0.3, 0.5, 0.8, 1.2, 3.0, 1.2, 0.8, 0.5, 0.3, 0.1];
+const MULTIPLIERS = [0.1, 0.3, 0.5, 0.8, 1.5, 2.0, 1.5, 0.8, 0.5, 0.3, 0.1];
 
 type Ball = {
   x: number;
@@ -653,9 +653,6 @@ export default function PlinkoGame({ initialCredits }: Props) {
                   </div>
                   <div className="text-right">
                     <div className="text-xs">{MULTIPLIERS[i]?.toFixed(2)}x</div>
-                    <div className="text-sm font-bold">
-                      {Math.round(betAmount * (MULTIPLIERS[i] ?? 0))}
-                    </div>
                   </div>
                 </div>
               ))}

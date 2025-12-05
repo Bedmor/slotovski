@@ -105,8 +105,23 @@ export default async function HomePage() {
                 </p>
               </div>
             </Link>
+            <Link
+              href="/plinko"
+              className="group relative w-full overflow-hidden rounded-3xl bg-linear-to-br from-green-500 to-emerald-600 p-0.5 shadow-[0_0_30px_rgba(34,197,94,0.3)] transition-all hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(34,197,94,0.5)]"
+            >
+              <div className="relative flex h-full flex-col items-center justify-center gap-3 rounded-[22px] bg-black/40 p-8 backdrop-blur-xl transition-all group-hover:bg-black/30">
+                <span className="text-6xl drop-shadow-[0_0_15px_rgba(34,197,94,0.5)] transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-12">
+                  🏐
+                </span>
+                <h3 className="text-2xl font-black tracking-wider text-white uppercase drop-shadow-md">
+                  Plinko
+                </h3>
+                <p className="text-sm font-medium text-green-300/80">
+                  Drop the ball!
+                </p>
+              </div>
+            </Link>
           </div>
-
           {user ? (
             <div className="flex w-full flex-col gap-6 rounded-3xl border border-purple-500/20 bg-black/40 p-8 backdrop-blur-md">
               <div className="flex items-center gap-6">
@@ -115,7 +130,7 @@ export default async function HomePage() {
                   userName={user.name}
                 />
                 <div className="flex flex-col overflow-hidden">
-                  <h2 className="truncate text-2xl font-black tracking-wide text-white uppercase">
+                  <h2 className="items-center truncate text-sm font-black tracking-wide text-white uppercase">
                     {user.name ?? "Player"}
                   </h2>
                   <div className="flex items-center gap-2 text-yellow-400">
