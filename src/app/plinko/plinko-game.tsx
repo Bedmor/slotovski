@@ -43,6 +43,7 @@ export default function PlinkoGame({ initialCredits }: Props) {
   const [betAmount, setBetAmount] = useState(10);
   const [numToSpawn, setNumToSpawn] = useState(10);
   const [spinning, setSpinning] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [autoSpawn, setAutoSpawn] = useState(false);
   const [bins, setBins] = useState<number[]>([]);
   const ballsRef = useRef<Ball[]>([]);
@@ -66,8 +67,10 @@ export default function PlinkoGame({ initialCredits }: Props) {
   const gravity = 1200;
   const elasticity = 0.88;
   const friction = 0.999;
-  const ballRadius = 6;
-  const pegRadius = 6;
+  const baseBallRadius = 6;
+  const ballRadiusRef = useRef<number>(baseBallRadius);
+  const basePegRadius = 6;
+  const pegRadiusRef = useRef<number>(basePegRadius);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -90,13 +93,45 @@ export default function PlinkoGame({ initialCredits }: Props) {
       if (!canvas) return;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
-      const cols = 11;
+      // Base columns target; will be reduced on small screens to preserve spacing
+      let cols = 11;
       const rows = Math.floor(h / 60);
       const pegs: Peg[] = [];
-      const offsetX = 40;
-      const startY = 130;
-      const spacingX = (w - offsetX * 2) / (cols - 1);
-      const spacingY = 55;
+      const offsetX = Math.max(20, Math.round(w * 0.05));
+      // make peg layout responsive: smaller startY and spacing on small screens
+      const startY = Math.max(70, Math.round(h * 0.12));
+      let spacingX = (w - offsetX * 2) / (cols - 1);
+      // compute responsive peg radius and update ref so collisions/draws use correct radius
+      const minScale = 0.6;
+      const scale = Math.min(1, Math.max(minScale, w / 420));
+      const newPegRadius = Math.max(3, Math.round(basePegRadius * scale));
+      pegRadiusRef.current = newPegRadius;
+      const spacingY = Math.max(40, Math.round(h / Math.max(4, rows + 1)));
+      // Minimum spacing to allow the balls to pass between pegs comfortably
+      const currentPegRadius = pegRadiusRef.current ?? basePegRadius;
+      const currentBallRadius = ballRadiusRef.current ?? baseBallRadius;
+      const minSpacing = Math.max(
+        36,
+        2 * (currentBallRadius + currentPegRadius) + 4,
+      );
+      // Reduce the number of columns on small screens while keeping spacing >= minSpacing
+      if (spacingX < minSpacing) {
+        const usableWidth = Math.max(1, w - offsetX * 2);
+        cols = Math.max(5, Math.floor(usableWidth / minSpacing) + 1);
+        spacingX = usableWidth / (cols - 1);
+      }
+
+      // If we ended up with very small spacing, shrink ball radius to keep things playable
+      if (spacingX < minSpacing * 1.1) {
+        // scale down slightly more in extremely narrow configurations
+        const scale = Math.max(0.5, spacingX / minSpacing);
+        ballRadiusRef.current = Math.max(
+          3,
+          Math.round(baseBallRadius * Math.max(0.6, scale)),
+        );
+      } else {
+        ballRadiusRef.current = baseBallRadius;
+      }
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
@@ -104,17 +139,18 @@ export default function PlinkoGame({ initialCredits }: Props) {
             offsetX + col * spacingX + (row % 2 === 0 ? spacingX / 2 : 0);
           const y = startY + row * spacingY;
           if (
-            x - pegRadius > 0 &&
-            x + pegRadius < w &&
-            y + pegRadius < h - 80
+            x - currentPegRadius > 0 &&
+            x + currentPegRadius < w &&
+            y + currentPegRadius < h - 80
           ) {
-            pegs.push({ x, y, r: pegRadius });
+            pegs.push({ x, y, r: currentPegRadius });
           }
         }
       }
 
       pegsRef.current = pegs;
-      setBins(new Array(cols).fill(0));
+      // Keep authoritative bin count tied to multipliers/server (11) instead of peg columns
+      setBins(new Array(MULTIPLIERS.length).fill(0));
       ballsRef.current = [];
       spawnIndexRef.current = 0;
     };
@@ -133,7 +169,7 @@ export default function PlinkoGame({ initialCredits }: Props) {
       y: 20 + Math.random() * 8,
       vx: (Math.random() - 0.5) * 60,
       vy: 0,
-      r: ballRadius,
+      r: ballRadiusRef.current,
       color: randomColor(),
       // resting not used; using settling flag instead
       settling: false,
@@ -537,8 +573,8 @@ export default function PlinkoGame({ initialCredits }: Props) {
             </div>
           </div>
 
-          <div className="mt-6 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+          <div className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex w-full flex-col items-center gap-4 sm:w-auto sm:flex-row">
               <label className="text-sm font-bold tracking-widest text-purple-400 uppercase">
                 Balls
               </label>
@@ -548,51 +584,59 @@ export default function PlinkoGame({ initialCredits }: Props) {
                 max={300}
                 value={numToSpawn}
                 onChange={(e) => setNumToSpawn(Number(e.target.value))}
-                className="h-2 w-56 cursor-pointer appearance-none rounded-lg bg-purple-900/50 accent-purple-400 hover:accent-purple-300"
+                className="h-2 w-full max-w-56 cursor-pointer appearance-none rounded-lg bg-purple-900/50 accent-purple-400 hover:accent-purple-300"
               />
               <span className="ml-2 min-w-[3ch] text-2xl font-bold text-white">
                 {numToSpawn}
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row">
               <button
                 onClick={handlePlay}
                 disabled={spinning || credits < betAmount * numToSpawn}
-                className={`flex items-center gap-2 rounded-xl px-6 py-3 font-black transition ${spinning ? "cursor-not-allowed border border-gray-700 bg-gray-800 text-gray-600" : "border border-purple-400/30 bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:scale-105"}`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3 font-black transition sm:w-auto ${spinning ? "cursor-not-allowed border border-gray-700 bg-gray-800 text-gray-600" : "border border-purple-400/30 bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:scale-105"}`}
               >
                 <Play className="h-5 w-5" />
                 {spinning ? "Playing..." : `Play (${betAmount * numToSpawn})`}
               </button>
               <button
                 onClick={() => setAutoSpawn((s) => !s)}
-                className={`rounded-xl px-4 py-2 ${autoSpawn ? "border border-red-500/50 bg-red-500/20 text-red-400" : "border border-purple-500/30 bg-purple-900/30 text-purple-300"}`}
+                className={`w-full rounded-xl px-4 py-2 sm:w-auto ${autoSpawn ? "border border-red-500/50 bg-red-500/20 text-red-400" : "border border-purple-500/30 bg-purple-900/30 text-purple-300"}`}
               >
                 {autoSpawn ? "Auto" : "Manual"}
               </button>
               <button
                 onClick={stopSpawning}
-                className="rounded-xl border border-white/5 px-4 py-2"
+                className="w-full rounded-xl border border-white/5 px-4 py-2 sm:w-auto"
               >
                 Stop
               </button>
             </div>
           </div>
 
-          <div className="mt-4 h-[560px] overflow-hidden rounded-xl border border-white/5 bg-black/60 p-2">
+          <div className="mt-4 h-80 overflow-hidden rounded-xl border border-white/5 bg-black/60 p-2 sm:h-80 md:h-[520px] lg:h-[560px]">
             <canvas
               ref={canvasRef}
-              style={{ width: "100%", height: "100%", display: "block" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "block",
+                touchAction: "none",
+              }}
             />
           </div>
         </div>
 
-        <aside className="flex w-full flex-col gap-6 rounded-3xl border border-purple-500/20 bg-black/40 p-6 shadow-xl backdrop-blur-md lg:w-80">
+        <aside
+          id="plinko-sidebar"
+          className={`flex w-full flex-col gap-6 rounded-3xl border border-purple-500/20 bg-black/40 p-4 shadow-xl backdrop-blur-md sm:p-6 lg:w-80 ${showSidebar ? "" : "hidden sm:flex"} lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto`}
+        >
           <div className="flex flex-col items-center gap-2">
             <h2 className="text-sm font-bold tracking-widest text-purple-400 uppercase">
               Credits
             </h2>
-            <div className="text-4xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+            <div className="text-2xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)] sm:text-4xl">
               {displayCredits}
             </div>
           </div>
@@ -631,7 +675,7 @@ export default function PlinkoGame({ initialCredits }: Props) {
           <div className="text-sm text-gray-300">
             Payouts per bin (multiplier):
           </div>
-          <div className="grid grid-cols-3 gap-2 text-xs text-gray-300">
+          <div className="grid grid-cols-2 gap-2 text-xs text-gray-300 sm:grid-cols-3">
             <div>Edge Bins: 0.1x</div>
             <div>Inner Edge: 0.3x</div>
             <div>Mid-edge: 0.5x</div>
@@ -659,6 +703,17 @@ export default function PlinkoGame({ initialCredits }: Props) {
             </div>
           </div>
         </aside>
+        {/* mobile show/hide details toggle */}
+        <div className="mt-2 flex w-full justify-end sm:hidden">
+          <button
+            className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/80"
+            onClick={() => setShowSidebar((s) => !s)}
+            aria-controls="plinko-sidebar"
+            aria-expanded={showSidebar}
+          >
+            {showSidebar ? "Hide Details" : "Show Details"}
+          </button>
+        </div>
       </div>
     </main>
   );
