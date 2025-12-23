@@ -170,7 +170,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "c:\\Users\\Besim\\jsjs\\slotovski\\generated\\prisma",
+      "value": "/home/besim/jsjs/slotovski/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -179,17 +179,16 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "c:\\Users\\Besim\\jsjs\\slotovski\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/besim/jsjs/slotovski/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.19.0",
@@ -198,6 +197,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -208,7 +208,7 @@ const config = {
   },
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below\n  // Further reading:\n  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema\n  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string\n  url      = env(\"PRISMA_DATABASE_URL\")\n}\n\n// Necessary for Next auth\n\nmodel User {\n  id              String    @id @default(cuid())\n  name            String?\n  email           String?   @unique\n  emailVerified   DateTime?\n  image           String?\n  password        String?\n  credits         Int       @default(0)\n  lastDailyReward DateTime?\n  role            String    @default(\"user\")\n}\n\nmodel GameRoom {\n  id                 String   @id\n  players            Json // Store as JSON since it's complex\n  dealer             Json\n  deck               Json\n  currentPlayerIndex Int\n  gameStarted        Boolean  @default(false)\n  gameEnded          Boolean  @default(false)\n  createdAt          DateTime @default(now())\n  maxPlayers         Int\n}\n\nmodel CrashGame {\n  id           String   @id @default(cuid())\n  userId       String\n  betAmount    Int\n  crashPoint   Float\n  cashOutPoint Float?\n  result       String // \"WIN\" | \"LOSS\"\n  createdAt    DateTime @default(now())\n}\n",
   "inlineSchemaHash": "4206889ebe83c51921925755014bd5c47ccd9a1cb960f99a924bee143e218404",
-  "copyEngine": false
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -245,3 +245,9 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "generated/prisma/schema.prisma")
